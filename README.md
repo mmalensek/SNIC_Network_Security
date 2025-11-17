@@ -5,3 +5,5 @@ In this explorative diploma thesis I am investigating the capabilities of **Smar
 I am also implementing a case study of in-network computation harnessing the GPU of the **A30X**, in this case the computation involves machine learning-based **network traffic filtering**.
 
 **Keywords**: Computer networks, Software-defined networking, GPUs, Machine learning, Network Security
+
+[@mmalensek].(https://github.com/mmalensek).
