@@ -54,7 +54,7 @@ def run_tests(dataset, labelIndex, numberTests, model):
         response = chat(model=model, messages=messages)
 
         ai_answer = response["message"]["content"].strip().lower()
-        true_label = str(row[labelIndex]).strip().lower()
+        true_label = str(row.iloc[labelIndex]).strip().lower()
 
         if ai_answer == true_label:
             numCorrect += 1
@@ -71,7 +71,7 @@ def main():
     delimiter = ","
     dataset = pd.read_csv(filepath, delimiter=delimiter)
 
-    print("--------------------------------------")
+    print("\n--------------------------------------")
     datasetHeight = getDataSetHeight(filepath)
     datasetWidth = getDataSetWidth(filepath)
     labelIndex = datasetWidth - 1
@@ -81,7 +81,7 @@ def main():
     print("--------------------------------------")
 
     numberTests = int(input("\nSet the number of tests: "))
-    model = input("Select the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    model = input("\nSelect the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     numCorrect = run_tests(dataset, labelIndex, numberTests, model)
 
     accuracy = evaluate_results(numberTests, numCorrect)
