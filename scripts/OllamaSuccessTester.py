@@ -131,7 +131,9 @@ def main():
     # input selecting number of tests and the wanted llm model
     numberTests = int(input("\nSet the number of tests: "))
     model = input("\nSelect the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
-    
+    # empty print for formatting
+    print("")
+
     # running of the tests
     numCorrect = run_tests(dataset, labelIndex, numberTests, model)
 
