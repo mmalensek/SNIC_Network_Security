@@ -7,12 +7,12 @@ from ollama import chat
 def create_prompt(record, type):
     # for now you have to manually set the prompt
     if(type == "TEST"):
-        prompt = f"Network record details: {record}. Is this traffic malicious? Answer BENIGN or DDoS."
+        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer "BENIGN" or "DDoS"."""
     if(type == "START"):
         prompt = """You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a DDoS attack. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent DDoS attacks. 
                     Here are the columns: 
                     Flow ID	Source IP	Source Port	Destination IP	Destination Port	Protocol	Timestamp	Flow Duration	Total Fwd Packets	Total Backward Packets	Total Length of Fwd Packets	Total Length of Bwd Packets	Fwd Packet Length Max	Fwd Packet Length Min	Fwd Packet Length Mean	Fwd Packet Length Std	Bwd Packet Length Max	Bwd Packet Length Min	Bwd Packet Length Mean	Bwd Packet Length Std	Flow Bytes/s	Flow Packets/s	Flow IAT Mean	Flow IAT Std	Flow IAT Max	Flow IAT Min	Fwd IAT Total	Fwd IAT Mean	Fwd IAT Std	Fwd IAT Max	Fwd IAT Min	Bwd IAT Total	Bwd IAT Mean	Bwd IAT Std	Bwd IAT Max	Bwd IAT Min	Fwd PSH Flags	Bwd PSH Flags	Fwd URG Flags	Bwd URG Flags	Fwd Header Length	Bwd Header Length	Fwd Packets/s	Bwd Packets/s	Min Packet Length	Max Packet Length	Packet Length Mean	Packet Length Std	Packet Length Variance	FIN Flag Count	SYN Flag Count	RST Flag Count	PSH Flag Count	ACK Flag Count	URG Flag Count	CWE Flag Count	ECE Flag Count	Down/Up Ratio	Average Packet Size	Avg Fwd Segment Size	Avg Bwd Segment Size	Fwd Header Length	Fwd Avg Bytes/Bulk	Fwd Avg Packets/Bulk	Fwd Avg Bulk Rate	Bwd Avg Bytes/Bulk	Bwd Avg Packets/Bulk	Bwd Avg Bulk Rate	Subflow Fwd Packets	Subflow Fwd Bytes	Subflow Bwd Packets	Subflow Bwd Bytes	Init_Win_bytes_forward	Init_Win_bytes_backward	act_data_pkt_fwd	min_seg_size_forward	Active Mean	Active Std	Active Max	Active Min	Idle Mean	Idle Std	Idle Max	Idle Min	Label
-                    Next I am going to include non-labeled traffic and you are to determine what kind of traffic it is. Answer ONLY with either “likely BENIGN” or “likely DDoS”."""
+                    Next I am going to include non-labeled traffic and you are to determine what kind of traffic it is. Answer ONLY with either “BENIGN” or “DDoS”."""
     return prompt
 
 # evaluating the results
@@ -62,7 +62,7 @@ def main():
 
     # TEMP FILEPATH AND DELIMITER VALUES
     # filepath = "../../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-    filepath = "martinmalensek_diploma/dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+    filepath = "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
     delimiter = ","
     dataset = pd.read_csv(filepath, delimiter=delimiter)
 
