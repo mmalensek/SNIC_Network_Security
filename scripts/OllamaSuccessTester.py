@@ -93,7 +93,7 @@ def run_tests(dataset, labelIndex, numberTests, model):
         reset = "\033[0m"
 
         # fixing long model answers
-        shortened_ai = ai_answer[:10] + ("..." if len(ai_answer) > 10 else "")
+        shortened_ai = ai_answer[:20] + ("..." if len(ai_answer) > 10 else "")
 
         # print formatted test line
         print(
