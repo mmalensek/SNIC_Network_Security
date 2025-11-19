@@ -42,7 +42,7 @@ def run_tests(dataset, labelIndex, numberTests, model):
     # give the first prompt (start)
     prompt = create_prompt("", "START")
     messages = [{"role": "user", "content": prompt}]
-    response = chat(messages, model=model)
+    response = chat(messages, model)
 
     for idx in sample_indexes:
         row = dataset.iloc[idx]
@@ -50,8 +50,8 @@ def run_tests(dataset, labelIndex, numberTests, model):
         prompt = create_prompt(record, "TEST")
 
         messages = [{"role": "user", "content": prompt}]
-        response = chat(messages, model=model)
-        
+        response = chat(messages, model)
+
         ai_answer = response.strip().lower()
         true_label = str(row[labelIndex]).strip().lower()
 
