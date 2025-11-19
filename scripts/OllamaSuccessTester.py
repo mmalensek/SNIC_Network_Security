@@ -94,7 +94,7 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
         # print formatted test line
         print(
-            f"{color}Test #{idx}: AI answer = {ai_answer}, True label = {true_label} --> {status}{reset}"
+            f"{color}Test #{idx}: True label = {true_label}, Predicted label = {ai_answer}: {status}{reset}"
         )
 
     # return total number of correct predictions
@@ -128,6 +128,8 @@ def main():
     # input selecting number of tests and the wanted llm model
     numberTests = int(input("\nSet the number of tests: "))
     model = input("\nSelect the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    print("\n")
+
     
     # running of the tests
     numCorrect = run_tests(dataset, labelIndex, numberTests, model)
