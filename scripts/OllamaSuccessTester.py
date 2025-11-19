@@ -92,9 +92,12 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
         reset = "\033[0m"
 
+        # fixing long model answers
+        shortened_ai = ai_answer[:10] + ("..." if len(ai_answer) > 10 else "")
+
         # print formatted test line
         print(
-            f"{color}Test #{idx}: True label = {true_label}, Predicted label = {ai_answer}: {status}{reset}"
+            f"{color}Test #{idx}: Correct label = {true_label}, Predicted label = {shortened_ai}: {status}{reset}"
         )
 
     # return total number of correct predictions
