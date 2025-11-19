@@ -34,60 +34,109 @@ def getDataSetWidth(filepath):
         return len(first_row)
 
 def run_tests(dataset, labelIndex, numberTests, model):
+    # fixed random sampling order for reproducibility
     random.seed(42)
+
+    # total number of rows in the dataset
     datasetHeight = len(dataset)
+
+    # randomly selecting rows to test
     sample_indexes = random.sample(range(datasetHeight), numberTests)
+
+    # keeping track of correct classifications
     numCorrect = 0
 
-    # give the first prompt (start)
+    # sending initial setup prompt to the model (explanation of task)
     prompt = create_prompt("", "START")
     messages = [{"role": "user", "content": prompt}]
     response = chat(model=model, messages=messages)
 
+    # inputing each flow to the model
+    # and printing out the results 
     for idx in sample_indexes:
+
+        # extract the row at index "idx"
         row = dataset.iloc[idx]
+
+        # get the name of the label column (usually "Label")
         label_col = dataset.columns[labelIndex]
+
+        # removing label so only input features remain
         record = row.drop(labels=label_col).tolist()
+
+        # prepare test prompt with features
         prompt = create_prompt(record, "TEST")
-
         messages = [{"role": "user", "content": prompt}]
-        response = chat(model=model, messages=messages)
 
+        # get model prediction
+        response = chat(model=model, messages=messages)
         ai_answer = response["message"]["content"].strip().lower()
+
+        # get correct label
         true_label = str(row.iloc[labelIndex]).strip().lower()
 
-        if ai_answer == true_label:
+        # checking correctness
+        is_correct = (ai_answer == true_label)
+        if is_correct:
             numCorrect += 1
 
-        print(f"Test #{idx}: AI answer = {ai_answer}, True label = {true_label}")
+        # color output based on correctness
+        if is_correct:
+            # green
+            color = "\033[92m"   
+            status = "✔"
+        else:
+            # red
+            color = "\033[91m"
+            status = "✘"
 
+        reset = "\033[0m"
+
+        # print formatted test line
+        print(
+            f"{color}Test #{idx}: AI answer = {ai_answer}, True label = {true_label} --> {status}{reset}"
+        )
+
+    # return total number of correct predictions
     return numCorrect
+
 
 def main():
 
     # TEMP FILEPATH AND DELIMITER VALUES
+    # MacBook filepath
     # filepath = "../../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+    
+    # Bluefield-Z1 filepath
     filepath = "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+    
     delimiter = ","
     dataset = pd.read_csv(filepath, delimiter=delimiter)
 
-    print("\n--------------------------------------")
+    # getting dataset metadata
     datasetHeight = getDataSetHeight(filepath)
     datasetWidth = getDataSetWidth(filepath)
     labelIndex = datasetWidth - 1
     label_values = dataset.iloc[:, labelIndex].unique()
+
+    # printing dataset metadata
+    print("\n--------------------------------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print("--------------------------------------")
 
+    # input selecting number of tests and the wanted llm model
     numberTests = int(input("\nSet the number of tests: "))
     model = input("\nSelect the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    
+    # running of the tests
     numCorrect = run_tests(dataset, labelIndex, numberTests, model)
 
+    # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
     print("\n--------------------------------------")
     print(f"Accuracy over {numberTests} tests: {accuracy:.2%}")
-    print("--------------------------------------")
+    print("--------------------------------------\n")
 
 
 if __name__ == "__main__":
