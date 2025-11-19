@@ -6,4 +6,6 @@ I am also implementing a case study of in-network computation harnessing the GPU
 
 **Keywords**: Computer networks, Software-defined networking, GPUs, Machine learning, Network Security.
 
+**Acknowledgements**: Mentor izr. prof. dr. Veljko Pejović and asist. Miha Grohar
+
 [@mmalensek](https://github.com/mmalensek)
