@@ -41,13 +41,17 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
     # give the first prompt (start)
     prompt = create_prompt("", "START")
-    response = chat(prompt, model)
+    messages = [{"role": "user", "content": prompt}]
+    response = chat(messages, model=model)
 
     for idx in sample_indexes:
         row = dataset.iloc[idx]
         record = row.drop(labelIndex).tolist()
         prompt = create_prompt(record, "TEST")
-        response = chat(prompt, model)
+
+        messages = [{"role": "user", "content": prompt}]
+        response = chat(messages, model=model)
+        
         ai_answer = response.strip().lower()
         true_label = str(row[labelIndex]).strip().lower()
 
