@@ -3,6 +3,10 @@ import random
 import pandas as pd
 from ollama import chat
 
+# TO-DO
+# dodat moznost za razlicne datasete - trenutno omejen na ddos dataset
+# dodat uravnotezene flowe, kjer je 50% benign in 50% ostalih drugacnih
+
 # preparing the prompt
 def create_prompt(record, type):
     # for now you have to manually set the prompt
