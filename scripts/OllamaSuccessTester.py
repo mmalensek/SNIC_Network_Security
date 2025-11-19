@@ -41,13 +41,13 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
     # give the first prompt (start)
     prompt = create_prompt("", "START")
-    response = chat(prompt, model = model)
+    response = chat(prompt, model)
 
     for idx in sample_indexes:
         row = dataset.iloc[idx]
         record = row.drop(labelIndex).tolist()
         prompt = create_prompt(record, "TEST")
-        response = chat(prompt, model = model)
+        response = chat(prompt, model)
         ai_answer = response.strip().lower()
         true_label = str(row[labelIndex]).strip().lower()
 
@@ -76,7 +76,7 @@ def main():
     print("--------------------------------------")
 
     numberTests = int(input("\nSet the number of tests: "))
-    model = input("Select the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...)")
+    model = input("Select the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     numCorrect = run_tests(dataset, labelIndex, numberTests, model)
 
     accuracy = evaluate_results(numberTests, numCorrect)
