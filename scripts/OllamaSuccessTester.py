@@ -46,7 +46,8 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
     for idx in sample_indexes:
         row = dataset.iloc[idx]
-        record = row.drop(labelIndex).tolist()
+        label_col = dataset.columns[labelIndex]
+        record = row.drop(labels=label_col).tolist()
         prompt = create_prompt(record, "TEST")
 
         messages = [{"role": "user", "content": prompt}]
