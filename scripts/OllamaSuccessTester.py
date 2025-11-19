@@ -33,7 +33,7 @@ def getDataSetWidth(filepath):
         first_row = next(reader)  # read the first row (header)
         return len(first_row)
 
-def run_tests(dataset, labelIndex, numberTests):
+def run_tests(dataset, labelIndex, numberTests, model):
     random.seed(42)
     datasetHeight = len(dataset)
     sample_indexes = random.sample(range(datasetHeight), numberTests)
@@ -41,13 +41,13 @@ def run_tests(dataset, labelIndex, numberTests):
 
     # give the first prompt (start)
     prompt = create_prompt("", "START")
-    response = chat(prompt)
+    response = chat(prompt, model = model)
 
     for idx in sample_indexes:
         row = dataset.iloc[idx]
         record = row.drop(labelIndex).tolist()
         prompt = create_prompt(record, "TEST")
-        response = chat(prompt)
+        response = chat(prompt, model = model)
         ai_answer = response.strip().lower()
         true_label = str(row[labelIndex]).strip().lower()
 
@@ -76,7 +76,8 @@ def main():
     print("--------------------------------------")
 
     numberTests = int(input("\nSet the number of tests: "))
-    numCorrect = run_tests(dataset, labelIndex, numberTests)
+    model = input("Select the wanted model: (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...)")
+    numCorrect = run_tests(dataset, labelIndex, numberTests, model)
 
     accuracy = evaluate_results(numberTests, numCorrect)
     print("\n--------------------------------------")
