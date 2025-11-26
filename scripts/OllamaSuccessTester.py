@@ -186,7 +186,7 @@ def main():
     # Bluefield-Z1 filepath
     filepath = "../../dataset/TrafficLabelling/"
 
-    print("\n----------------INPUT-----------------")
+    print("\n---------------INPUT------------------")
     # get filename, dataset type and the shot setting
     filename = input("Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("Enter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
@@ -211,7 +211,7 @@ def main():
     label_values = dataset.iloc[:, labelIndex].unique()
 
     # printing dataset metadata
-    print("-------------METADATA-----------------")
+    print("\n-------------METADATA-----------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print("--------------------------------------")
@@ -226,7 +226,7 @@ def main():
     RED = "\033[91m"
     RESET = "\033[0m"
 
-    print("\n----------------RESULTS---------------")
+    print("\n---------------RESULTS----------------")
     print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
     print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests)*100}{RESET}%")
     print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests)*100}{RESET}%")
