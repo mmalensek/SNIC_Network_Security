@@ -188,15 +188,15 @@ def main():
 
     print("\n----------------INPUT-----------------")
     # get filename, dataset type and the shot setting
-    filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
-    datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
-    shots = input("\nEnter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
+    filename = input("Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
+    datasetType = input("Enter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
+    shots = input("Enter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
 
     # input selecting number of tests and the wanted llm model
-    numberTests = int(input("\nSet the number of tests: "))
-    model = input("\nSelect the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    numberTests = int(input("Set the number of tests: "))
+    model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     # empty print for formatting
-    print("\n--------------------------------------")
+    print("--------------------------------------")
 
     # default file name for the ddos dataset
     # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
