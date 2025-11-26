@@ -49,6 +49,8 @@ def run_tests(dataset, labelIndex, numberTests, model):
 
     # keeping track of correct classifications
     numCorrect = 0
+    numFalsePositive = 0
+    numFalseNegative = 0
 
     # sending initial setup prompt to the model (explanation of task)
     prompt = create_prompt("", "START")
@@ -83,6 +85,11 @@ def run_tests(dataset, labelIndex, numberTests, model):
         is_correct = (ai_answer == true_label)
         if is_correct:
             numCorrect += 1
+        else:
+            if ai_answer == "ddos":
+                numFalsePositive += 1
+            elif ai_answer == "benign":
+                numFalseNegative += 1
 
         # color output based on correctness
         if is_correct:
@@ -105,7 +112,7 @@ def run_tests(dataset, labelIndex, numberTests, model):
         )
 
     # return total number of correct predictions
-    return numCorrect
+    return numCorrect, numFalsePositive, numFalseNegative
 
 
 def main():
@@ -115,14 +122,17 @@ def main():
     # filepath = "../../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
     
     # Bluefield-Z1 filepath
-    filepath = "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-    
+    filepath = "../../dataset/TrafficLabelling/"
+
+    # default filename (DDoS dataset)
+    filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+
     delimiter = ","
-    dataset = pd.read_csv(filepath, delimiter=delimiter)
+    dataset = pd.read_csv(filepath+filename, delimiter=delimiter)
 
     # getting dataset metadata
-    datasetHeight = getDataSetHeight(filepath)
-    datasetWidth = getDataSetWidth(filepath)
+    datasetHeight = getDataSetHeight(filepath+filename)
+    datasetWidth = getDataSetWidth(filepath+filename)
     labelIndex = datasetWidth - 1
     label_values = dataset.iloc[:, labelIndex].unique()
 
@@ -139,12 +149,15 @@ def main():
     print("")
 
     # running of the tests
-    numCorrect = run_tests(dataset, labelIndex, numberTests, model)
+    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model)
 
     # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
     print("\n--------------------------------------")
     print(f"Accuracy over {numberTests} tests: {accuracy:.2%}")
+    print(f"Percentage of false positives: {numFalsePositive/numberTests}%")
+    print(f"Percentage of false negatives: {numFalseNegative/numberTests}%")
+    print(f"Percentage of other responses: {(numberTests - numFalsePositive - numFalseNegative)/numberTests}")
     print("--------------------------------------\n")
 
 
