@@ -216,10 +216,15 @@ def main():
 
     # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
+
+    GREEN = "\033[92m"
+    RED = "\033[91m"
+    RESET = "\033[0m"
+
     print("\n--------------------------------------")
-    print(f"Accuracy over {numberTests} tests: {accuracy:.1%}")
-    print(f"Percentage of false positives: {(numFalsePositive/numberTests)*100}%")
-    print(f"Percentage of false negatives: {(numFalseNegative/numberTests)*100}%")
+    print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
+    print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests)*100}{RESET}%")
+    print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests)*100}{RESET}%")
     print(f"Percentage of other responses: {((numberTests - numFalsePositive - numFalseNegative - numCorrect)/numberTests) * 100}%")
     print("--------------------------------------\n")
 
