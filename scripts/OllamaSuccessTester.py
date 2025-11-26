@@ -109,7 +109,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
     # inputing each flow to the model
     # and printing out the results 
 
-    print("--------------------------------------")
+    print("\n--------------TESTING-----------------")
     for idx in sample_indexes:
 
         # extract the row at index "idx"
@@ -186,6 +186,7 @@ def main():
     # Bluefield-Z1 filepath
     filepath = "../../dataset/TrafficLabelling/"
 
+    print("\n----------------INPUT-----------------")
     # get filename, dataset type and the shot setting
     filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
@@ -195,7 +196,7 @@ def main():
     numberTests = int(input("\nSet the number of tests: "))
     model = input("\nSelect the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     # empty print for formatting
-    print("")
+    print("\n--------------------------------------")
 
     # default file name for the ddos dataset
     # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
@@ -210,7 +211,7 @@ def main():
     label_values = dataset.iloc[:, labelIndex].unique()
 
     # printing dataset metadata
-    print("\n--------------------------------------")
+    print("-------------METADATA-----------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print("--------------------------------------")
@@ -225,7 +226,7 @@ def main():
     RED = "\033[91m"
     RESET = "\033[0m"
 
-    print("\n--------------------------------------")
+    print("\n----------------RESULTS---------------")
     print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
     print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests)*100}{RESET}%")
     print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests)*100}{RESET}%")
