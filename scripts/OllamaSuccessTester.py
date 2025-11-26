@@ -187,7 +187,7 @@ def main():
     filepath = "../../dataset/TrafficLabelling/"
 
     # get filename, dataset type and the shot setting
-    filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ").upper()
+    filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
     shots = input("\nEnter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
 
