@@ -108,6 +108,8 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
 
     # inputing each flow to the model
     # and printing out the results 
+
+    print("--------------------------------------")
     for idx in sample_indexes:
 
         # extract the row at index "idx"
@@ -168,6 +170,8 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
         print(
             f"{color}Test #{idx}: Correct label = {true_label}, Predicted label = {shortened_ai}: {status}{reset}"
         )
+    print("--------------------------------------")
+
 
     # return total number of correct predictions
     return numCorrect, numFalsePositive, numFalseNegative
@@ -183,9 +187,15 @@ def main():
     filepath = "../../dataset/TrafficLabelling/"
 
     # get filename, dataset type and the shot setting
-    filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
-    datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ")
-    shots = input("\nEnter the shot example type (ZERO-SHOT, FEW-SHOT): ")
+    filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ").upper()
+    datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
+    shots = input("\nEnter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
+
+    # input selecting number of tests and the wanted llm model
+    numberTests = int(input("\nSet the number of tests: "))
+    model = input("\nSelect the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    # empty print for formatting
+    print("")
 
     # default file name for the ddos dataset
     # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
@@ -204,12 +214,6 @@ def main():
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print("--------------------------------------")
-
-    # input selecting number of tests and the wanted llm model
-    numberTests = int(input("\nSet the number of tests: "))
-    model = input("\nSelect the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
-    # empty print for formatting
-    print("")
 
     # running of the tests
     numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots)
