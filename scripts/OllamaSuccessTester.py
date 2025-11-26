@@ -86,7 +86,7 @@ def getDataSetWidth(filepath):
         first_row = next(reader)  # read the first row (header)
         return len(first_row)
 
-def run_tests(dataset, labelIndex, numberTests, model, datasetType):
+def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
     # fixed random sampling order for reproducibility
     random.seed(42)
 
@@ -102,7 +102,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType):
     numFalseNegative = 0
 
     # sending initial setup prompt to the model (explanation of task)
-    prompt = create_prompt("", "START")
+    prompt = create_prompt("", "START" + " " + datasetType + " " + shots)
     messages = [{"role": "user", "content": prompt}]
     response = chat(model=model, messages=messages)
 
@@ -120,7 +120,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType):
         record = row.drop(labels=label_col).tolist()
 
         # prepare test prompt with features
-        prompt = create_prompt(record, "TEST")
+        prompt = create_prompt(record, "TEST"+ " " + datasetType)
         messages = [{"role": "user", "content": prompt}]
 
         # get model prediction
@@ -182,10 +182,10 @@ def main():
     # Bluefield-Z1 filepath
     filepath = "../../dataset/TrafficLabelling/"
 
-    # get filename
+    # get filename, dataset type and the shot setting
     filename = input("\nEnter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("\nEnter the dataset type (DDOS, WEB ATTACK, ...): ")
-    print("")
+    shots = input("\nEnter the shot example type (ZERO-SHOT, FEW-SHOT): ")
 
     # default file name for the ddos dataset
     # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
@@ -212,7 +212,7 @@ def main():
     print("")
 
     # running of the tests
-    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType)
+    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots)
 
     # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
