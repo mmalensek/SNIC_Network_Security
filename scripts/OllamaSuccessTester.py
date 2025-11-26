@@ -155,9 +155,9 @@ def main():
     accuracy = evaluate_results(numberTests, numCorrect)
     print("\n--------------------------------------")
     print(f"Accuracy over {numberTests} tests: {accuracy:.2%}")
-    print(f"Percentage of false positives: {numFalsePositive/numberTests}%")
-    print(f"Percentage of false negatives: {numFalseNegative/numberTests}%")
-    print(f"Percentage of other responses: {(numberTests - numFalsePositive - numFalseNegative)/numberTests}")
+    print(f"Percentage of false positives: {(numFalsePositive/numberTests)*100}%")
+    print(f"Percentage of false negatives: {(numFalseNegative/numberTests)*100}%")
+    print(f"Percentage of other responses: {((numberTests - numFalsePositive - numFalseNegative - numCorrect)/numberTests) * 100}%")
     print("--------------------------------------\n")
 
 
