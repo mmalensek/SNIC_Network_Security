@@ -24,12 +24,12 @@ Here are the columns:
 
 Flow ID	Source IP	Source Port	Destination IP	Destination Port	Protocol	Timestamp	Flow Duration	Total Fwd Packets	Total Backward Packets	Total Length of Fwd Packets	Total Length of Bwd Packets	Fwd Packet Length Max	Fwd Packet Length Min	Fwd Packet Length Mean	Fwd Packet Length Std	Bwd Packet Length Max	Bwd Packet Length Min	Bwd Packet Length Mean	Bwd Packet Length Std	Flow Bytes/s	Flow Packets/s	Flow IAT Mean	Flow IAT Std	Flow IAT Max	Flow IAT Min	Fwd IAT Total	Fwd IAT Mean	Fwd IAT Std	Fwd IAT Max	Fwd IAT Min	Bwd IAT Total	Bwd IAT Mean	Bwd IAT Std	Bwd IAT Max	Bwd IAT Min	Fwd PSH Flags	Bwd PSH Flags	Fwd URG Flags	Bwd URG Flags	Fwd Header Length	Bwd Header Length	Fwd Packets/s	Bwd Packets/s	Min Packet Length	Max Packet Length	Packet Length Mean	Packet Length Std	Packet Length Variance	FIN Flag Count	SYN Flag Count	RST Flag Count	PSH Flag Count	ACK Flag Count	URG Flag Count	CWE Flag Count	ECE Flag Count	Down/Up Ratio	Average Packet Size	Avg Fwd Segment Size	Avg Bwd Segment Size	Fwd Header Length	Fwd Avg Bytes/Bulk	Fwd Avg Packets/Bulk	Fwd Avg Bulk Rate	Bwd Avg Bytes/Bulk	Bwd Avg Packets/Bulk	Bwd Avg Bulk Rate	Subflow Fwd Packets	Subflow Fwd Bytes	Subflow Bwd Packets	Subflow Bwd Bytes	Init_Win_bytes_forward	Init_Win_bytes_backward	act_data_pkt_fwd	min_seg_size_forward	Active Mean	Active Std	Active Max	Active Min	Idle Mean	Idle Std	Idle Max	Idle Min	Label
 
-Below are examples of benign flows: 
+Below are examples of benign flows:
 192.168.10.16-104.17.241.25-46236-443-6	104.17.241.25	443	192.168.10.16	46236	6	7/7/2017 3:30	34	1	1	6	6	6	6	6	0	6	6	6	0	352941.1765	58823.52941	34	0	34	34	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20	20	29411.76471	29411.76471	6	6	6	0	0	0	0	0	0	1	1	0	0	1	9	6	6	20	0	0	0	0	0	0	1	6	1	6	31	329	0	20	0	0	0	0	0	0	0	0	BENIGN
 192.168.10.5-104.19.196.102-54863-443-6	104.19.196.102	443	192.168.10.5	54863	6	7/7/2017 3:30	3	2	0	12	0	6	6	6	0	0	0	0	0	4000000	666666.6667	3	0	3	3	3	3	0	3	3	0	0	0	0	0	0	0	0	0	40	0	666666.6667	0	6	6	6	0	0	0	0	0	0	1	0	0	0	0	9	6	0	40	0	0	0	0	0	0	2	12	0	0	32	-1	1	20	0	0	0	0	0	0	0	0	BENIGN
 192.168.10.5-104.20.10.120-54871-443-6	104.20.10.120	443	192.168.10.5	54871	6	7/7/2017 3:30	1022	2	0	12	0	6	6	6	0	0	0	0	0	11741.68297	1956.947162	1022	0	1022	1022	1022	1022	0	1022	1022	0	0	0	0	0	0	0	0	0	40	0	1956.947162	0	6	6	6	0	0	0	0	0	0	1	0	0	0	0	9	6	0	40	0	0	0	0	0	0	2	12	0	0	32	-1	1	20	0	0	0	0	0	0	0	0	BENIGN
 
-Below are examples of DDoS attack flows: 
+Below are examples of DDoS attack flows:
 172.16.0.1-192.168.10.50-57093-80-6	172.16.0.1	57093	192.168.10.50	80	6	7/7/2017 3:59	1488275	3	5	26	11607	20	0	8.666666667	10.26320288	5840	0	2321.4	3173.373883	7816.431775	5.375350658	212610.7143	562099.7266	1487333	3	685	342.5	422.1427484	641	44	1488212	372053	743520.0647	1487333	3	0	0	0	0	72	112	2.015756497	3.359594161	0	5840	1292.555556	2554.159212	6523729.278	0	0	0	1	0	0	0	0	1	1454.125	8.666666667	2321.4	72	0	0	0	0	0	0	3	26	5	11607	8192	229	2	20	0	0	0	0	0	0	0	0	DDoS
 172.16.0.1-192.168.10.50-57094-80-6	172.16.0.1	57094	192.168.10.50	80	6	7/7/2017 3:59	74333316	9	5	62	11601	20	0	6.888888889	5.30199124	8760	0	2320.2	3668.897	156.9013819	0.188340851	5717947.385	18900000	68500000	1	73100000	9141746.25	24000000	68500000	1	1214301	303575.25	596675.3272	1198526	180	0	0	0	0	192	112	0.121076261	0.06726459	0	8760	777.9333333	2262.786603	5120203.21	0	0	0	0	1	0	0	0	0	833.5	6.888888889	2320.2	192	0	0	0	0	0	0	9	62	5	11601	256	229	7	20	4649910	0	4649910	4649910	68500000	0	68500000	68500000	DDoS
 172.16.0.1-192.168.10.50-57095-80-6	172.16.0.1	57095	192.168.10.50	80	6	7/7/2017 3:59	1488477	3	5	26	11607	20	0	8.666666667	10.26320288	8760	0	2321.4	3802.315321	7815.371013	5.374621173	212639.5714	562169.023	1487519	1	718	359	325.2691193	589	129	1488476	372119	743600.0732	1487519	2	0	0	0	0	72	112	2.01548294	3.359138233	0	8760	1292.555556	2952.520834	8717379.278	0	0	0	1	0	0	0	0	1	1454.125	8.666666667	2321.4	72	0	0	0	0	0	0	3	26	5	11607	8192	229	2	20	0	0	0	0	0	0	0	0	DDoS
@@ -50,7 +50,7 @@ Here are the columns:
 
 Flow ID	Source IP	Source Port	Destination IP	Destination Port	Protocol	Timestamp	Flow Duration	Total Fwd Packets	Total Backward Packets	Total Length of Fwd Packets	Total Length of Bwd Packets	Fwd Packet Length Max	Fwd Packet Length Min	Fwd Packet Length Mean	Fwd Packet Length Std	Bwd Packet Length Max	Bwd Packet Length Min	Bwd Packet Length Mean	Bwd Packet Length Std	Flow Bytes/s	Flow Packets/s	Flow IAT Mean	Flow IAT Std	Flow IAT Max	Flow IAT Min	Fwd IAT Total	Fwd IAT Mean	Fwd IAT Std	Fwd IAT Max	Fwd IAT Min	Bwd IAT Total	Bwd IAT Mean	Bwd IAT Std	Bwd IAT Max	Bwd IAT Min	Fwd PSH Flags	Bwd PSH Flags	Fwd URG Flags	Bwd URG Flags	Fwd Header Length	Bwd Header Length	Fwd Packets/s	Bwd Packets/s	Min Packet Length	Max Packet Length	Packet Length Mean	Packet Length Std	Packet Length Variance	FIN Flag Count	SYN Flag Count	RST Flag Count	PSH Flag Count	ACK Flag Count	URG Flag Count	CWE Flag Count	ECE Flag Count	Down/Up Ratio	Average Packet Size	Avg Fwd Segment Size	Avg Bwd Segment Size	Fwd Header Length	Fwd Avg Bytes/Bulk	Fwd Avg Packets/Bulk	Fwd Avg Bulk Rate	Bwd Avg Bytes/Bulk	Bwd Avg Packets/Bulk	Bwd Avg Bulk Rate	Subflow Fwd Packets	Subflow Fwd Bytes	Subflow Bwd Packets	Subflow Bwd Bytes	Init_Win_bytes_forward	Init_Win_bytes_backward	act_data_pkt_fwd	min_seg_size_forward	Active Mean	Active Std	Active Max	Active Min	Idle Mean	Idle Std	Idle Max	Idle Min	Label
 
-Below are examples of web attack flows: 
+Below are examples of web attack flows:
 a) Brute force
 172.16.0.1-192.168.10.50-47432-80-6	172.16.0.1	47432	192.168.10.50	80	6	6/7/2017 9:55	5452190	3	1	0	0	0	0	0	0	0	0	0	0	0	0.733650148	1817396.667	3147061.274	5451310	160	5452190	2726095	3854036.013	5451310	880	0	0	0	0	0	0	0	0	0	104	40	0.550237611	0.183412537	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	104	0	0	0	0	0	0	3	0	1	0	29200	28960	0	32	0	0	0	0	0	0	0	0	Web Attack Â– Brute Force
 b) XSS
@@ -85,6 +85,26 @@ def getDataSetWidth(filepath):
         reader = csv.reader(csvfile)
         first_row = next(reader)  # read the first row (header)
         return len(first_row)
+    
+def getBenignPercentage(filepath, labelIndex):
+    with open(filepath, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        # skip the header row
+        next(reader)
+        
+        total_rows = 0
+        benign_rows = 0
+        
+        for row in reader:
+            total_rows += 1
+            if row[labelIndex].strip().upper() == "BENIGN":
+                benign_rows += 1
+        
+        if total_rows == 0:
+            return 0.0
+        
+        percentage = (benign_rows / total_rows) * 100
+        return percentage
 
 def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
     # fixed random sampling order for reproducibility
@@ -208,12 +228,14 @@ def main():
     datasetHeight = getDataSetHeight(filepath+filename)
     datasetWidth = getDataSetWidth(filepath+filename)
     labelIndex = datasetWidth - 1
+    benignPercentage = getBenignPercentage(filepath+filename, labelIndex)
     label_values = dataset.iloc[:, labelIndex].unique()
 
     # printing dataset metadata
     print("\n-------------METADATA-----------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
+    print(f"Percentage of flows labeled BENIGN: {benignPercentage:.2f}%")    
     print("--------------------------------------")
 
     # running of the tests
