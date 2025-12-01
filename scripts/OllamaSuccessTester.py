@@ -106,9 +106,9 @@ def getBenignPercentage(filepath, labelIndex):
         percentage = (benign_rows / total_rows) * 100
         return percentage
 
-def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize):
+def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed):
     # fixed random sampling order for reproducibility
-    random.seed(42)
+    random.seed(seed)
 
     # total number of rows in the dataset
     datasetHeight = len(dataset)
@@ -221,6 +221,7 @@ def main():
     # input selecting number of tests and the wanted llm model
     numberTests = int(input("Set the number of tests: "))
     windowSize = int(input("Set the window size: "))
+    seed = int(input("Set the seed: "))
     model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     # empty print for formatting
     print("--------------------------------------")
@@ -246,7 +247,7 @@ def main():
     print("--------------------------------------")
 
     # running of the tests
-    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize)
+    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed)
 
     numberTests = ( (numberTests * windowSize) + 1 ) * 2
 
