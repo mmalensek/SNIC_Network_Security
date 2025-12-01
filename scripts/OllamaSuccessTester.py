@@ -9,7 +9,7 @@ from ollama import chat
 
 # preparing the prompt
 def create_prompt(record, type):
-    # for now you have to manually set the prompt
+    # for now you have to manually set and enter the prompt
     if(type == "TEST DDOS"):
         prompt = f"""Network record details: {record}. Is this traffic malicious? Answer "BENIGN" or "DDoS"."""
     if(type == "START DDOS ZERO-SHOT"):
