@@ -113,8 +113,8 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
     # total number of rows in the dataset
     datasetHeight = len(dataset)
 
-    # randomly selecting rows to test
-    sample_indexes = random.sample(range(datasetHeight), numberTests)
+    # randomly selecting sorted rows to test
+    sample_indexes = sorted(random.sample(range(datasetHeight), numberTests))
 
     # keeping track of correct classifications
     numCorrect = 0
