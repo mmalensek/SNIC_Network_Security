@@ -69,8 +69,8 @@ Please analyze these features and learn to distinguish benign network flows from
     return prompt
 
 # evaluating the results
-def evaluate_results(numTest, numCorrect):
-    return numCorrect / numTest
+def evaluate_results(numTest, numCorrect, windowSize):
+    return (numCorrect * windowSize) / numTest
 
 # get the number of rows in a dataset
 def getDataSetHeight(filepath):
@@ -249,7 +249,7 @@ def main():
     numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize)
 
     # printing out the results
-    accuracy = evaluate_results(numberTests, numCorrect)
+    accuracy = evaluate_results(numberTests, numCorrect, windowSize)
 
     GREEN = "\033[92m"
     RED = "\033[91m"
