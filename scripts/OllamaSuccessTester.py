@@ -155,6 +155,16 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         response = chat(model=model, messages=messages)
         ai_answer = response["message"]["content"].strip().lower()
 
+        # append to response to maintain context
+        messages.append({"role": "assistant", "content": ai_answer})
+
+        # ask for explanation
+        messages.append({"role": "user", "content": "Why did you choose this label? Explain your reasoning."})
+
+        # Get explanation
+        explanation_response = chat(model=model, messages=messages)
+        explanation = explanation_response["message"]["content"]
+
         # get correct label
         true_label = str(row.iloc[labelIndex]).strip().lower()
 
@@ -196,6 +206,9 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         print(
             f"{color}Test #{idx}: Correct label = {true_label}, Predicted label = {shortened_ai}: {status}{reset}"
         )
+        print(explanation)
+    
+    # end of testing print for formatting
     print("--------------------------------------")
 
 
