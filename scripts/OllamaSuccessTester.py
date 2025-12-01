@@ -259,9 +259,9 @@ def main():
 
     print("\n---------------RESULTS----------------")
     print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
-    print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests)*100}{RESET}%")
-    print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests)*100}{RESET}%")
-    print(f"Percentage of other responses: {((numberTests - numFalsePositive - numFalseNegative - numCorrect)/numberTests) * 100}%")
+    print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests)*100:.1%}{RESET}%")
+    print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests)*100:.1%}{RESET}%")
+    print(f"Percentage of other responses: {((numberTests - numFalsePositive - numFalseNegative - numCorrect)/numberTests) * 100:.1%}%")
     print("--------------------------------------\n")
 
 
