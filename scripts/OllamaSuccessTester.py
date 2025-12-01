@@ -106,7 +106,7 @@ def getBenignPercentage(filepath, labelIndex):
         percentage = (benign_rows / total_rows) * 100
         return percentage
 
-def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
+def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize):
     # fixed random sampling order for reproducibility
     random.seed(42)
 
@@ -115,6 +115,12 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
 
     # randomly selecting sorted rows to test
     sample_indexes = sorted(random.sample(range(datasetHeight), numberTests))
+
+    # add window around each index
+    sample_indexes_with_windows = sorted(set(
+    i for idx in sample_indexes 
+        for i in range(max(0, idx - windowSize), min(datasetHeight, idx + windowSize + 1))
+    ))
 
     # keeping track of correct classifications
     numCorrect = 0
@@ -130,7 +136,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots):
     # and printing out the results 
 
     print("\n--------------TESTING-----------------")
-    for idx in sample_indexes:
+    for idx in sample_indexes_with_windows:
 
         # extract the row at index "idx"
         row = dataset.iloc[idx]
@@ -214,6 +220,7 @@ def main():
 
     # input selecting number of tests and the wanted llm model
     numberTests = int(input("Set the number of tests: "))
+    windowSize = int(input("Set the window size: "))
     model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     # empty print for formatting
     print("--------------------------------------")
@@ -239,7 +246,7 @@ def main():
     print("--------------------------------------")
 
     # running of the tests
-    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots)
+    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize)
 
     # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
