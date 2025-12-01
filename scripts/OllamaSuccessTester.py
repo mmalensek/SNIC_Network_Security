@@ -70,7 +70,7 @@ Please analyze these features and learn to distinguish benign network flows from
 
 # evaluating the results
 def evaluate_results(numTest, numCorrect, windowSize):
-    return (numCorrect * windowSize) / numTest
+    return numCorrect / (numTest * windowSize)
 
 # get the number of rows in a dataset
 def getDataSetHeight(filepath):
