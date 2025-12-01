@@ -106,7 +106,7 @@ def getBenignPercentage(filepath, labelIndex):
         percentage = (benign_rows / total_rows) * 100
         return percentage
 
-def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed):
+def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning):
     # fixed random sampling order for reproducibility
     random.seed(seed)
 
@@ -155,15 +155,16 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         response = chat(model=model, messages=messages)
         ai_answer = response["message"]["content"].strip().lower()
 
-        # append to response to maintain context
-        messages.append({"role": "assistant", "content": ai_answer})
+        if printReasoning == "YES":
+            # append to response to maintain context
+            messages.append({"role": "assistant", "content": ai_answer})
 
-        # ask for explanation
-        messages.append({"role": "user", "content": "Why did you choose this label? Explain your reasoning."})
+            # ask for explanation
+            messages.append({"role": "user", "content": "Why did you choose this label? Explain your reasoning."})
 
-        # Get explanation
-        explanation_response = chat(model=model, messages=messages)
-        explanation = explanation_response["message"]["content"]
+            # Get explanation
+            explanation_response = chat(model=model, messages=messages)
+            explanation = explanation_response["message"]["content"]
 
         # get correct label
         true_label = str(row.iloc[labelIndex]).strip().lower()
@@ -206,7 +207,9 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         print(
             f"{color}Test #{idx}: Correct label = {true_label}, Predicted label = {shortened_ai}: {status}{reset}"
         )
-        print(explanation)
+        
+        if printReasoning == "YES":
+            print(explanation)
     
     # end of testing print for formatting
     print("--------------------------------------")
@@ -235,6 +238,7 @@ def main():
     numberTests = int(input("Set the number of tests: "))
     windowSize = int(input("Set the window size: "))
     seed = int(input("Set the seed: "))
+    printReasoning = input("Do you want to print models reasoning for selected label (YES/NO): ").upper()
     model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
     # empty print for formatting
     print("--------------------------------------")
@@ -260,7 +264,7 @@ def main():
     print("--------------------------------------")
 
     # running of the tests
-    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed)
+    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning)
 
     numberTests = ( (numberTests * windowSize) + 1 ) * 2
 
