@@ -4,10 +4,6 @@ import random
 import pandas as pd
 from ollama import chat
 
-# TO-DO
-# dodat moznost za razlicne datasete - trenutno omejen na ddos dataset
-# dodat uravnotezene flowe, kjer je 50% benign in 50% ostalih drugacnih
-
 # preparing the prompt
 def create_prompt(record, type):
     # for now you have to manually set and enter the prompt
@@ -228,7 +224,7 @@ def main():
     filepath = "../../dataset/TrafficLabelling/"
 
     print("\n---------------INPUT------------------")
-    # Get basic inputs
+    # get basic inputs
     filename = input("Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("Enter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
     shots = input("Enter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
@@ -238,46 +234,41 @@ def main():
     seed = int(input("Set the seed: "))
     print("--------------------------------------")
 
-    # Load and prepare dataset
+    # load and prepare dataset
     delimiter = ","
     dataset = pd.read_csv(filepath+filename, delimiter=delimiter)
     
-    # Getting dataset metadata
+    # getting dataset metadata
     datasetHeight = getDataSetHeight(filepath+filename)
     datasetWidth = getDataSetWidth(filepath+filename)
     labelIndex = datasetWidth - 1
     benignPercentage = getBenignPercentage(filepath+filename, labelIndex)
     label_values = dataset.iloc[:, labelIndex].unique()
 
-    # Printing dataset metadata
+    # printing dataset metadata
     print("\n-------------METADATA-----------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print(f"Percentage of flows labeled BENIGN: {benignPercentage:.2f}%")    
     print("--------------------------------------")
 
-    # Ask if user wants automated testing
+    # ask if user wants automated testing
     run_automated = input("\nRun automated model comparison on all installed models? (yes/no): ").lower()
     
     if run_automated == "yes":
         from AutomatedTestingLoop import run_automated_tests
-        print("\nStarting automated testing loop...")
+        print("Starting automated testing loop...")
         run_automated_tests(dataset, labelIndex, datasetType, shots, numberTests, windowSize, seed)
-        return  # Exit after automated testing
+        return  # exit after automated testing
     
-    # If not automated, continue with single model test
+    # if not automated, continue with single model test
     printReasoning = input("Do you want to print models reasoning for selected label (YES/NO): ").upper()
     model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
 
-    # Running of the tests
+    # running of the tests
     numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(
         dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning
     )
-
-    numberTests = numberTests * windowSize
-
-    # [Rest of your single-model results calculation and printing code stays the same]
-    # ... (all the accuracy, precision, recall, F1, MCC calculations and printing)
 
     numberTests = numberTests * windowSize
 

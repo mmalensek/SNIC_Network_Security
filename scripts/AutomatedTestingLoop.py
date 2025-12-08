@@ -2,25 +2,25 @@
 import subprocess
 
 def get_installed_models():
-    """Get all locally installed Ollama models"""
+    # get all locally installed Ollama models
     result = subprocess.run(['ollama', 'list'], capture_output=True, text=True)
     lines = result.stdout.strip().split('\n')[1:]
     return [line.split()[0] for line in lines if line.strip()]
 
 def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, window_size=5, seed=42):
-    """Run tests on all installed models and return results"""
+    # run tests on all installed models and return results
     from ModelTester import run_tests
     import math
     
     results = []
     models = get_installed_models()
     
-    print(f"\nFound {len(models)} installed models\n")
+    print(f"Found {len(models)} installed models")
     
     for model in models:
-        print(f"\n{'='*50}")
+        print(f"\n{'='*100}")
         print(f"Testing model: {model}")
-        print(f"{'='*50}")
+        print(f"{'='*100}")
         
         try:
             numTP, numTN, numFP, numFN = run_tests(
@@ -28,14 +28,14 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
                 dataset_type, shots, window_size, seed, False
             )
             
-            # Calculate metrics
+            # calculate metrics
             total = num_tests * window_size
             accuracy = (numTP + numTN) / total
             precision = numTP / (numTP + numFP) if (numTP + numFP) > 0 else 0.0
             recall = numTP / (numTP + numFN) if (numTP + numFN) > 0 else 0.0
             f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
             
-            # Calculate MCC
+            # calculate MCC
             numerator = (numTP * numTN) - (numFP * numFN)
             denominator = math.sqrt((numTP + numFP) * (numTP + numFN) * (numTN + numFP) * (numTN + numFN))
             mcc = numerator / denominator if denominator > 0 else 0.0
@@ -56,7 +56,7 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
             print(f"Error with {model}: {e}")
             continue
     
-    # Sort and display results
+    # sort and display results
     if not results:
         print("\nNo results to display.")
         return results
@@ -73,7 +73,7 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
         print(f"{r['model']:<25} {r['accuracy']:<12.1%} {r['precision']:<12.1%} "
               f"{r['recall']:<12.1%} {r['f1_score']:<12.1%} {r['mcc']:<10.4f}")
     
-    # Show best model details
+    # show best model details
     best = results[0]
     print("\n" + "="*100)
     print("BEST MODEL DETAILS")
