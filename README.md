@@ -8,4 +8,4 @@ I am also implementing a case study of in-network computation harnessing the GPU
 
 **Acknowledgements**: Mentor izr. prof. dr. Veljko Pejović and asist. Miha Grohar
 
-[@mmalensek](https://github.com/mmalensek)
+**Author**: [@mmalensek](https://github.com/mmalensek)
