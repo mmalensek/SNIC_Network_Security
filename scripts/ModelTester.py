@@ -253,7 +253,7 @@ def main():
     print("--------------------------------------")
 
     # ask if user wants automated testing
-    run_automated = input("\nRun automated model comparison on all installed models? (yes/no): ").lower()
+    run_automated = input("\nRun automated model comparison on all installed models? (YES/NO): ").lower()
     
     if run_automated == "yes":
         from AutomatedTestingLoop import run_automated_tests
