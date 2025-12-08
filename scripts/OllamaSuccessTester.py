@@ -267,7 +267,7 @@ def main():
     # running of the tests
     numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning)
 
-    numberTests = ( (numberTests * windowSize) + 1 ) * 2
+    numberTests = numberTests * windowSize
 
     # printing out the results
     accuracy = evaluate_results(numberTests, numCorrect)
