@@ -225,52 +225,59 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
 
 
 def main():
-
-    # TEMP FILEPATH AND DELIMITER VALUES
-    # MacBook filepath
-    # filepath = "../../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-    
-    # Bluefield-Z1 filepath
     filepath = "../../dataset/TrafficLabelling/"
 
     print("\n---------------INPUT------------------")
-    # get filename, dataset type and the shot setting
+    # Get basic inputs
     filename = input("Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("Enter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
     shots = input("Enter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
-
-    # input selecting number of tests and the wanted llm model
+    
     numberTests = int(input("Set the number of tests: "))
     windowSize = int(input("Set the window size: "))
     seed = int(input("Set the seed: "))
-    printReasoning = input("Do you want to print models reasoning for selected label (YES/NO): ").upper()
-    model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
-    # empty print for formatting
     print("--------------------------------------")
 
-    # default file name for the ddos dataset
-    # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-
-    # setting default delimiter in dataset
+    # Load and prepare dataset
     delimiter = ","
     dataset = pd.read_csv(filepath+filename, delimiter=delimiter)
-
-    # getting dataset metadata
+    
+    # Getting dataset metadata
     datasetHeight = getDataSetHeight(filepath+filename)
     datasetWidth = getDataSetWidth(filepath+filename)
     labelIndex = datasetWidth - 1
     benignPercentage = getBenignPercentage(filepath+filename, labelIndex)
     label_values = dataset.iloc[:, labelIndex].unique()
 
-    # printing dataset metadata
+    # Printing dataset metadata
     print("\n-------------METADATA-----------------")
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print(f"Percentage of flows labeled BENIGN: {benignPercentage:.2f}%")    
     print("--------------------------------------")
 
-    # running of the tests
-    numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning)
+    # Ask if user wants automated testing
+    run_automated = input("\nRun automated model comparison on all installed models? (yes/no): ").lower()
+    
+    if run_automated == "yes":
+        from AutomatedTestingLoop import run_automated_tests
+        print("\nStarting automated testing loop...")
+        run_automated_tests(dataset, labelIndex, datasetType, shots, numberTests, windowSize, seed)
+        return  # Exit after automated testing
+    
+    # If not automated, continue with single model test
+    printReasoning = input("Do you want to print models reasoning for selected label (YES/NO): ").upper()
+    model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+
+    # Running of the tests
+    numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(
+        dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning
+    )
+
+    numberTests = numberTests * windowSize
+
+    # [Rest of your single-model results calculation and printing code stays the same]
+    # ... (all the accuracy, precision, recall, F1, MCC calculations and printing)
 
     numberTests = numberTests * windowSize
 
