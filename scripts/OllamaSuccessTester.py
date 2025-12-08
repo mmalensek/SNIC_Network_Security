@@ -119,7 +119,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
     # add window around each index
     sample_indexes_with_windows = sorted(set(
     i for idx in sample_indexes 
-        for i in range(max(0, idx - windowSize), min(datasetHeight, idx + windowSize + 1))
+        for i in range(idx, min(datasetHeight, idx + windowSize))
     ))
 
     # keeping track of correct classifications
@@ -246,6 +246,7 @@ def main():
     # default file name for the ddos dataset
     # filename = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
 
+    # setting default delimiter in dataset
     delimiter = ","
     dataset = pd.read_csv(filepath+filename, delimiter=delimiter)
 
