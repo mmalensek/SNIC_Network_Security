@@ -1,4 +1,5 @@
 import csv
+import math
 import random
 import pandas as pd
 from ollama import chat
@@ -69,8 +70,8 @@ Please analyze these features and learn to distinguish benign network flows from
     return prompt
 
 # evaluating the results
-def evaluate_results(numTest, numCorrect):
-    return numCorrect / numTest 
+def evaluate_results(numTest, numTruePositive, numTrueNegative):
+    return ( numTruePositive + numTrueNegative ) / numTest 
 
 # get the number of rows in a dataset
 def getDataSetHeight(filepath):
@@ -123,7 +124,8 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
     ))
 
     # keeping track of correct classifications
-    numCorrect = 0
+    numTruePositive = 0
+    numTrueNegative = 0
     numFalsePositive = 0
     numFalseNegative = 0
 
@@ -172,7 +174,10 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         # checking correctness
         is_correct = (ai_answer == true_label)
         if is_correct:
-            numCorrect += 1
+            if ai_answer == "ddos":
+                numTruePositive += 1
+            else:
+                numTrueNegative += 1
 
         # get the fp and ft values for each of the 
         # two different datasets
@@ -216,7 +221,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
 
 
     # return total number of correct predictions
-    return numCorrect, numFalsePositive, numFalseNegative
+    return numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative
 
 
 def main():
@@ -265,22 +270,46 @@ def main():
     print("--------------------------------------")
 
     # running of the tests
-    numCorrect, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning)
+    numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning)
 
     numberTests = numberTests * windowSize
 
-    # printing out the results
-    accuracy = evaluate_results(numberTests, numCorrect)
+    # calculating basic results
+    accuracy = evaluate_results(numberTests, numTruePositive, numTrueNegative)
+    falsePositiveResult = numFalsePositive/numberTests
+    falseNegativeResult = numFalseNegative/numberTests
+    otherResponsesResult = (numberTests - numFalsePositive - numFalseNegative - numTruePositive - numTrueNegative)/numberTests
 
+    # calculating advanced metrics
+    precision = numTruePositive / ( numTruePositive + numFalsePositive )
+    recall = numTruePositive / ( numTruePositive + numFalseNegative )
+    F1_score = 2 * (precision * recall) / (precision + recall)
+    # calculating matthews correlation coefficient
+    numerator = (numTruePositive * numTrueNegative) - (numFalsePositive * numFalseNegative)
+    denominator = math.sqrt((numTruePositive + numFalsePositive) * 
+                        (numTruePositive + numFalseNegative) * 
+                        (numTrueNegative + numFalsePositive) * 
+                        (numTrueNegative + numFalseNegative))
+    if denominator == 0:
+        mcc = 0.0
+    else:
+        mcc = numerator / denominator
+
+    # setting the colors for printing
     GREEN = "\033[92m"
     RED = "\033[91m"
     RESET = "\033[0m"
 
+    # printing the results
     print("\n---------------RESULTS----------------")
     print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
-    print(f"{RED}Percentage of false positives: {(numFalsePositive/numberTests):.1%}{RESET}")
-    print(f"{RED}Percentage of false negatives: {(numFalseNegative/numberTests):.1%}{RESET}")
-    print(f"Percentage of other responses: {((numberTests - numFalsePositive - numFalseNegative - numCorrect)/numberTests):.1%}")
+    print(f"{RED}Percentage of wrong labels: {falsePositiveResult + falseNegativeResult:.1%}{RESET}")
+    print(f"Percentage of other responses: {otherResponsesResult:.1%}")
+    print("Other metrics:")
+    print(f"Precision (how accurate attack predictions are): {precision:.1%}")
+    print(f"Recall (what percentage of attacks it catches): {recall:.1%}")
+    print(f"F1 Score (combining precision and recall): {F1_score:.1%}")
+    print(f"Matthews Correlation Coefficient: {mcc:.4f}")
     print("--------------------------------------\n")
 
 
