@@ -283,7 +283,7 @@ def main():
     # calculating advanced metrics
     precision = numTruePositive / (numTruePositive + numFalsePositive) if (numTruePositive + numFalsePositive) > 0 else 0.0
     recall = numTruePositive / (numTruePositive + numFalseNegative) if (numTruePositive + numFalseNegative) > 0 else 0.0
-    F1_score = 2 * (precision * recall) / (precision + recall)
+    F1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
     # calculating matthews correlation coefficient
     numerator = (numTruePositive * numTrueNegative) - (numFalsePositive * numFalseNegative)
     denominator = math.sqrt((numTruePositive + numFalsePositive) * (numTruePositive + numFalseNegative) * (numTrueNegative + numFalsePositive) * (numTrueNegative + numFalseNegative))
@@ -299,14 +299,15 @@ def main():
 
     # printing the results
     print("\n---------------RESULTS----------------")
-    print(f"{GREEN}Percentage of correct  labels: {accuracy:.1%}{RESET}")
-    print(f"{RED}Percentage of wrong labels: {falsePositiveResult + falseNegativeResult:.1%}{RESET}")
-    print(f"Percentage of other responses: {otherResponsesResult:.1%}")
-    print(f"Precision (accuracy of attack predictions): {precision:.1%}")
-    print(f"Recall (percentage of attacks caught): {recall:.1%}")
-    print(f"F1 Score (combining precision and recall): {F1_score:.1%}")
-    print(f"Matthews Correlation Coefficient: {mcc:.4f}")
+    print(f"{GREEN}{'Percentage of correct labels:':<45} {accuracy:.1%}{RESET}")
+    print(f"{RED}{'Percentage of wrong labels:':<45} {falsePositiveResult + falseNegativeResult:.1%}{RESET}")
+    print(f"{'Percentage of other responses:':<45} {otherResponsesResult:.1%}")
+    print(f"{'Precision (accuracy of attack predictions):':<45} {precision:.1%}")
+    print(f"{'Recall (percentage of attacks caught):':<45} {recall:.1%}")
+    print(f"{'F1 Score (combining precision and recall):':<45} {F1_score:.1%}")
+    print(f"{'Matthews Correlation Coefficient:':<45} {mcc:.4f}")
     print("--------------------------------------\n")
+
 
 
 if __name__ == "__main__":
