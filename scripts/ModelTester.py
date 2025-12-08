@@ -253,7 +253,8 @@ def main():
     print("--------------------------------------")
 
     # ask if user wants automated testing
-    run_automated = input("\nRun automated model comparison on all installed models? (YES/NO): ").lower()
+    print("\n-------------AUTOMATION?--------------")
+    run_automated = input("Run automated model comparison on all installed models? (YES/NO): ").lower()
     
     if run_automated == "yes":
         from AutomatedTestingLoop import run_automated_tests
@@ -264,6 +265,8 @@ def main():
     # if not automated, continue with single model test
     printReasoning = input("Do you want to print models reasoning for selected label (YES/NO): ").upper()
     model = input("Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): ")
+    print("--------------------------------------")
+
 
     # running of the tests
     numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(

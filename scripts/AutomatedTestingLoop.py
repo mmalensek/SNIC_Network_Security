@@ -16,6 +16,8 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
     models = get_installed_models()
     
     print(f"Found {len(models)} installed models")
+    print("--------------------------------------")
+
     
     for model in models:
         print(f"\n{'='*100}")
