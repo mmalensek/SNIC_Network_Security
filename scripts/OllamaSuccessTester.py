@@ -281,15 +281,12 @@ def main():
     otherResponsesResult = (numberTests - numFalsePositive - numFalseNegative - numTruePositive - numTrueNegative)/numberTests
 
     # calculating advanced metrics
-    precision = numTruePositive / ( numTruePositive + numFalsePositive )
-    recall = numTruePositive / ( numTruePositive + numFalseNegative )
+    precision = numTruePositive / (numTruePositive + numFalsePositive) if (numTruePositive + numFalsePositive) > 0 else 0.0
+    recall = numTruePositive / (numTruePositive + numFalseNegative) if (numTruePositive + numFalseNegative) > 0 else 0.0
     F1_score = 2 * (precision * recall) / (precision + recall)
     # calculating matthews correlation coefficient
     numerator = (numTruePositive * numTrueNegative) - (numFalsePositive * numFalseNegative)
-    denominator = math.sqrt((numTruePositive + numFalsePositive) * 
-                        (numTruePositive + numFalseNegative) * 
-                        (numTrueNegative + numFalsePositive) * 
-                        (numTrueNegative + numFalseNegative))
+    denominator = math.sqrt((numTruePositive + numFalsePositive) * (numTruePositive + numFalseNegative) * (numTrueNegative + numFalsePositive) * (numTrueNegative + numFalseNegative))
     if denominator == 0:
         mcc = 0.0
     else:
