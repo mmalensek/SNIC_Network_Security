@@ -300,15 +300,10 @@ def main():
     else:
         mcc = numerator / denominator
 
-    # setting the colors for printing
-    GREEN = "\033[92m"
-    RED = "\033[91m"
-    RESET = "\033[0m"
-
     # printing the results
     print("\n---------------RESULTS----------------")
-    print(f"{GREEN}{'Percentage of correct labels:':<45} {accuracy:.1%}{RESET}")
-    print(f"{RED}{'Percentage of wrong labels:':<45} {falsePositiveResult + falseNegativeResult:.1%}{RESET}")
+    print(f"{'Percentage of correct labels:':<45} {accuracy:.1%}")
+    print(f"{'Percentage of wrong labels:':<45} {falsePositiveResult + falseNegativeResult:.1%}")
     print(f"{'Percentage of other responses:':<45} {otherResponsesResult:.1%}")
     print(f"{'Precision (accuracy of attack predictions):':<45} {precision:.1%}")
     print(f"{'Recall (percentage of attacks caught):':<45} {recall:.1%}")
