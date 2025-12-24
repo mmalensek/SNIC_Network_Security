@@ -1,3 +1,6 @@
+# RUNNING OF CODE:
+# python ModelTester.py 2>&1 | tee "logs/testing_$(date +%Y-%m-%d_%H-%M).txt"
+
 import csv
 import math
 import random
@@ -189,7 +192,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
                 elif ai_answer == "benign":
                     numFalseNegative += 1
 
-        # color output based on correctness
+        # color output based on result
         if is_correct:
             # green
             color = "\033[92m"   
@@ -197,6 +200,10 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         else:
             # red
             color = "\033[91m"
+            status = "✘"
+
+        if len(ai_answer) > 6:
+            color = "\033[0m"
             status = "✘"
 
         reset = "\033[0m"
