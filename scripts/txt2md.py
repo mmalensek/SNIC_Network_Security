@@ -15,9 +15,9 @@ def strip_ansi(text):
 
 
 def remove_input_section(text):
-    # remove the entire INPUT section from the log
+    # remove INPUT section + following empty/whitespace-only lines
     return re.sub(
-        r'-{10,}INPUT-{10,}.*?-{10,}\n',
+        r'-{10,}INPUT-{10,}.*?-{10,}\s*',
         '',
         text,
         flags=re.DOTALL
@@ -34,44 +34,8 @@ def process_file(input_file, output_file):
     # remove INPUT section
     clean_text = remove_input_section(clean_text)
 
-    markdown_content = clean_text
-
-    """
-    # convert test results
-    markdown_content = re.sub(
-        r'Test #(\d+):.*?✔',
-        r'**Test #\1: ✔**',
-        markdown_content
-    )
-    markdown_content = re.sub(
-        r'Test #(\d+):.*?✘',
-        r'*Test #\1: ✘*',
-        markdown_content
-    )
-
-    # convert section headers to Markdown headers
-    markdown_content = re.sub(
-        r'^-{10,}\s*(.*?)\s*-{10,}',
-        r'### \1',
-        markdown_content,
-        flags=re.MULTILINE
-    )
-
-    # highlight result percentages
-    markdown_content = re.sub(
-        r'Percentage of correct labels:\s*(\d+\.?\d*)%',
-        r'**✅ Correct: \1%**',
-        markdown_content
-    )
-    markdown_content = re.sub(
-        r'Percentage of wrong labels:\s*(\d+\.?\d*)%',
-        r'**❌ Wrong: \1%**',
-        markdown_content
-    )
-    """
-
     with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(markdown_content)
+        f.write(clean_text)
 
     print(f"Clean Markdown saved: {output_file}")
 
