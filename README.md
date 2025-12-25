@@ -1,13 +1,16 @@
 # Smart Network Interface Cards for in-network AI Network Security
-
 In this explorative diploma thesis I am investigating the capabilities of **Smart NIC's**, their integration with the hosting server, and the SDKs used for controlling the cards.
-
 I am also implementing a case study of in-network computation harnessing the GPU of the **A30X**, in this case the computation involves machine learning-based **network traffic filtering**.
 
-To run the code, _first_ make sure to make **run_test.sh** an executable (with _"chmod +x run_test.sh"_) and then simply run **"./run_test.sh"**.
+## Running of the code
+To run the code, _first_ make sure to make "run_test.sh" an executable (with **"chmod +x run_test.sh"**) and secondly simply run **"./run_test.sh"**.
 
-**Keywords**: Computer networks, Software-defined networking, GPUs, Machine learning, Network Security.
 
-**Acknowledgements**: Mentor izr. prof. dr. Veljko Pejović and asist. Miha Grohar
+## Keywords
+Computer networks, Software-defined networking, GPUs, Machine learning, Network Security.
 
-**Author**: [@mmalensek](https://github.com/mmalensek)
+## Acknowledgements 
+Mentor izr. prof. dr. Veljko Pejović and asist. Miha Grohar
+
+## Author
+[@mmalensek](https://github.com/mmalensek)
