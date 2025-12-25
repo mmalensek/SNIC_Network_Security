@@ -262,6 +262,12 @@ def main():
     print("Unique label values:", label_values)
     print("Number of rows in the dataset:", datasetHeight)
     print(f"Percentage of flows labeled BENIGN: {benignPercentage:.2f}%")    
+    print("Dataset name:", filename)
+    print("Dataset type:", datasetType)
+    print("Shot example type:", shots)
+    print("Number of tests:", numberTests)
+    print("Window size:", windowSize)
+    print("Set seed:", seed)
     print("--------------------------------------")
 
     # ask if user wants automated testing

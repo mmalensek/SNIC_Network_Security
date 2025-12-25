@@ -14,4 +14,4 @@ python ModelTester.py 2>&1 | tee "logs/testing_${ts}.txt"
 echo "Converting log to markdown..."
 python txt2md.py "logs/testing_${ts}.txt"
 
-echo "Done! Check logs/testing_${ts}.txt and its .md version."[web:26][web:31]
+echo "Done! Check logs/testing_${ts}.md
