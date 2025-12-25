@@ -1,0 +1,916 @@
+
+---------------INPUT------------------
+Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'DDoS']
+Number of rows in the dataset: 225746
+Percentage of flows labeled BENIGN: 43.29%
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Starting automated testing loop...
+Found 8 installed models
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:8b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1964: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4152: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4153: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4154: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4568: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4570: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4571: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8077: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #8078: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #8079: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8080: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9156: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9158: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #22003: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22004: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22005: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #22006: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #23761: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #23762: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #23763: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #23764: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #25800: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25801: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25802: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #25803: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30631: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #30632: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30633: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #30634: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #62078: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #62079: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62080: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[92mTest #62081: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #90725: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #90726: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90727: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #92965: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #92966: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #92967: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92968: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #115535: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #115536: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #115537: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #115538: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #121516: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #121517: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #121518: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121519: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #126942: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126944: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #126945: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #152628: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #152629: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #152630: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[91mTest #161432: Correct label = ddos, Predicted label = : ✘[0m
+[92mTest #161433: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #161434: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #161435: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #163389: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163390: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #163391: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #163392: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #169952: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[92mTest #169953: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #169954: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #169955: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176047: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #181691: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #200928: Correct label = benign, Predicted label = ddos: ✘[0m
+[0mTest #200929: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #200930: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #200931: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203994: Correct label = benign, Predicted label = : ✘[0m
+[92mTest #206772: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206773: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206774: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206775: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211551: Correct label = benign, Predicted label = : ✘[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211553: Correct label = benign, Predicted label = ddos: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:270m
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1965: Correct label = benign, Predicted label = "benign": ✘[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4152: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4153: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #4154: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[92mTest #4155: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #4568: Correct label = benign, Predicted label = benei: ✘[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #4570: Correct label = benign, Predicted label = : ✘[0m
+[0mTest #4571: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[91mTest #8077: Correct label = benign, Predicted label = : ✘[0m
+[0mTest #8078: Correct label = benign, Predicted label = okay, i've analyzed ...: ✘[0m
+[0mTest #8079: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #8080: Correct label = benign, Predicted label = "benign": ✘[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22003: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #22004: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #22005: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #22006: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #23761: Correct label = ddos, Predicted label = the network record d...: ✘[0m
+[91mTest #23762: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23763: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23764: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25800: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #25801: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[91mTest #25802: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #25803: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #30631: Correct label = ddos, Predicted label = yes, the traffic is ...: ✘[0m
+[0mTest #30632: Correct label = ddos, Predicted label = "benign": ✘[0m
+[91mTest #30633: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62078: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62079: Correct label = ddos, Predicted label = "benign": ✘[0m
+[91mTest #62080: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62081: Correct label = ddos, Predicted label = yes, this is a traff...: ✘[0m
+[91mTest #90725: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90726: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #90727: Correct label = ddos, Predicted label = "benign": ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92965: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #92966: Correct label = ddos, Predicted label = the network record d...: ✘[0m
+[91mTest #92967: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #92968: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #115535: Correct label = ddos, Predicted label = the traffic is likel...: ✘[0m
+[0mTest #115536: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[91mTest #115537: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #115538: Correct label = ddos, Predicted label = yes, this is a traff...: ✘[0m
+[0mTest #121516: Correct label = benign, Predicted label = response: ✘[0m
+[0mTest #121517: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #121518: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #121519: Correct label = benign, Predicted label = yes, the network rec...: ✘[0m
+[0mTest #126942: Correct label = ddos, Predicted label = "benign": ✘[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #126944: Correct label = ddos, Predicted label = yes, the traffic is ...: ✘[0m
+[91mTest #126945: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #152628: Correct label = ddos, Predicted label = yes, this traffic is...: ✘[0m
+[0mTest #152629: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #152630: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #161432: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #161433: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #161434: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #161435: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #163389: Correct label = ddos, Predicted label = "benign": ✘[0m
+[91mTest #163390: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163391: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163392: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #169952: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #169953: Correct label = ddos, Predicted label = "benign": ✘[0m
+[0mTest #169954: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[91mTest #169955: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #176046: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #176047: Correct label = benign, Predicted label = the network record d...: ✘[0m
+[0mTest #176048: Correct label = benign, Predicted label = yes, this traffic is...: ✘[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #181688: Correct label = ddos, Predicted label = the traffic is malic...: ✘[0m
+[91mTest #181689: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = ddos, Predicted label = : ✘[0m
+[91mTest #181691: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #200928: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #200929: Correct label = benign, Predicted label = yes, this traffic is...: ✘[0m
+[0mTest #200930: Correct label = benign, Predicted label = yes, this is a traff...: ✘[0m
+[0mTest #200931: Correct label = benign, Predicted label = the network record d...: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203992: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #206772: Correct label = benign, Predicted label = the traffic is malic...: ✘[0m
+[0mTest #206773: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #206774: Correct label = benign, Predicted label = yes, the traffic is ...: ✘[0m
+[0mTest #206775: Correct label = benign, Predicted label = "benign": ✘[0m
+[0mTest #211550: Correct label = benign, Predicted label = "benign": ✘[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: phi3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[0mTest #1963: Correct label = benign, Predicted label = without context such...: ✘[0m
+[0mTest #1964: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[0mTest #1965: Correct label = benign, Predicted label = as an ai developed b...: ✘[0m
+[0mTest #1966: Correct label = benign, Predicted label = as an ai model devel...: ✘[0m
+[0mTest #4152: Correct label = benign, Predicted label = to determine whether...: ✘[0m
+[0mTest #4153: Correct label = benign, Predicted label = i cannot directly an...: ✘[0m
+[0mTest #4154: Correct label = benign, Predicted label = this record indicate...: ✘[0m
+[0mTest #4155: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #4568: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[0mTest #4569: Correct label = benign, Predicted label = given the data provi...: ✘[0m
+[0mTest #4570: Correct label = benign, Predicted label = this record does not...: ✘[0m
+[0mTest #4571: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[0mTest #8077: Correct label = benign, Predicted label = without more context...: ✘[0m
+[0mTest #8078: Correct label = benign, Predicted label = given the limited in...: ✘[0m
+[0mTest #8079: Correct label = benign, Predicted label = to determine whether...: ✘[0m
+[0mTest #8080: Correct label = benign, Predicted label = given the data provi...: ✘[0m
+[0mTest #9155: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #9156: Correct label = benign, Predicted label = given the provided n...: ✘[0m
+[0mTest #9157: Correct label = benign, Predicted label = since the provided p...: ✘[0m
+[0mTest #9158: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #22003: Correct label = benign, Predicted label = as an ai language mo...: ✘[0m
+[0mTest #22004: Correct label = benign, Predicted label = to determine whether...: ✘[0m
+[0mTest #22005: Correct label = benign, Predicted label = benign
+
+
+explangy: t...: ✘[0m
+[0mTest #22006: Correct label = benign, Predicted label = without further cont...: ✘[0m
+[0mTest #23761: Correct label = ddos, Predicted label = benign
+
+
+i made the ...: ✘[0m
+[0mTest #23762: Correct label = ddos, Predicted label = without further cont...: ✘[0m
+[0mTest #23763: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[0mTest #23764: Correct label = ddos, Predicted label = to determine whether...: ✘[0m
+[0mTest #25800: Correct label = ddos, Predicted label = given the details pr...: ✘[0m
+[0mTest #25801: Correct label = ddos, Predicted label = to determine whether...: ✘[0m
+[0mTest #25802: Correct label = ddos, Predicted label = this network record ...: ✘[0m
+[0mTest #25803: Correct label = ddos, Predicted label = to determine whether...: ✘[0m
+[0mTest #30631: Correct label = ddos, Predicted label = given the informatio...: ✘[0m
+[0mTest #30632: Correct label = ddos, Predicted label = to determine if the ...: ✘[0m
+[0mTest #30633: Correct label = ddos, Predicted label = without additional c...: ✘[0m
+[91mTest #30634: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62078: Correct label = ddos, Predicted label = given the network re...: ✘[0m
+[0mTest #62079: Correct label = ddos, Predicted label = to assess whether th...: ✘[0m
+[0mTest #62080: Correct label = ddos, Predicted label = answer: benign...: ✘[0m
+[0mTest #62081: Correct label = ddos, Predicted label = given the provided n...: ✘[0m
+[0mTest #90725: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[0mTest #90726: Correct label = ddos, Predicted label = the network record p...: ✘[0m
+[0mTest #90727: Correct label = ddos, Predicted label = without conducting a...: ✘[0m
+[0mTest #90728: Correct label = ddos, Predicted label = the network record d...: ✘[0m
+[0mTest #92965: Correct label = ddos, Predicted label = without additional c...: ✘[0m
+[0mTest #92966: Correct label = ddos, Predicted label = benign
+
+
+**note: giv...: ✘[0m
+[0mTest #92967: Correct label = ddos, Predicted label = without access to re...: ✘[0m
+[0mTest #92968: Correct label = ddos, Predicted label = without more context...: ✘[0m
+[0mTest #115535: Correct label = ddos, Predicted label = without conducting a...: ✘[0m
+[0mTest #115536: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[0mTest #115537: Correct label = ddos, Predicted label = benign. the provided...: ✘[0m
+[0mTest #115538: Correct label = ddos, Predicted label = given the provided n...: ✘[0m
+[0mTest #121516: Correct label = benign, Predicted label = as an ai developed b...: ✘[0m
+[0mTest #121517: Correct label = benign, Predicted label = this record indicate...: ✘[0m
+[0mTest #121518: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[0mTest #121519: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[0mTest #126942: Correct label = ddos, Predicted label = this record suggests...: ✘[0m
+[0mTest #126943: Correct label = ddos, Predicted label = to determine whether...: ✘[0m
+[0mTest #126944: Correct label = ddos, Predicted label = to accurately assess...: ✘[0m
+[0mTest #126945: Correct label = ddos, Predicted label = this provided data d...: ✘[0m
+[0mTest #152627: Correct label = ddos, Predicted label = it's not possible to...: ✘[0m
+[0mTest #152628: Correct label = ddos, Predicted label = without additional c...: ✘[0m
+[0mTest #152629: Correct label = ddos, Predicted label = the provided network...: ✘[0m
+[0mTest #152630: Correct label = ddos, Predicted label = as an ai model, i do...: ✘[0m
+[0mTest #161432: Correct label = ddos, Predicted label = to determine if the ...: ✘[0m
+[0mTest #161433: Correct label = ddos, Predicted label = this network record ...: ✘[0m
+[0mTest #161434: Correct label = ddos, Predicted label = without additional c...: ✘[0m
+[0mTest #161435: Correct label = ddos, Predicted label = without additional c...: ✘[0m
+[0mTest #163389: Correct label = ddos, Predicted label = without access to th...: ✘[0m
+[0mTest #163390: Correct label = ddos, Predicted label = to accurately determ...: ✘[0m
+[0mTest #163391: Correct label = ddos, Predicted label = given the network re...: ✘[0m
+[0mTest #163392: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #169952: Correct label = ddos, Predicted label = given the informatio...: ✘[0m
+[0mTest #169953: Correct label = ddos, Predicted label = to determine whether...: ✘[0m
+[0mTest #169954: Correct label = ddos, Predicted label = benign
+
+
+the provide...: ✘[0m
+[0mTest #169955: Correct label = ddos, Predicted label = it's difficult to ca...: ✘[0m
+[0mTest #176046: Correct label = benign, Predicted label = this record details ...: ✘[0m
+[0mTest #176047: Correct label = benign, Predicted label = the provided network...: ✘[0m
+[0mTest #176048: Correct label = benign, Predicted label = without conducting a...: ✘[0m
+[0mTest #176049: Correct label = benign, Predicted label = the information prov...: ✘[0m
+[0mTest #181688: Correct label = ddos, Predicted label = since the network re...: ✘[0m
+[0mTest #181689: Correct label = ddos, Predicted label = given the network re...: ✘[0m
+[0mTest #181690: Correct label = ddos, Predicted label = given the provided i...: ✘[0m
+[0mTest #181691: Correct label = ddos, Predicted label = the provided network...: ✘[0m
+[0mTest #200928: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[92mTest #200929: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #200930: Correct label = benign, Predicted label = since the provided i...: ✘[0m
+[92mTest #200931: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203991: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #203992: Correct label = benign, Predicted label = given the network re...: ✘[0m
+[0mTest #203993: Correct label = benign, Predicted label = given the network re...: ✘[0m
+[0mTest #203994: Correct label = benign, Predicted label = without additional c...: ✘[0m
+[0mTest #206772: Correct label = benign, Predicted label = ddos
+
+this record su...: ✘[0m
+[0mTest #206773: Correct label = benign, Predicted label = given the provided n...: ✘[0m
+[0mTest #206774: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[0mTest #206775: Correct label = benign, Predicted label = benign
+
+
+the provide...: ✘[0m
+[0mTest #211550: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #211551: Correct label = benign, Predicted label = to determine if the ...: ✘[0m
+[0mTest #211552: Correct label = benign, Predicted label = benign
+
+
+given netwo...: ✘[0m
+[0mTest #211553: Correct label = benign, Predicted label = given the data provi...: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: mistral:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[0mTest #1963: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1964: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1965: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1966: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4152: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4153: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4154: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4155: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4568: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4569: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4570: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #4571: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #8077: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #8078: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #8079: Correct label = benign, Predicted label = analyzing network re...: ✘[0m
+[0mTest #8080: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9155: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9156: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9157: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9158: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #22003: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #22004: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #22005: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #22006: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #23761: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #23762: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #23763: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #23764: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #25800: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #25801: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #25802: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #25803: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #30631: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #30632: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #30633: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #30634: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #62078: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #62079: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #62080: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #62081: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #90725: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #90726: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #90727: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #90728: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #92965: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #92966: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #92967: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #92968: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #115535: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #115536: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #115537: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #115538: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #121516: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #121517: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #121518: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #121519: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #126942: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #126943: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #126944: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #126945: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #152627: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #152628: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #152629: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #152630: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #161432: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #161433: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #161434: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #161435: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #163389: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #163390: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #163391: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #163392: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #169952: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #169953: Correct label = ddos, Predicted label = analyzing network tr...: ✘[0m
+[0mTest #169954: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #169955: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #176046: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176047: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176048: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176049: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #181688: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #181689: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #181690: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #181691: Correct label = ddos, Predicted label = based on the provide...: ✘[0m
+[0mTest #200928: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #200929: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #200930: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #200931: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #203991: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #203992: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #203993: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #203994: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #206772: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #206773: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #206774: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #206775: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211550: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211551: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211552: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211553: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: dolphin3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[0mTest #1963: Correct label = benign, Predicted label = the provided network...: ✘[0m
+[0mTest #1964: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #4152: Correct label = benign, Predicted label = this is a benign net...: ✘[0m
+[92mTest #4153: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #4154: Correct label = benign, Predicted label = this traffic appears...: ✘[0m
+[92mTest #4155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4568: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #4570: Correct label = benign, Predicted label = the network record d...: ✘[0m
+[0mTest #4571: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[92mTest #8077: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #8078: Correct label = benign, Predicted label = the traffic record y...: ✘[0m
+[0mTest #8079: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[92mTest #8080: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9156: Correct label = benign, Predicted label = this traffic is beni...: ✘[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9158: Correct label = benign, Predicted label = the given network re...: ✘[0m
+[92mTest #22003: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22004: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22005: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #22006: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[91mTest #23761: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23762: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #23763: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[0mTest #23764: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[91mTest #25800: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #25801: Correct label = ddos, Predicted label = this traffic appears...: ✘[0m
+[91mTest #25802: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25803: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30631: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #30632: Correct label = ddos, Predicted label = this traffic is beni...: ✘[0m
+[91mTest #30633: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62078: Correct label = ddos, Predicted label = this traffic is beni...: ✘[0m
+[91mTest #62079: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62080: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62081: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #90725: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[91mTest #90726: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90727: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #92965: Correct label = ddos, Predicted label = this traffic is beni...: ✘[0m
+[91mTest #92966: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92967: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #92968: Correct label = ddos, Predicted label = this traffic is beni...: ✘[0m
+[91mTest #115535: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115536: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #121516: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #121517: Correct label = benign, Predicted label = the given network re...: ✘[0m
+[0mTest #121518: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[92mTest #121519: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #126942: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126944: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #126945: Correct label = ddos, Predicted label = this network record ...: ✘[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152630: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #161432: Correct label = ddos, Predicted label = the provided network...: ✘[0m
+[91mTest #161433: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161434: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161435: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163389: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #163390: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[0mTest #163391: Correct label = ddos, Predicted label = this traffic does no...: ✘[0m
+[91mTest #163392: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #169952: Correct label = ddos, Predicted label = this traffic is beni...: ✘[0m
+[91mTest #169953: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #169954: Correct label = ddos, Predicted label = this traffic does no...: ✘[0m
+[91mTest #169955: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176048: Correct label = benign, Predicted label = this traffic appears...: ✘[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #181690: Correct label = ddos, Predicted label = the given network re...: ✘[0m
+[91mTest #181691: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #200928: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #200929: Correct label = benign, Predicted label = this traffic is beni...: ✘[0m
+[92mTest #200930: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #200931: Correct label = benign, Predicted label = this network record ...: ✘[0m
+[0mTest #203991: Correct label = benign, Predicted label = the given network re...: ✘[0m
+[0mTest #203992: Correct label = benign, Predicted label = this is a benign net...: ✘[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206772: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206773: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206774: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206775: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #211550: Correct label = benign, Predicted label = the given network re...: ✘[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:32b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4152: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4153: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4154: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4568: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4570: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #4571: Correct label = benign, Predicted label = the network record s...: ✘[0m
+[92mTest #8077: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #8078: Correct label = benign, Predicted label = the network traffic ...: ✘[0m
+[92mTest #8079: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #8080: Correct label = benign, Predicted label = the network traffic ...: ✘[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22003: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22004: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22005: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22006: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #23761: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23762: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23763: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #23764: Correct label = ddos, Predicted label = ddos: ✔[0m
+[0mTest #25800: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[0mTest #25801: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[0mTest #25802: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[91mTest #25803: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #30631: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #30632: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30633: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62078: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #62079: Correct label = ddos, Predicted label = the analysis of the ...: ✘[0m
+[91mTest #62080: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62081: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90725: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90726: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90727: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92965: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92966: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92967: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #92968: Correct label = ddos, Predicted label = ddos: ✔[0m
+[0mTest #115535: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[91mTest #115536: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #121516: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121517: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121518: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121519: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #126942: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126944: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126945: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152630: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #161432: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[0mTest #161433: Correct label = ddos, Predicted label = the analysis of the ...: ✘[0m
+[91mTest #161434: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #161435: Correct label = ddos, Predicted label = the analysis of the ...: ✘[0m
+[91mTest #163389: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #163390: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[91mTest #163391: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163392: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #169952: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #169953: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #169954: Correct label = ddos, Predicted label = benign: ✘[0m
+[0mTest #169955: Correct label = ddos, Predicted label = the network traffic ...: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #181688: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #181689: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181691: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #200928: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #200929: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #200930: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #200931: Correct label = benign, Predicted label = the network traffic ...: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206772: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206773: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #206774: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #206775: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211551: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gpt-oss:20b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1964: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4152: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4153: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #4154: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #4155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4568: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4570: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4571: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8077: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8078: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8079: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #8080: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22003: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22004: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22005: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #22006: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #23761: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #23762: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #23763: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #23764: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25800: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25801: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25802: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #25803: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #30631: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30632: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30633: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #30634: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62078: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #62079: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #62080: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #62081: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90725: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90726: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90727: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92965: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #92966: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #92967: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #92968: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #115535: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #115536: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #121516: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121517: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121518: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #121519: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #126942: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126944: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #126945: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152630: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161432: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161433: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161434: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #161435: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163389: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163390: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163391: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #163392: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #169952: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #169953: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #169954: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #169955: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #181691: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #200928: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #200929: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #200930: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #200931: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206772: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206773: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206774: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #206775: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211552: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:1b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1965: Correct label = benign, Predicted label = cannot determine if ...: ✘[0m
+[91mTest #1966: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #4152: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #4153: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #4154: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #4155: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #4568: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #4569: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #4570: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #4571: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #8077: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #8078: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #8079: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #8080: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #9155: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #9156: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #9157: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #9158: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #22003: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #22004: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #22005: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #22006: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #23761: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #23762: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #23763: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #23764: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #25800: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #25801: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #25802: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #25803: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30631: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30632: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30633: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #30634: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #62078: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #62079: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #62080: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #62081: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #90725: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #90726: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #90727: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #90728: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #92965: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #92966: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #92967: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #92968: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #115535: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #115536: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #115537: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #115538: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #121516: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #121517: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #121518: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #121519: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #126942: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #126943: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #126944: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #126945: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #152628: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #152629: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #152630: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #161432: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #161433: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #161434: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #161435: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #163389: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #163390: Correct label = ddos, Predicted label = benign: ✘[0m
+[92mTest #163391: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #163392: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #169952: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #169953: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #169954: Correct label = ddos, Predicted label = ddos: ✔[0m
+[92mTest #169955: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #176046: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #176047: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #176048: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #176049: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #181688: Correct label = ddos, Predicted label = ddos: ✔[0m
+[0mTest #181689: Correct label = ddos, Predicted label = cannot determine....: ✘[0m
+[92mTest #181690: Correct label = ddos, Predicted label = ddos: ✔[0m
+[91mTest #181691: Correct label = ddos, Predicted label = benign: ✘[0m
+[91mTest #200928: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #200929: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #200930: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #200931: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #203991: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #203992: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #203993: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #206772: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #206773: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #206774: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #206775: Correct label = benign, Predicted label = ddos: ✘[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211551: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #211552: Correct label = benign, Predicted label = ddos: ✘[0m
+[91mTest #211553: Correct label = benign, Predicted label = ddos: ✘[0m
+--------------------------------------
+
+====================================================================================================
+MODEL COMPARISON RESULTS - SORTED BY F1 SCORE
+====================================================================================================
+Model                     Accuracy     Precision    Recall       F1 Score     MCC       
+----------------------------------------------------------------------------------------------------
+gemma3:1b                 48.0%        50.6%        82.4%        62.7%        -0.0677   
+deepseek-r1:8b            54.0%        65.5%        39.6%        49.4%        0.1873    
+gpt-oss:20b               53.0%        69.2%        17.3%        27.7%        0.1333    
+deepseek-r1:32b           46.0%        62.5%        11.9%        20.0%        0.0875    
+gemma3:270m               20.0%        0.0%         0.0%         0.0%         0.0000    
+phi3:latest               2.0%         0.0%         0.0%         0.0%         0.0000    
+mistral:latest            0.0%         0.0%         0.0%         0.0%         0.0000    
+dolphin3:latest           29.0%        0.0%         0.0%         0.0%         0.0000    
+
+====================================================================================================
+BEST MODEL DETAILS
+====================================================================================================
+Model:                                        gemma3:1b
+Accuracy:                                     48.0%
+Precision:                                    50.6%
+Recall:                                       82.4%
+F1 Score:                                     62.7%
+MCC:                                          -0.0677
+Confusion Matrix:                             TP=42, TN=6, FP=41, FN=9
+====================================================================================================
