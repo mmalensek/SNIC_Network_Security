@@ -4,6 +4,8 @@ In this explorative diploma thesis I am investigating the capabilities of **Smar
 
 I am also implementing a case study of in-network computation harnessing the GPU of the **A30X**, in this case the computation involves machine learning-based **network traffic filtering**.
 
+To run the code, _first_ make sure to make **run_test.sh** an executable (with _"chmod +x run_test.sh"_) and then simply run **"./run_test.sh"**.
+
 **Keywords**: Computer networks, Software-defined networking, GPUs, Machine learning, Network Security.
 
 **Acknowledgements**: Mentor izr. prof. dr. Veljko Pejović and asist. Miha Grohar
