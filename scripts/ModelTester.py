@@ -1,5 +1,10 @@
-# RUNNING OF CODE:
-# python ModelTester.py 2>&1 | tee "logs/testing_$(date +%Y-%m-%d_%H-%M).txt"
+#!/usr/bin/env python3
+
+
+# Runner of network intrusion tests with Ollama
+# Run: python ModelTester.py 2>&1 | tee "logs/testing_$(date +%Y-%m-%d_%H-%M).txt"
+# Output: terminal output and with the bash command ".txt" file
+
 
 import csv
 import math
@@ -232,7 +237,7 @@ def main():
 
     print("\n---------------INPUT------------------")
     # get basic inputs
-    filename = input("Enter the datset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
+    filename = input("Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
     datasetType = input("Enter the dataset type (DDOS, WEB ATTACK, ...): ").upper()
     shots = input("Enter the shot example type (ZERO-SHOT, FEW-SHOT): ").upper()
     
