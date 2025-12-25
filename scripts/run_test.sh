@@ -8,7 +8,7 @@ ts="$(date +%Y-%m-%d_%H-%M)"
 
 # Run ModelTester with logging
 echo "Running ModelTester.py..."
-python ModelTester.py 2>&1 | tee "logs/testing_${ts}.txt"
+python -u ModelTester.py 2>&1 | tee "logs/testing_${ts}.txt"
 
 # Run txt2md on the generated log file
 echo "Converting log to markdown..."
