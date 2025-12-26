@@ -1,0 +1,8 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Traceback (most recent call last):
+  File "/home/ubuntu/martinmalensek_diploma/SNIC_Network_Security/scripts/ModelTester.py", line 328, in <module>
+    main()
+  File "/home/ubuntu/martinmalensek_diploma/SNIC_Network_Security/scripts/ModelTester.py", line 240, in main
+    filename = input("Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): ")
+OSError: [Errno 9] Bad file descriptor
