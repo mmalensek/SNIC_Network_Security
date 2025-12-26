@@ -16,9 +16,9 @@ from ollama import chat
 def create_prompt(record, type):
     # for now you have to manually set and enter the prompt
     if(type == "TEST DDOS"):
-        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer "BENIGN" or "DDoS"."""
+        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     if(type == "START DDOS ZERO-SHOT"):
-        prompt = """You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a DDoS attack. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent DDoS attacks. 
+        prompt = """You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a DDoS attack. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent DDoS attacks. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words. 
                     Here are the columns: 
                     Flow ID	Source IP	Source Port	Destination IP	Destination Port	Protocol	Timestamp	Flow Duration	Total Fwd Packets	Total Backward Packets	Total Length of Fwd Packets	Total Length of Bwd Packets	Fwd Packet Length Max	Fwd Packet Length Min	Fwd Packet Length Mean	Fwd Packet Length Std	Bwd Packet Length Max	Bwd Packet Length Min	Bwd Packet Length Mean	Bwd Packet Length Std	Flow Bytes/s	Flow Packets/s	Flow IAT Mean	Flow IAT Std	Flow IAT Max	Flow IAT Min	Fwd IAT Total	Fwd IAT Mean	Fwd IAT Std	Fwd IAT Max	Fwd IAT Min	Bwd IAT Total	Bwd IAT Mean	Bwd IAT Std	Bwd IAT Max	Bwd IAT Min	Fwd PSH Flags	Bwd PSH Flags	Fwd URG Flags	Bwd URG Flags	Fwd Header Length	Bwd Header Length	Fwd Packets/s	Bwd Packets/s	Min Packet Length	Max Packet Length	Packet Length Mean	Packet Length Std	Packet Length Variance	FIN Flag Count	SYN Flag Count	RST Flag Count	PSH Flag Count	ACK Flag Count	URG Flag Count	CWE Flag Count	ECE Flag Count	Down/Up Ratio	Average Packet Size	Avg Fwd Segment Size	Avg Bwd Segment Size	Fwd Header Length	Fwd Avg Bytes/Bulk	Fwd Avg Packets/Bulk	Fwd Avg Bulk Rate	Bwd Avg Bytes/Bulk	Bwd Avg Packets/Bulk	Bwd Avg Bulk Rate	Subflow Fwd Packets	Subflow Fwd Bytes	Subflow Bwd Packets	Subflow Bwd Bytes	Init_Win_bytes_forward	Init_Win_bytes_backward	act_data_pkt_fwd	min_seg_size_forward	Active Mean	Active Std	Active Max	Active Min	Idle Mean	Idle Std	Idle Max	Idle Min	Label
                     Next I am going to include non-labeled traffic and you are to determine what kind of traffic it is. Answer ONLY with either “BENIGN” or “DDoS”."""
@@ -39,15 +39,15 @@ Below are examples of DDoS attack flows:
 172.16.0.1-192.168.10.50-57094-80-6	172.16.0.1	57094	192.168.10.50	80	6	7/7/2017 3:59	74333316	9	5	62	11601	20	0	6.888888889	5.30199124	8760	0	2320.2	3668.897	156.9013819	0.188340851	5717947.385	18900000	68500000	1	73100000	9141746.25	24000000	68500000	1	1214301	303575.25	596675.3272	1198526	180	0	0	0	0	192	112	0.121076261	0.06726459	0	8760	777.9333333	2262.786603	5120203.21	0	0	0	0	1	0	0	0	0	833.5	6.888888889	2320.2	192	0	0	0	0	0	0	9	62	5	11601	256	229	7	20	4649910	0	4649910	4649910	68500000	0	68500000	68500000	DDoS
 172.16.0.1-192.168.10.50-57095-80-6	172.16.0.1	57095	192.168.10.50	80	6	7/7/2017 3:59	1488477	3	5	26	11607	20	0	8.666666667	10.26320288	8760	0	2321.4	3802.315321	7815.371013	5.374621173	212639.5714	562169.023	1487519	1	718	359	325.2691193	589	129	1488476	372119	743600.0732	1487519	2	0	0	0	0	72	112	2.01548294	3.359138233	0	8760	1292.555556	2952.520834	8717379.278	0	0	0	1	0	0	0	0	1	1454.125	8.666666667	2321.4	72	0	0	0	0	0	0	3	26	5	11607	8192	229	2	20	0	0	0	0	0	0	0	0	DDoS
 
-Please analyze these features and learn to distinguish benign network flows from DDoS attack flows based on patterns in the data and your knowledge. Next I am going to include non-labeled traffic and you are to determine, what kind of traffic it is. Answer ONLY with either “BENIGN” or “DDoS”."""
+Please analyze these features and learn to distinguish benign network flows from DDoS attack flows based on patterns in the data and your knowledge. Next I am going to include non-labeled traffic and you are to determine, what kind of traffic it is. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     
     if(type == "TEST WEB ATTACK"):
-        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer "BENIGN" or "WEB ATTACK"."""
+        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     if(type == "START WEB ATTACK ZERO-SHOT"):
         prompt = f"""You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a web attack, like XSS, SQL injection or Brute Force. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent web attacks. 
 Here are the columns: 
 Flow ID	Source IP	Source Port	Destination IP	Destination Port	Protocol	Timestamp	Flow Duration	Total Fwd Packets	Total Backward Packets	Total Length of Fwd Packets	Total Length of Bwd Packets	Fwd Packet Length Max	Fwd Packet Length Min	Fwd Packet Length Mean	Fwd Packet Length Std	Bwd Packet Length Max	Bwd Packet Length Min	Bwd Packet Length Mean	Bwd Packet Length Std	Flow Bytes/s	Flow Packets/s	Flow IAT Mean	Flow IAT Std	Flow IAT Max	Flow IAT Min	Fwd IAT Total	Fwd IAT Mean	Fwd IAT Std	Fwd IAT Max	Fwd IAT Min	Bwd IAT Total	Bwd IAT Mean	Bwd IAT Std	Bwd IAT Max	Bwd IAT Min	Fwd PSH Flags	Bwd PSH Flags	Fwd URG Flags	Bwd URG Flags	Fwd Header Length	Bwd Header Length	Fwd Packets/s	Bwd Packets/s	Min Packet Length	Max Packet Length	Packet Length Mean	Packet Length Std	Packet Length Variance	FIN Flag Count	SYN Flag Count	RST Flag Count	PSH Flag Count	ACK Flag Count	URG Flag Count	CWE Flag Count	ECE Flag Count	Down/Up Ratio	Average Packet Size	Avg Fwd Segment Size	Avg Bwd Segment Size	Fwd Header Length	Fwd Avg Bytes/Bulk	Fwd Avg Packets/Bulk	Fwd Avg Bulk Rate	Bwd Avg Bytes/Bulk	Bwd Avg Packets/Bulk	Bwd Avg Bulk Rate	Subflow Fwd Packets	Subflow Fwd Bytes	Subflow Bwd Packets	Subflow Bwd Bytes	Init_Win_bytes_forward	Init_Win_bytes_backward	act_data_pkt_fwd	min_seg_size_forward	Active Mean	Active Std	Active Max	Active Min	Idle Mean	Idle Std	Idle Max	Idle Min	Label
-Next I am going to include non-labeled traffic and you are to determine what kind of traffic it is. Answer ONLY with either “BENIGN” or “WEB ATTACK”."""
+Next I am going to include non-labeled traffic and you are to determine what kind of traffic it is. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     if(type == "START WEB ATTACK FEW-SHOT"):
         prompt = f"""You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a web attack, like XSS, SQL injection or Brute Force. Here is network traffic flow data. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent web attacks. 
 
@@ -69,7 +69,7 @@ Below are examples of benign flows:
 192.168.10.12-52.207.6.164-45304-443-6	192.168.10.12	45304	52.207.6.164	443	6	6/7/2017 12:14	5214869	10	7	351	5392	194	0	35.1	68.43723808	1448	0	770.2857143	710.9446097	1101.274068	3.259909309	325929.3125	1250039.438	5012899	3	5214869	579429.8889	1662878.509	5012899	3	109543	18257.16667	27350.02976	53998	47	0	0	0	0	328	232	1.917593711	1.342315598	0	1448	319.0555556	564.0281045	318127.7026	0	0	0	1	0	0	0	0	0	337.8235294	35.1	770.2857143	328	0	0	0	0	0	0	10	351	7	5392	29200	110	3	32	201967	0	201967	201967	5012899	0	5012899	5012899	BENIGN
 192.168.10.3-192.168.10.9-53-55644-17	192.168.10.9	55644	192.168.10.3	53	17	6/7/2017 12:14	196	2	2	72	184	36	36	36	0	92	92	92	0	1306122.449	20408.16327	65.33333333	30.022214	100	48	48	48	0	48	48	48	48	0	48	48	0	0	0	0	64	64	10204.08163	10204.08163	36	92	58.4	30.67246322	940.8	0	0	0	0	0	0	0	0	1	73	36	92	64	0	0	0	0	0	0	2	72	2	184	-1	-1	1	32	0	0	0	0	0	0	0	0	BENIGN
 
-Please analyze these features and learn to distinguish benign network flows from web attack flows based on patterns in the data and your knowledge. Next I am going to include non-labeled traffic and you are to determine, what kind of traffic it is. Answer ONLY with either “BENIGN” or “WEB ATTACK”."""
+Please analyze these features and learn to distinguish benign network flows from web attack flows based on patterns in the data and your knowledge. Next I am going to include non-labeled traffic and you are to determine, what kind of traffic it is. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
 
     return prompt
 
@@ -174,37 +174,25 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
 
         # get correct label
         true_label = str(row.iloc[labelIndex]).strip().lower()
-        if(datasetType == "WEB ATTACK"):
-            true_label = "web attack"
+        if(true_label != "benign"):
+            true_label = "malicious"
 
         # checking correctness
         is_correct = (ai_answer == true_label)
 
         # get the tp and tt values for each of the two different datasets
         if is_correct:
-            if datasetType == "DDOS":
-                if ai_answer == "ddos":
-                    numTruePositive += 1
-                else:
-                    numTrueNegative += 1
-            if(datasetType == "WEB ATTACK"):
-                if ai_answer == "web attack":
-                    numTruePositive += 1
-                elif ai_answer == "benign":
-                    numTrueNegative += 1
+            if ai_answer == "benign":
+                numTrueNegative += 1
+            elif ai_answer == "malicious":
+                numTruePositive += 1
 
         # get the fp and ft values for each of the two different datasets
         else:
-            if(datasetType == "DDOS"):
-                if ai_answer == "ddos":
-                    numFalsePositive += 1
-                elif ai_answer == "benign":
-                    numFalseNegative += 1
-            if(datasetType == "WEB ATTACK"):
-                if ai_answer == "web attack":
-                    numFalsePositive += 1
-                elif ai_answer == "benign":
-                    numFalseNegative += 1
+            if ai_answer == "benign":
+                numFalseNegative += 1
+            elif ai_answer == "malicious":
+                numFalsePositive += 1
 
         # color output based on result
         if is_correct:
