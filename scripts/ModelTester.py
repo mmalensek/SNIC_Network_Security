@@ -174,17 +174,26 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
 
         # get correct label
         true_label = str(row.iloc[labelIndex]).strip().lower()
+        if(datasetType == "WEB ATTACK"):
+            true_label = "web attack"
 
         # checking correctness
         is_correct = (ai_answer == true_label)
-        if is_correct:
-            if ai_answer == "ddos":
-                numTruePositive += 1
-            else:
-                numTrueNegative += 1
 
-        # get the fp and ft values for each of the 
-        # two different datasets
+        # get the tp and tt values for each of the two different datasets
+        if is_correct:
+            if datasetType == "DDOS":
+                if ai_answer == "ddos":
+                    numTruePositive += 1
+                else:
+                    numTrueNegative += 1
+            if(datasetType == "WEB ATTACK"):
+                if ai_answer == "web attack":
+                    numTruePositive += 1
+                elif ai_answer == "benign":
+                    numTrueNegative += 1
+
+        # get the fp and ft values for each of the two different datasets
         else:
             if(datasetType == "DDOS"):
                 if ai_answer == "ddos":
