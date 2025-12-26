@@ -8,6 +8,7 @@
 
 import csv
 import math
+import time
 import random
 import pandas as pd
 from ollama import chat
@@ -142,6 +143,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
     # and printing out the results 
 
     print("\n--------------TESTING-----------------")
+    startTime = time.time()
     for idx in sample_indexes_with_windows:
 
         # extract the row at index "idx"
@@ -204,7 +206,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
             color = "\033[91m"
             status = "✘"
 
-        if len(ai_answer) > 6:
+        if len(ai_answer) > 8:
             color = "\033[0m"
             status = "✘"
 
@@ -220,13 +222,21 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
         
         if printReasoning == "YES":
             print(explanation)
+
+    endTime = time.time()
+    totalTime = endTime - startTime
+    avgTime = totalTime / numberTests
     
     # end of testing print for formatting
+    print("")
+    print(f"Total testing time: {totalTime:.1f} seconds")
+    print(f"Average time per test: {avgTime:.1f} seconds")
     print("--------------------------------------")
 
 
+
     # return total number of correct predictions
-    return numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative
+    return numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative, totalTime
 
 
 def main():
@@ -284,7 +294,7 @@ def main():
 
 
     # running of the tests
-    numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative = run_tests(
+    numTruePositive, numTrueNegative, numFalsePositive, numFalseNegative, timeTotal = run_tests(
         dataset, labelIndex, numberTests, model, datasetType, shots, windowSize, seed, printReasoning
     )
 
@@ -317,6 +327,7 @@ def main():
     print(f"{'Recall (percentage of attacks caught):':<45} {recall:.1%}")
     print(f"{'F1 Score (combining precision and recall):':<45} {F1_score:.1%}")
     print(f"{'Matthews Correlation Coefficient:':<45} {mcc:.4f}")
+    print(f"{'Total time required:':<45} {timeTotal:.4f} seconds")
     print("--------------------------------------\n")
 
 
