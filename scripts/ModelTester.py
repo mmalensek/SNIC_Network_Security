@@ -206,7 +206,7 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
             color = "\033[91m"
             status = "✘"
 
-        if len(ai_answer) > 8:
+        if len(ai_answer) > len("malicious"):
             color = "\033[0m"
             status = "✘"
 
@@ -225,12 +225,8 @@ def run_tests(dataset, labelIndex, numberTests, model, datasetType, shots, windo
 
     endTime = time.time()
     totalTime = endTime - startTime
-    avgTime = totalTime / numberTests
     
     # end of testing print for formatting
-    print("")
-    print(f"Total testing time: {totalTime:.1f} seconds")
-    print(f"Average time per test: {avgTime:.1f} seconds")
     print("--------------------------------------")
 
 
@@ -327,7 +323,8 @@ def main():
     print(f"{'Recall (percentage of attacks caught):':<45} {recall:.1%}")
     print(f"{'F1 Score (combining precision and recall):':<45} {F1_score:.1%}")
     print(f"{'Matthews Correlation Coefficient:':<45} {mcc:.4f}")
-    print(f"{'Total time required:':<45} {timeTotal:.4f} seconds")
+    print(f"{'Total time required:':<45} {timeTotal:.1f} seconds")
+    print(f"{'Average time per flow:':<45} {timeTotal/numberTests:.1f} seconds")
     print("--------------------------------------\n")
 
 
