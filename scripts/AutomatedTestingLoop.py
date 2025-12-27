@@ -52,7 +52,8 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
                 'tp': numTP,
                 'tn': numTN,
                 'fp': numFP,
-                'fn': numFN
+                'fn': numFN,
+                'totalTime': totalTime
             })
         except Exception as e:
             print(f"Error with {model}: {e}")
