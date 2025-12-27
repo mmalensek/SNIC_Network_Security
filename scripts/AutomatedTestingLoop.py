@@ -69,13 +69,13 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
     print("\n" + "="*100)
     print("MODEL COMPARISON RESULTS - SORTED BY F1 SCORE")
     print("="*100)
-    print(f"{'Model':<25} {'Accuracy':<12} {'Precision':<12} {'Recall':<12} {'F1 Score':<12} {'MCC':<10}")
+    print(f"{'Model':<25} {'Accuracy':<12} {'Precision':<12} {'Recall':<12} {'F1 Score':<12} {'MCC':<10} {'Total Time':12}")
     print("-"*100)
     
     for r in results:
         print(f"{r['model']:<25} {r['accuracy']:<12.1%} {r['precision']:<12.1%} "
           f"{r['recall']:<12.1%} {r['f1_score']:<12.1%} {r['mcc']:<10.4f} "
-          f"{r['totalTime']:<12.1f}")
+          f"{r['totalTime']:<12.1f} seconds")
 
     
     # show best model details
