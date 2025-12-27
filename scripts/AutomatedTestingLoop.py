@@ -75,7 +75,7 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
     for r in results:
         print(f"{r['model']:<25} {r['accuracy']:<12.1%} {r['precision']:<12.1%} "
           f"{r['recall']:<12.1%} {r['f1_score']:<12.1%} {r['mcc']:<10.4f} "
-          f"{r['totalTime']:<12.1f} seconds")
+          f"{r['totalTime']/60:<6.1f} minutes")
 
     
     # show best model details
