@@ -75,7 +75,7 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
     for r in results:
         print(f"{r['model']:<25} {r['accuracy']:<12.1%} {r['precision']:<12.1%} "
           f"{r['recall']:<12.1%} {r['f1_score']:<12.1%} {r['mcc']:<10.4f} "
-          f"{r['totalTime']/60:<6.1f} minutes")
+          f"{r['totalTime']/60:<8.1f} minutes")
 
     
     # show best model details
@@ -90,6 +90,8 @@ def run_automated_tests(dataset, labelIndex, dataset_type, shots, num_tests=20, 
     print(f"{'F1 Score:':<45} {best['f1_score']:.1%}")
     print(f"{'MCC:':<45} {best['mcc']:.4f}")
     print(f"{'Confusion Matrix:':<45} TP={best['tp']}, TN={best['tn']}, FP={best['fp']}, FN={best['fn']}")
+    print(f"{'Total time required:':<45} {totalTime/60:.1f} minutes")
+    print(f"{'Average time per flow:':<45} {totalTime/num_tests:.1f} seconds")
     print("="*100)
     
     return results
