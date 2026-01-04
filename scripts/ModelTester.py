@@ -251,7 +251,11 @@ def main():
 
     # load and prepare dataset
     delimiter = ","
-    dataset = pd.read_csv(filepath+filename, delimiter=delimiter)
+    dataset = pd.read_csv(
+        filepath + filename,
+        delimiter=delimiter,
+        encoding="cp1252"
+    )
     
     # getting dataset metadata
     datasetHeight = getDataSetHeight(filepath+filename)
