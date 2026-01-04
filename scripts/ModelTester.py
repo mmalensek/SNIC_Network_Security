@@ -80,20 +80,20 @@ def evaluate_results(numTest, numTruePositive, numTrueNegative):
 
 # get the number of rows in a dataset
 def getDataSetHeight(filepath):
-    with open(filepath, newline='') as csvfile:
+    with open(filepath, encoding="latin1", newline='') as csvfile:
         reader = csv.reader(csvfile)
         rowCount = sum(1 for row in reader)
     return rowCount
 
 # get the number of columns in a dataset
 def getDataSetWidth(filepath):
-    with open(filepath, newline='') as csvfile:
+    with open(filepath, encoding="latin1", newline='') as csvfile:
         reader = csv.reader(csvfile)
         first_row = next(reader)  # read the first row (header)
         return len(first_row)
     
 def getBenignPercentage(filepath, labelIndex):
-    with open(filepath, newline='') as csvfile:
+    with open(filepath, encoding="latin1", newline='') as csvfile:
         reader = csv.reader(csvfile)
         # skip the header row
         next(reader)
