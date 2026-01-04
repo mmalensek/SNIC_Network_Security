@@ -254,7 +254,7 @@ def main():
     dataset = pd.read_csv(
         filepath + filename,
         delimiter=delimiter,
-        encoding="cp1252"
+        encoding="latin1"
     )
     
     # getting dataset metadata
