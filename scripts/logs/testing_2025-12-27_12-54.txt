@@ -1,0 +1,963 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'DDoS']
+Number of rows in the dataset: 225746
+Percentage of flows labeled BENIGN: 43.29%
+Dataset name: Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
+Dataset type: DDOS
+Shot example type: ZERO-SHOT
+Number of tests: 10
+Window size: 10
+Set seed: 1234
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Starting automated testing loop...
+Found 8 installed models
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:8b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1964: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1968: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1969: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1970: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1972: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9156: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9159: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9160: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9161: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9162: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9163: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9164: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #23761: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #23762: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23763: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23766: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #23767: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23768: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23769: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23770: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30636: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30637: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30638: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30639: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115535: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115536: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115538: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115539: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115540: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115541: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115542: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115543: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #152627: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152628: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152629: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152630: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152632: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152633: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #152634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152636: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #176046: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176049: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176050: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176051: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176052: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176053: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176055: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #181689: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #181691: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181692: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181694: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181695: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181696: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181697: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203992: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203993: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203994: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203995: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203996: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #203997: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203998: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203999: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #204000: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211550: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211551: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211553: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211554: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211555: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211556: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211557: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211558: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211559: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:270m
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #1963: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1965: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1968: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1969: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1970: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1972: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9155: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9156: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9157: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9158: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9159: Correct label = benign, Predicted label = yes: ✘[0m
+[91mTest #9160: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9161: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9162: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9163: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9164: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #23761: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23762: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23763: Correct label = malicious, Predicted label = nebenign: ✘[0m
+[92mTest #23764: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #23765: Correct label = malicious, Predicted label = ime, this traffic is...: ✘[0m
+[92mTest #23766: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23767: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23768: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23769: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23770: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30632: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30633: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30634: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30635: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30637: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30638: Correct label = malicious, Predicted label = false: ✘[0m
+[91mTest #30639: Correct label = malicious, Predicted label = nebenign: ✘[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115535: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115536: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115537: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115538: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115539: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115540: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115541: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115542: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115543: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #152627: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #152628: Correct label = malicious, Predicted label = i am programmed to b...: ✘[0m
+[92mTest #152629: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152630: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #152632: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #152633: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #152634: Correct label = malicious, Predicted label = i am programmed to b...: ✘[0m
+[92mTest #152635: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176047: Correct label = benign, Predicted label = i am programmed to b...: ✘[0m
+[91mTest #176048: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176050: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176051: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176052: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176053: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176055: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #181688: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #181689: Correct label = malicious, Predicted label = i am sorry, but i ca...: ✘[0m
+[92mTest #181690: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181691: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181692: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181693: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #181694: Correct label = malicious, Predicted label = false: ✘[0m
+[92mTest #181695: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181696: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181697: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #203991: Correct label = benign, Predicted label = yes, the traffic is ...: ✘[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203993: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203994: Correct label = benign, Predicted label = yes: ✘[0m
+[91mTest #203995: Correct label = benign, Predicted label = yes: ✘[0m
+[92mTest #203996: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203997: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203998: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203999: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #204000: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211550: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211551: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211552: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211553: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211554: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211555: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211556: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211557: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211558: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211559: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: phi3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1968: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1969: Correct label = benign, Predicted label = benign
+
+the provided...: ✘[0m
+[92mTest #1970: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1971: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1972: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9155: Correct label = benign, Predicted label = benign
+
+this network...: ✘[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9159: Correct label = benign, Predicted label = benign ✅
+
+
+justifica...: ✘[0m
+[0mTest #9160: Correct label = benign, Predicted label = malicious
+
+
+the give...: ✘[0m
+[92mTest #9161: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9162: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9163: Correct label = benign, Predicted label = benign
+
+
+inference: ...: ✘[0m
+[0mTest #9164: Correct label = benign, Predicted label = benign  
+
+given the ...: ✘[0m
+[0mTest #23761: Correct label = malicious, Predicted label = benign  
+
+(note: wit...: ✘[0m
+[0mTest #23762: Correct label = malicious, Predicted label = benign - the provide...: ✘[0m
+[91mTest #23763: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23766: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #23767: Correct label = malicious, Predicted label = benign (i conclude t...: ✘[0m
+[91mTest #23768: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #23769: Correct label = malicious, Predicted label = benign
+
+
+instruction...: ✘[0m
+[0mTest #23770: Correct label = malicious, Predicted label = benign
+
+
+network rec...: ✘[0m
+[91mTest #30631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30632: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30633: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30634: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #30635: Correct label = malicious, Predicted label = benign
+
+the provided...: ✘[0m
+[91mTest #30636: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30637: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30638: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30639: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #115535: Correct label = malicious, Predicted label = benign
+
+
+network rec...: ✘[0m
+[0mTest #115536: Correct label = malicious, Predicted label = benign - the provide...: ✘[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #115539: Correct label = malicious, Predicted label = benign  
+
+your netwo...: ✘[0m
+[92mTest #115540: Correct label = malicious, Predicted label = malicious: ✔[0m
+[0mTest #115541: Correct label = malicious, Predicted label = benign
+
+
+instruction...: ✘[0m
+[0mTest #115542: Correct label = malicious, Predicted label = benign
+
+the provided...: ✘[0m
+[92mTest #115543: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152627: Correct label = malicious, Predicted label = benign
+
+the provided...: ✘[0m
+[91mTest #152628: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152629: Correct label = malicious, Predicted label = benign - the details...: ✘[0m
+[91mTest #152630: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152631: Correct label = malicious, Predicted label = benign
+
+
+the provide...: ✘[0m
+[0mTest #152632: Correct label = malicious, Predicted label = benign
+
+
+(note: to d...: ✘[0m
+[0mTest #152633: Correct label = malicious, Predicted label = benign - the provide...: ✘[0m
+[0mTest #152634: Correct label = malicious, Predicted label = benign
+
+
+network rec...: ✘[0m
+[0mTest #152635: Correct label = malicious, Predicted label = benign (based on the...: ✘[0m
+[92mTest #152636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176048: Correct label = benign, Predicted label = benign  
+
+(the provi...: ✘[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176050: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176051: Correct label = benign, Predicted label = benign
+
+please provi...: ✘[0m
+[92mTest #176052: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176053: Correct label = benign, Predicted label = benign
+
+
+given the n...: ✘[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176055: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #181688: Correct label = malicious, Predicted label = benign - the given i...: ✘[0m
+[91mTest #181689: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181691: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181692: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181694: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181695: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #181696: Correct label = malicious, Predicted label = benign - based on th...: ✘[0m
+[91mTest #181697: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203995: Correct label = benign, Predicted label = benign - the provide...: ✘[0m
+[0mTest #203996: Correct label = benign, Predicted label = benign
+
+
+as an ai de...: ✘[0m
+[0mTest #203997: Correct label = benign, Predicted label = benign
+
+
+justificati...: ✘[0m
+[0mTest #203998: Correct label = benign, Predicted label = benign (based on the...: ✘[0m
+[92mTest #203999: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #204000: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211554: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #211555: Correct label = benign, Predicted label = benign - the provide...: ✘[0m
+[92mTest #211556: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211557: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211558: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211559: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: mistral:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[0mTest #1963: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1964: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1968: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1969: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #1970: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1972: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9155: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9158: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9159: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #9160: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #9161: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9162: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9163: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #9164: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #23761: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #23762: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23763: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #23765: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #23766: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #23767: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23768: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #23769: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #23770: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30631: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #30632: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #30635: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #30636: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #30637: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #30638: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #30639: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #30640: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #115535: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #115536: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115539: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115540: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115541: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #115542: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #115543: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #115544: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #152627: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #152628: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #152629: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152630: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #152631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152632: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152633: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #152634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152636: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #176046: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176047: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176048: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #176050: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176051: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176052: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176053: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176054: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #176055: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #181688: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #181689: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #181691: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #181692: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #181694: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #181695: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[0mTest #181696: Correct label = malicious, Predicted label = based on the provide...: ✘[0m
+[91mTest #181697: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #203991: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203993: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #203994: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #203995: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203996: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #203997: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203998: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #203999: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #204000: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #211550: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211551: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #211553: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211554: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211555: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211556: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[92mTest #211557: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #211558: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+[0mTest #211559: Correct label = benign, Predicted label = based on the provide...: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: dolphin3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #1963: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1968: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1969: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1970: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1972: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9158: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9159: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9160: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9161: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9162: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9163: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9164: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #23761: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23762: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #23763: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23766: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23767: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23768: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23769: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23770: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30631: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30632: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30635: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30637: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30638: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30639: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115535: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115536: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115537: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115538: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115539: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115540: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115541: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115542: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115543: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152630: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152636: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #176046: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176050: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176051: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176052: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176053: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #176055: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #181688: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181691: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181692: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181694: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #181695: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #181696: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #181697: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203995: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #203996: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203997: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203998: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203999: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #204000: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211553: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211554: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211555: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211556: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211557: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211558: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211559: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:32b
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #1963: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1968: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1969: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1970: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1972: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9159: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9160: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9161: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9162: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9163: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9164: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #23761: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23762: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #23763: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23766: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23767: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23768: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #23769: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #23770: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30634: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30635: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30637: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30638: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30639: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115535: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115536: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115538: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115539: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115540: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115541: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115542: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115543: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = malicious, Predicted label = benign: ✘[0m
+[0mTest #152630: Correct label = malicious, Predicted label = the network record s...: ✘[0m
+[91mTest #152631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152636: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176050: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176051: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176052: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176053: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176055: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181691: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181692: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #181694: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #181695: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181696: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181697: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203995: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203996: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203997: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203998: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203999: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #204000: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211554: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211555: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211556: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211557: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211558: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211559: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gpt-oss:20b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1964: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1965: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1967: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1968: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1969: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1970: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1971: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #1972: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9156: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9158: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9159: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9160: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9161: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9162: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9163: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #9164: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #23761: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23762: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23763: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23764: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23766: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23767: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23768: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23769: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #23770: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30636: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30637: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30638: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30639: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #30640: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115535: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115536: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115538: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115539: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115540: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115541: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115542: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115543: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #115544: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152627: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152628: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152629: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152630: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152631: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152632: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152633: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152634: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152635: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #152636: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #176046: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176047: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176048: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176049: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176050: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176051: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176052: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176053: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176054: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #176055: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #181688: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181689: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181690: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181691: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181692: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181693: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181694: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181695: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181696: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #181697: Correct label = malicious, Predicted label = benign: ✘[0m
+[91mTest #203991: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203993: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203994: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203995: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203996: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #203997: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203998: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203999: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #204000: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211550: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211551: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211552: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211553: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211554: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211555: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211556: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211557: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211558: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #211559: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:1b
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #1963: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1964: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1965: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #1966: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #1967: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1968: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1969: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1970: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1971: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #1972: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9155: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9156: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9157: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9158: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9159: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9160: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9161: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #9162: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9163: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #9164: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #23761: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23762: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23763: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23764: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23765: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23766: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23767: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23768: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23769: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #23770: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30632: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #30633: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #30634: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30635: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30637: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30638: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30639: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #30640: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115535: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115536: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115537: Correct label = malicious, Predicted label = benign: ✘[0m
+[92mTest #115538: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115539: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115540: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115541: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115542: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115543: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #115544: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152627: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152628: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152629: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152630: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152632: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152633: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152634: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152635: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #152636: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #176046: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176047: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176048: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176049: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176050: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176051: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176052: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176053: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176054: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #176055: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #181688: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181689: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181690: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181691: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181692: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181693: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181694: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181695: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181696: Correct label = malicious, Predicted label = malicious: ✔[0m
+[92mTest #181697: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #203991: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203992: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203993: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203994: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203995: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203996: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203997: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203998: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203999: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #204000: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211550: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211551: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211552: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211553: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211554: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #211555: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #211556: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211557: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211558: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211559: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+====================================================================================================
+MODEL COMPARISON RESULTS - SORTED BY F1 SCORE
+====================================================================================================
+Model                     Accuracy     Precision    Recall       F1 Score     MCC        Total Time  
+----------------------------------------------------------------------------------------------------
+gemma3:1b                 51.0%        50.5%        96.0%        66.2%        0.0459     2.3      minutes
+gemma3:270m               48.0%        52.2%        83.3%        64.2%        0.1452     1.3      minutes
+deepseek-r1:8b            47.0%        46.5%        40.0%        43.0%        -0.0606    19.5     minutes
+deepseek-r1:32b           56.0%        71.4%        20.4%        31.7%        0.1780     65.7     minutes
+dolphin3:latest           51.0%        53.3%        16.0%        24.6%        0.0280     1.4      minutes
+phi3:latest               39.0%        80.0%        13.3%        22.9%        0.1986     1.3      minutes
+gpt-oss:20b               48.0%        25.0%        2.0%         3.7%         -0.1021    9.8      minutes
+mistral:latest            15.0%        0.0%         0.0%         0.0%         0.0000     1.9      minutes
+
+====================================================================================================
+BEST MODEL DETAILS
+====================================================================================================
+Model:                                        gemma3:1b
+Accuracy:                                     51.0%
+Precision:                                    50.5%
+Recall:                                       96.0%
+F1 Score:                                     66.2%
+MCC:                                          0.0459
+Confusion Matrix:                             TP=48, TN=3, FP=47, FN=2
+Total time required:                          2.3 minutes
+Average time per flow:                        13.7 seconds
+====================================================================================================

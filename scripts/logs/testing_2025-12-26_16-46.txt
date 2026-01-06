@@ -1,0 +1,103 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'PortScan']
+Number of rows in the dataset: 286468
+Percentage of flows labeled BENIGN: 44.52%
+Dataset name: Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv
+Dataset type: WEB ATTACK
+Shot example type: ZERO-SHOT
+Number of tests: 100
+Window size: 5
+Set seed: 1234
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Starting automated testing loop...
+Found 8 installed models
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:8b
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #3030: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3031: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3032: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #3033: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #3034: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3927: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3928: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3929: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #3930: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #3931: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #7664: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #7665: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #7666: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #7667: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #7668: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #8304: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #8305: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #8306: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #8307: Correct label = web attack, Predicted label = based on the provide...: ✘[0m
+[0mTest #8308: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #9137: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #9138: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #9139: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #9140: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #9141: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #10118: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #10119: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #10120: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #10121: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #10122: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #14223: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #14224: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #14225: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #14226: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #14227: Correct label = web attack, Predicted label = web attack: ✘[0m
+[0mTest #16155: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #16156: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #16157: Correct label = web attack, Predicted label = web attack: ✘[0m
+[0mTest #16158: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #16159: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #18311: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #18312: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #18313: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #18314: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #18315: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #20756: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #20757: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #20758: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #20759: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #20760: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #21078: Correct label = web attack, Predicted label = web attack: ✘[0m
+[0mTest #21079: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #21080: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #21081: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #21082: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #21528: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #21529: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #21530: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #21531: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #21532: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #23765: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #23766: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #23767: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #23768: Correct label = web attack, Predicted label = web attack: ✘[0m
+[0mTest #23769: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #24099: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #24100: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #24101: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #24102: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #24103: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #28403: Correct label = web attack, Predicted label = benign: ✘[0m
+[91mTest #28404: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #28405: Correct label = web attack, Predicted label = web attack: ✘[0m
+[0mTest #28406: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #28407: Correct label = web attack, Predicted label = benign: ✘[0m
+[0mTest #33070: Correct label = web attack, Predicted label = web attack: ✘[0m
+[91mTest #33071: Correct label = web attack, Predicted label = benign: ✘[0m

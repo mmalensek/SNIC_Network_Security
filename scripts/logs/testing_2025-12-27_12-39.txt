@@ -1,0 +1,118 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'DDoS']
+Number of rows in the dataset: 225746
+Percentage of flows labeled BENIGN: 43.29%
+Dataset name: Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
+Dataset type: DDOS
+Shot example type: ZERO-SHOT
+Number of tests: 1
+Window size: 2
+Set seed: 1234
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Starting automated testing loop...
+Found 8 installed models
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:8b
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #203991: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:270m
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #203991: Correct label = benign, Predicted label = nebenign: ✘[0m
+[0mTest #203992: Correct label = benign, Predicted label = yes, this traffic is...: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: phi3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[0mTest #203991: Correct label = benign, Predicted label = hamlet-lee, i have c...: ✘[0m
+[0mTest #203992: Correct label = benign, Predicted label = write a comprehensiv...: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: mistral:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: dolphin3:latest
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #203992: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:32b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gpt-oss:20b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #203991: Correct label = benign, Predicted label = benign: ✔[0m
+[92mTest #203992: Correct label = benign, Predicted label = benign: ✔[0m
+--------------------------------------
+
+====================================================================================================
+Testing model: gemma3:1b
+====================================================================================================
+
+--------------TESTING-----------------
+[91mTest #203991: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #203992: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+====================================================================================================
+MODEL COMPARISON RESULTS - SORTED BY F1 SCORE
+====================================================================================================
+Model                     Accuracy     Precision    Recall       F1 Score     MCC        Total Time  
+----------------------------------------------------------------------------------------------------
+deepseek-r1:8b            50.0%        0.0%         0.0%         0.0%         0.0000     0.3    minutes
+gemma3:270m               0.0%         0.0%         0.0%         0.0%         0.0000     0.0    minutes
+phi3:latest               0.0%         0.0%         0.0%         0.0%         0.0000     0.1    minutes
+mistral:latest            100.0%       0.0%         0.0%         0.0%         0.0000     0.0    minutes
+dolphin3:latest           50.0%        0.0%         0.0%         0.0%         0.0000     0.0    minutes
+deepseek-r1:32b           100.0%       0.0%         0.0%         0.0%         0.0000     1.6    minutes
+gpt-oss:20b               100.0%       0.0%         0.0%         0.0%         0.0000     0.2    minutes
+gemma3:1b                 0.0%         0.0%         0.0%         0.0%         0.0000     0.0    minutes
+
+====================================================================================================
+BEST MODEL DETAILS
+====================================================================================================
+Model:                                        deepseek-r1:8b
+Accuracy:                                     50.0%
+Precision:                                    0.0%
+Recall:                                       0.0%
+F1 Score:                                     0.0%
+MCC:                                          0.0000
+Confusion Matrix:                             TP=0, TN=1, FP=1, FN=0
+====================================================================================================

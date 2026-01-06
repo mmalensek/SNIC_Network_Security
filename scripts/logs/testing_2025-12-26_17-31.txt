@@ -1,0 +1,34 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'DDoS']
+Number of rows in the dataset: 225746
+Percentage of flows labeled BENIGN: 43.29%
+Dataset name: Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
+Dataset type: DDOS
+Shot example type: ZERO-SHOT
+Number of tests: 10
+Window size: 5
+Set seed: 1234
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Starting automated testing loop...
+Found 8 installed models
+--------------------------------------
+
+====================================================================================================
+Testing model: deepseek-r1:8b
+====================================================================================================
+
+--------------TESTING-----------------
+[92mTest #1963: Correct label = benign, Predicted label = benign: ✔[0m
+[0mTest #1964: Correct label = benign, Predicted label = malicious: ✘[0m
+[0mTest #1965: Correct label = benign, Predicted label = malicious: ✘[0m
+[0mTest #1966: Correct label = benign, Predicted label = malicious: ✘[0m
+[0mTest #1967: Correct label = benign, Predicted label = malicious: ✘[0m
+[0mTest #9155: Correct label = benign, Predicted label = malicious: ✘[0m
+[0mTest #9156: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9157: Correct label = benign, Predicted label = benign: ✔[0m

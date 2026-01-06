@@ -1,0 +1,44 @@
+
+---------------INPUT------------------
+Enter the dataset name (Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv, ...): Enter the dataset type (DDOS, WEB ATTACK, ...): Enter the shot example type (ZERO-SHOT, FEW-SHOT): Set the number of tests: Set the window size: Set the seed: --------------------------------------
+
+-------------METADATA-----------------
+Unique label values: ['BENIGN' 'DDoS']
+Number of rows in the dataset: 225746
+Percentage of flows labeled BENIGN: 43.29%
+Dataset name: Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv
+Dataset type: DDOS
+Shot example type: ZERO-SHOT
+Number of tests: 10
+Window size: 1
+Set seed: 1234
+--------------------------------------
+
+-------------AUTOMATION?--------------
+Run automated model comparison on all installed models? (YES/NO): Do you want to print models reasoning for selected label (YES/NO): Select the wanted model (deepseek-r1:32b, gpt-oss:20b, gemma3:1b, ...): --------------------------------------
+
+--------------TESTING-----------------
+[91mTest #1963: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #9155: Correct label = benign, Predicted label = benign: ✔[0m
+[91mTest #23761: Correct label = malicious, Predicted label = false: ✘[0m
+[92mTest #30631: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #115535: Correct label = malicious, Predicted label = nebenign: ✘[0m
+[92mTest #152627: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #176046: Correct label = benign, Predicted label = malicious: ✘[0m
+[92mTest #181688: Correct label = malicious, Predicted label = malicious: ✔[0m
+[91mTest #203991: Correct label = benign, Predicted label = malicious: ✘[0m
+[91mTest #211550: Correct label = benign, Predicted label = malicious: ✘[0m
+--------------------------------------
+
+---------------RESULTS----------------
+Percentage of correct labels:                 40.0%
+Percentage of wrong labels:                   40.0%
+Percentage of other responses:                20.0%
+Precision (accuracy of attack predictions):   42.9%
+Recall (percentage of attacks caught):        100.0%
+F1 Score (combining precision and recall):    60.0%
+Matthews Correlation Coefficient:             0.2928
+Total time required:                          7.7 seconds
+Average time per flow:                        0.8 seconds
+--------------------------------------
+
