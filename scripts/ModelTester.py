@@ -13,11 +13,93 @@ import random
 import pandas as pd
 from ollama import chat
 
+COLUMN_DESCS = """
+- Destination Port: Destination TCP/UDP port number
+- Flow Duration: Total duration of the flow in microseconds
+- Total Fwd Packets: Total number of packets sent in the forward direction
+- Total Backward Packets: Total number of packets sent in the backward direction
+- Total Length of Fwd Packets: Total bytes sent in the forward direction
+- Total Length of Bwd Packets: Total bytes sent in the backward direction
+- Fwd Packet Length Max: Maximum packet length in the forward direction
+- Fwd Packet Length Min: Minimum packet length in the forward direction
+- Fwd Packet Length Mean: Mean packet length in the forward direction
+- Fwd Packet Length Std: Standard deviation of packet length in the forward direction
+- Bwd Packet Length Max: Maximum packet length in the backward direction
+- Bwd Packet Length Min: Minimum packet length in the backward direction
+- Bwd Packet Length Mean: Mean packet length in the backward direction
+- Bwd Packet Length Std: Standard deviation of packet length in the backward direction
+- Flow Bytes/s: Number of flow bytes per second
+- Flow Packets/s: Number of flow packets per second
+- Flow IAT Mean: Mean inter-arrival time between packets in the flow
+- Flow IAT Std: Standard deviation of flow inter-arrival times
+- Flow IAT Max: Maximum inter-arrival time in the flow
+- Flow IAT Min: Minimum inter-arrival time in the flow
+- Fwd IAT Total: Total inter-arrival time of forward packets
+- Fwd IAT Mean: Mean inter-arrival time of forward packets
+- Fwd IAT Std: Standard deviation of forward inter-arrival times
+- Fwd IAT Max: Maximum inter-arrival time of forward packets
+- Fwd IAT Min: Minimum inter-arrival time of forward packets
+- Bwd IAT Total: Total inter-arrival time of backward packets
+- Bwd IAT Mean: Mean inter-arrival time of backward packets
+- Bwd IAT Std: Standard deviation of backward inter-arrival times
+- Bwd IAT Max: Maximum inter-arrival time of backward packets
+- Bwd IAT Min: Minimum inter-arrival time of backward packets
+- Fwd PSH Flags: Number of PSH flags set in forward packets
+- Bwd PSH Flags: Number of PSH flags set in backward packets
+- Fwd URG Flags: Number of URG flags set in forward packets
+- Bwd URG Flags: Number of URG flags set in backward packets
+- Fwd Header Length: Total bytes used for headers in forward packets
+- Bwd Header Length: Total bytes used for headers in backward packets
+- Fwd Packets/s: Forward packet rate per second
+- Bwd Packets/s: Backward packet rate per second
+- Min Packet Length: Minimum packet length in the flow
+- Max Packet Length: Maximum packet length in the flow
+- Packet Length Mean: Mean packet length of the flow
+- Packet Length Std: Standard deviation of packet length in the flow
+- Packet Length Variance: Variance of packet lengths in the flow
+- FIN Flag Count: Number of FIN flags set
+- SYN Flag Count: Number of SYN flags set
+- RST Flag Count: Number of RST flags set
+- PSH Flag Count: Number of PSH flags set
+- ACK Flag Count: Number of ACK flags set
+- URG Flag Count: Number of URG flags set
+- CWE Flag Count: Number of CWE flags set
+- ECE Flag Count: Number of ECE flags set
+- Down/Up Ratio: Ratio of backward to forward packets
+- Average Packet Size: Average packet size of the flow
+- Avg Fwd Segment Size: Average size of forward TCP segments
+- Avg Bwd Segment Size: Average size of backward TCP segments
+- Fwd Header Length.1: Duplicate forward header length feature
+- Fwd Avg Bytes/Bulk: Average bytes per bulk transfer in forward direction
+- Fwd Avg Packets/Bulk: Average packets per bulk transfer in forward direction
+- Fwd Avg Bulk Rate: Average bulk transfer rate in forward direction
+- Bwd Avg Bytes/Bulk: Average bytes per bulk transfer in backward direction
+- Bwd Avg Packets/Bulk: Average packets per bulk transfer in backward direction
+- Bwd Avg Bulk Rate: Average bulk transfer rate in backward direction
+- Subflow Fwd Packets: Number of forward packets in subflows
+- Subflow Fwd Bytes: Number of forward bytes in subflows
+- Subflow Bwd Packets: Number of backward packets in subflows
+- Subflow Bwd Bytes: Number of backward bytes in subflows
+- Init_Win_bytes_forward: Initial TCP window size in forward direction
+- Init_Win_bytes_backward: Initial TCP window size in backward direction
+- act_data_pkt_fwd: Number of forward packets carrying application data
+- min_seg_size_forward: Minimum segment size in forward direction
+- Active Mean: Mean active time of the flow
+- Active Std: Standard deviation of active time
+- Active Max: Maximum active time
+- Active Min: Minimum active time
+- Idle Mean: Mean idle time of the flow
+- Idle Std: Standard deviation of idle time
+- Idle Max: Maximum idle time
+- Idle Min: Minimum idle time
+- Label: Traffic label (BENIGN or attack type)
+""".strip()
+
 # preparing the prompt
 def create_prompt(record, type):
     # for now you have to manually set and enter the prompt
     if(type == "TEST DDOS"):
-        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
+        prompt = f"""Analyze this network flow for attacks.\ncolumn descriptors: {COLUMN_DESCS}\nflow: {record}.\nIs this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     if(type == "START DDOS ZERO-SHOT"):
         prompt = """You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a DDoS attack. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent DDoS attacks. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words. 
                     Here are the columns: 
@@ -43,7 +125,7 @@ Below are examples of DDoS attack flows:
 Please analyze these features and learn to distinguish benign network flows from DDoS attack flows based on patterns in the data and your knowledge. Next I am going to include non-labeled traffic and you are to determine, what kind of traffic it is. Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     
     if(type == "TEST WEB ATTACK"):
-        prompt = f"""Network record details: {record}. Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
+        prompt = f"""Analyze this network flow for attacks.\ncolumn descriptors: {COLUMN_DESCS}\nflow: {record}.\nIs this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     if(type == "START WEB ATTACK ZERO-SHOT"):
         prompt = f"""You are to analyze traffic flow data and determine if the traffic is benign or it represents part of a web attack, like XSS, SQL injection or Brute Force. Each flow is described with multiple features such as source and destination IPs and ports, protocol, timestamps, packet counts and lengths, flow duration, packet inter-arrival times, flags, bytes per second, and more. Some flows represent benign network activity and some represent web attacks. 
 Here are the columns: 
