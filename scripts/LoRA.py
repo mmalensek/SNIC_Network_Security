@@ -199,7 +199,6 @@ trainer = SFTTrainer(
     formatting_func=formatting_func,
     data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
     args=args,
-    packing=False
 )
 
 # training
