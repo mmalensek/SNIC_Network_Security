@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+
+# set all huging face cache to external drive
+import os
+os.environ["HF_HOME"] = "/mnt/share/huggingface" 
+os.environ["TRANSFORMERS_CACHE"] = "/mnt/share/huggingface/hub"  
+os.environ["TOKENIZERS_PARALLELISM"] = "false"  
+
 import torch
 from datasets import load_dataset
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, AutoPeftModelForCausalLM
