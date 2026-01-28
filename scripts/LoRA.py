@@ -165,7 +165,6 @@ args = TrainingArguments(
     fp16=torch.cuda.is_available(),
     report_to=None, 
     remove_unused_columns=False,
-    packing=False
 )
 
 # setup trainer
@@ -178,6 +177,7 @@ trainer = SFTTrainer(
     data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
     args=args,
     max_seq_length=2048,
+    packing=False
 )
 
 print("Starting training...")
