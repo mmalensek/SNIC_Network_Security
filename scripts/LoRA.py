@@ -123,6 +123,8 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
+tokenizer.model_max_length = 2048
+
 # preparation for QLoRA
 model = prepare_model_for_kbit_training(model)
 model.gradient_checkpointing_enable()
@@ -178,16 +180,15 @@ args = TrainingArguments(
     per_device_train_batch_size=1,
     gradient_accumulation_steps=8,
     warmup_steps=5,
-    max_steps=50,  # starting number, change later
+    max_steps=50,
     learning_rate=2e-4,
     logging_steps=5,
     save_steps=25,
     eval_strategy="steps",
     eval_steps=25,
     fp16=torch.cuda.is_available(),
-    report_to=None, 
+    report_to=None,
     remove_unused_columns=False,
-    max_length=2048,
 )
 
 # setup trainer
@@ -201,12 +202,15 @@ trainer = SFTTrainer(
     packing=False
 )
 
+# training
 print("Starting training...")
 trainer.train()
+
+# saving lora adapter
 trainer.save_model(OUTPUT_DIR)
 print(f"Saved LoRA model to {OUTPUT_DIR}")
 
-# merge (for Ollama)
+# merge lora with base model
 merged_model = AutoPeftModelForCausalLM.from_pretrained(OUTPUT_DIR, device_map="auto")
 merged_model = merged_model.merge_and_unload()
 merged_model.save_pretrained(OUTPUT_DIR + "-merged")
