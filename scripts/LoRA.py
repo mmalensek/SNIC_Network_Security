@@ -141,11 +141,13 @@ print(f"Loaded {len(dataset['train'])} train, {len(dataset['eval'])} eval sample
 
 # prompt formatter
 def formatting_func(example):
-    record_str = str(example[FLOW_COL])
+    # removes label, serialize rest as dict
+    flow_dict = {k: v for k, v in example.items() if k != LABEL_COL}
+    record_str = str(flow_dict)
     prompt = f"""Analyze this network flow for attacks.
-Column descriptors: {COLUMN_DESCS}
-Flow: {record_str}.
-Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
+                Column descriptors: {COLUMN_DESCS}
+                Flow: {record_str}.
+                Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
     return prompt + example[LABEL_COL]
 
 # training arguments
