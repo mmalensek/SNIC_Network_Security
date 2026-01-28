@@ -14,7 +14,8 @@ from trl import SFTTrainer
 
 print("Starting LoRA fine-tuning...")
 
-# meta data
+# meta data 
+# !!! EVAL PATH CURRENTLY SET TO THE SAME DATASET JUST FOR TESTING, CHANGE LATER !!!
 COLUMN_DESCS = """
 - Destination Port: Destination TCP/UDP port number
 - Flow Duration: Total duration of the flow in microseconds
@@ -97,9 +98,9 @@ COLUMN_DESCS = """
 - Label: Traffic label (BENIGN or attack type)
 """.strip()
 MODEL_ID = "microsoft/DialoGPT-small" # testing model, change later
-CSV_PATH = {"train": "../data/train.csv", "eval": "../data/eval.csv"}  # current paths
-FLOW_COL = "flow_data"  # CSV column
-LABEL_COL = "label"     # either benign or malicious
+CSV_PATH = {"train": "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv", "eval": "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"} # current dataset paths
+FLOW_COL = "flow_data" # CSV column
+LABEL_COL = "label" # either benign or malicious
 OUTPUT_DIR = "./lora_models/nids-deepseek-lora"
 
 # 4bit quantization
