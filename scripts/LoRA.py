@@ -142,7 +142,7 @@ print(f"Loaded {len(dataset['train'])} train, {len(dataset['eval'])} eval sample
 # prompt formatter
 def formatting_func(example):
     # removes label, serialize rest as dict
-    flow_dict = {k: v for k, v in example.items() if k != LABEL_COL}
+    flow_dict = {k.strip(): v for k, v in example.items() if k.strip() != "Label"}
     record_str = str(flow_dict)
     prompt = f"""Analyze this network flow for attacks.
                 Column descriptors: {COLUMN_DESCS}
