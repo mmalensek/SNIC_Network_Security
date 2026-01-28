@@ -141,14 +141,36 @@ print(f"Loaded {len(dataset['train'])} train, {len(dataset['eval'])} eval sample
 
 # prompt formatter
 def formatting_func(example):
-    # removes label, serialize rest as dict
-    flow_dict = {k.strip(): v for k, v in example.items() if k.strip() != "Label"}
-    record_str = str(flow_dict)
-    prompt = f"""Analyze this network flow for attacks.
-                Column descriptors: {COLUMN_DESCS}
-                Flow: {record_str}.
-                Is this traffic malicious? Answer ONLY with either BENIGN or MALICIOUS, because my program only detects this two words."""
-    return prompt + example[LABEL_COL]
+    texts = []
+
+    labels = example[LABEL_COL] 
+    keys = example.keys()
+
+    for i in range(len(labels)):
+        flow_dict = {
+            k.strip(): example[k][i]
+            for k in keys
+            if k.strip() != "Label"
+        }
+
+        record_str = str(flow_dict)
+
+        prompt = f"""Analyze this network flow for attacks.
+Column descriptors:
+{COLUMN_DESCS}
+
+Flow:
+{record_str}
+
+Is this traffic malicious?
+Answer ONLY with either BENIGN or MALICIOUS."""
+        
+        # label must be string
+        label = str(labels[i]).strip()
+
+        texts.append(prompt + "\n" + label)
+
+    return texts
 
 # training arguments
 args = TrainingArguments(
