@@ -165,6 +165,7 @@ args = TrainingArguments(
     fp16=torch.cuda.is_available(),
     report_to=None, 
     remove_unused_columns=False,
+    packing=False
 )
 
 # setup trainer
