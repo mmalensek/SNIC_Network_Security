@@ -89,7 +89,7 @@ COLUMN_DESCS = """
 - Idle Min: Minimum idle time
 - Label: Traffic label (BENIGN or attack type)
 """.strip()
-MODEL_ID = "google/gemma-3-270m"  # testing model, change later
+MODEL_ID = "microsoft/Phi-3-mini-4k-instruct" # testing model, change later
 CSV_PATH = {"train": "../data/train.csv", "eval": "../data/eval.csv"}  # current paths
 FLOW_COL = "flow_data"  # CSV column
 LABEL_COL = "label"     # either benign or malicious
