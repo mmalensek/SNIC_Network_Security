@@ -2,8 +2,8 @@
 import torch
 from datasets import load_dataset
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, AutoPeftModelForCausalLM
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
-from trl import SFTTrainer, DataCollatorForLanguageModeling
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
+from trl import SFTTrainer
 
 print("Starting LoRA fine-tuning...")
 
