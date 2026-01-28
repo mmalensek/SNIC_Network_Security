@@ -100,7 +100,7 @@ COLUMN_DESCS = """
 MODEL_ID = "microsoft/DialoGPT-small" # testing model, change later
 CSV_PATH = {"train": "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv", "eval": "../../dataset/TrafficLabelling/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"} # current dataset paths
 FLOW_COL = "flow_data" # CSV column
-LABEL_COL = "label" # either benign or malicious
+LABEL_COL = "Label" # either benign or malicious
 OUTPUT_DIR = "./lora_models/nids-deepseek-lora"
 
 # 4bit quantization
