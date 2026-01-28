@@ -192,7 +192,6 @@ args = TrainingArguments(
 # setup trainer
 trainer = SFTTrainer(
     model=model,
-    tokenizer=tokenizer,
     train_dataset=dataset["train"],
     eval_dataset=dataset["eval"],
     formatting_func=formatting_func,
