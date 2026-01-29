@@ -189,7 +189,6 @@ args = TrainingArguments(
     fp16=torch.cuda.is_available(),
     report_to=None,
     remove_unused_columns=False,
-    push_to_hub=False,
 )
 
 # setup trainer
