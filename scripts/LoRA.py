@@ -184,15 +184,14 @@ args = TrainingArguments(
     learning_rate=2e-4,
     logging_steps=5,
     save_steps=25,
-    eval_strategy="steps",
+    evaluation_strategy="steps",  # changed name becaue of transformers version
     eval_steps=25,
     fp16=torch.cuda.is_available(),
     report_to=None,
     remove_unused_columns=False,
     push_to_hub=False,
-
-    push_to_hub_token="",
 )
+
 
 # setup trainer
 trainer = SFTTrainer(
