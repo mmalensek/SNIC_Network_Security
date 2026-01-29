@@ -143,21 +143,19 @@ print(f"Loaded {len(dataset['train'])} train, {len(dataset['eval'])} eval sample
 
 # prompt formatter
 def formatting_func(example):
-    texts = []
+    # label
+    label = str(example[LABEL_COL]).strip()
 
-    labels = example[LABEL_COL] 
-    keys = example.keys()
+    # build flow dict (exclude label column)
+    flow_dict = {
+        k.strip(): example[k]
+        for k in example.keys()
+        if k.strip() != "Label"
+    }
 
-    for i in range(len(labels)):
-        flow_dict = {
-            k.strip(): example[k][i]
-            for k in keys
-            if k.strip() != "Label"
-        }
+    record_str = str(flow_dict)
 
-        record_str = str(flow_dict)
-
-        prompt = f"""Analyze this network flow for attacks.
+    prompt = f"""Analyze this network flow for attacks.
 Column descriptors:
 {COLUMN_DESCS}
 
@@ -166,13 +164,8 @@ Flow:
 
 Is this traffic malicious?
 Answer ONLY with either BENIGN or MALICIOUS."""
-        
-        # label must be string
-        label = str(labels[i]).strip()
-
-        texts.append(prompt + "\n" + label)
-
-    return texts
+    
+    return prompt + "\n" + label
 
 # training arguments
 args = TrainingArguments(
