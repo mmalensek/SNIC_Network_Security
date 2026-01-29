@@ -190,7 +190,6 @@ args = TrainingArguments(
     report_to=None,
     remove_unused_columns=False,
     push_to_hub=False,
-    push_to_hub_token=None,
 )
 
 # setup trainer
