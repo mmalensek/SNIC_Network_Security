@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 
-# set all huging face cache to external drive
+import torch
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
+
+# set all hugging face cache to external drive
 import os
 os.environ["HF_HOME"] = "/mnt/share/huggingface" 
 os.environ["TRANSFORMERS_CACHE"] = "/mnt/share/huggingface/hub"  
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  
 
-import torch
-from datasets import load_dataset
+# parameter efficient fine-tuning
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, AutoPeftModelForCausalLM
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
+
+# training reinforcement learning
 from trl import SFTTrainer
 
 print("Starting LoRA fine-tuning...")
@@ -111,7 +115,7 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_use_double_quant=True,
 )
 
-# load model/tokenizer
+# load model/tokenizer from hugging face
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID, 
     quantization_config=bnb_config, 
@@ -123,7 +127,7 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
-tokenizer.model_max_length = 2048
+tokenizer.model_max_length = 512
 
 # preparation for QLoRA
 model = prepare_model_for_kbit_training(model)
@@ -131,7 +135,7 @@ model.gradient_checkpointing_enable()
 
 # LoRA config
 lora_config = LoraConfig(
-    r=16, lora_alpha=32, lora_dropout=0.1,
+    r=2, lora_alpha=16, lora_dropout=0.05,
     bias="none", task_type="CAUSAL_LM",
     target_modules=["c_attn"]  # GPT2 combined attention layer
 )
@@ -171,17 +175,17 @@ Answer ONLY with either BENIGN or MALICIOUS."""
 args = TrainingArguments(
     output_dir=OUTPUT_DIR,
     per_device_train_batch_size=1,
-    gradient_accumulation_steps=8,
-    warmup_steps=5,
-    max_steps=50,
-    learning_rate=2e-4,
+    gradient_accumulation_steps=4,
+    warmup_steps=2,
+    max_steps=20,
+    learning_rate=5e-4,
     logging_steps=5,
-    save_steps=25,
+    save_steps=10,
     eval_strategy="steps",  # changed name becaue of transformers version
-    eval_steps=25,
+    eval_steps=10,
     fp16=torch.cuda.is_available(),
     report_to=None,
-    remove_unused_columns=False,
+    remove_unused_columns=True,
     push_to_hub=False,
 )
 
@@ -192,7 +196,6 @@ trainer = SFTTrainer(
     train_dataset=dataset["train"],
     eval_dataset=dataset["eval"],
     formatting_func=formatting_func,
-    data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
     args=args,
 )
 
