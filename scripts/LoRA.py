@@ -8,7 +8,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import os
 os.environ["HF_HOME"] = "/mnt/share/huggingface" 
 os.environ["TRANSFORMERS_CACHE"] = "/mnt/share/huggingface/hub"  
-os.environ["TOKENIZERS_PARALLELISM"] = "false"  
+os.environ["HF_DATASETS_CACHE"] = "/mnt/share/huggingface/datasets"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["TMPDIR"] = "/mnt/share/tmp"
+os.environ["TEMP"] = "/mnt/share/tmp"
+os.environ["TMP"] = "/mnt/share/tmp"
+
 
 # parameter efficient fine-tuning
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, AutoPeftModelForCausalLM
@@ -187,6 +192,7 @@ args = TrainingArguments(
     report_to=None,
     remove_unused_columns=True,
     push_to_hub=False,
+    dataloader_pin_memory=False,
 )
 
 
