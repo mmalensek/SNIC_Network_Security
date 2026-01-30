@@ -107,7 +107,7 @@ COLUMN_DESCS = """
 - Label: Traffic label (BENIGN or attack type)
 """.strip()
 MODEL_ID = "microsoft/DialoGPT-small" # testing model, change later
-CSV_PATH = {"train": "../../dataset/TrafficLabelling/Friday-DDos_SHORTENED.csv", "eval": "../../dataset/TrafficLabelling/Friday-DDos_SHORTENED.csv"} # current dataset paths
+CSV_PATH = {"train": "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv", "eval": "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"} # current dataset paths
 FLOW_COL = "flow_data" # CSV column
 LABEL_COL = " Label" # either benign or malicious !!! "_LABEL" !!!
 OUTPUT_DIR = "./lora_models/nids-deepseek-lora"
