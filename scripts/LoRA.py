@@ -23,6 +23,10 @@ from trl import SFTTrainer
 
 print("Starting LoRA fine-tuning...")
 
+# TEST
+print("CUDA available:", torch.cuda.is_available())
+print("Model device:", next(model.parameters()).device)
+
 # meta data 
 # !!! EVAL PATH CURRENTLY SET TO THE SAME DATASET JUST FOR TESTING, CHANGE LATER !!!
 COLUMN_DESCS = """
