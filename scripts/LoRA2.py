@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+pip install \
+  torch==2.1.2 \
+  transformers==4.36.2 \
+  trl==0.7.11 \
+  peft==0.7.1 \
+  tokenizers==0.15.2
+"""
+
 import os
 import gc
 import torch
@@ -10,6 +19,10 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
 )
+
+import peft
+peft.utils.other.is_bnb_available = lambda: False
+
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from trl import SFTTrainer
 
@@ -63,6 +76,7 @@ lora_config = LoraConfig(
     bias="none",
     task_type="CAUSAL_LM",
     target_modules=["c_attn", "c_proj", "c_fc"],  # DialoGPT-specific
+    inference_mode=False
 )
 
 model = get_peft_model(model, lora_config)
@@ -79,24 +93,23 @@ eval_dataset = dataset["eval"].select(range(min(200, len(dataset["eval"]))))
 print(f"Using subset: {len(train_dataset)} train / {len(eval_dataset)} eval")
 
 def formatting_func(example):
-    """Simplified formatting to avoid memory issues"""
     label = str(example[LABEL_COL]).strip()
-    
-    # Select only key features to reduce prompt size
+
     key_features = {
         "Flow Duration": example.get(" Flow Duration", 0),
         "Total Fwd Packets": example.get(" Total Fwd Packets", 0),
         "Total Bwd Packets": example.get(" Total Backward Packets", 0),
         "Flow Bytes/s": example.get("Flow Bytes/s", 0),
-        " Label": label
+        "Label": label,
     }
-    
+
     prompt = f"""Analyze network flow:
 {key_features}
 
 Malicious? {label}"""
-    
-    return prompt
+
+    return [prompt]
+
 
 # Ultra-conservative training args
 args = TrainingArguments(
