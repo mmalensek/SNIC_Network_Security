@@ -50,7 +50,7 @@ model = model.cpu()
 logger.info(f"Model loaded on CPU with {sum(p.numel() for p in model.parameters()):,} parameters")
 
 # Load tokenizer
-tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, use_fast=False, trust_remote_code=False)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 tokenizer.model_max_length = 512
