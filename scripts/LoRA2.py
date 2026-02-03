@@ -120,7 +120,7 @@ args = TrainingArguments(
     remove_unused_columns=False,
     report_to=None,  # Disable wandb/tensorboard
     save_total_limit=2,
-    load_best_model_at_end=True,
+    load_best_model_at_end=False,
 )
 
 # Create trainer with explicit args
