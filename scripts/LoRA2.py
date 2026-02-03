@@ -42,7 +42,6 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.float32,
     device_map=None,
     low_cpu_mem_usage=True,
-    trust_remote_code=True,
 )
 
 # Force CPU placement initially
