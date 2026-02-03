@@ -92,23 +92,35 @@ train_dataset = dataset["train"].select(range(min(1000, len(dataset["train"]))))
 eval_dataset = dataset["eval"].select(range(min(200, len(dataset["eval"]))))
 print(f"Using subset: {len(train_dataset)} train / {len(eval_dataset)} eval")
 
-def formatting_func(example):
-    label = str(example[LABEL_COL]).strip()
+def formatting_func(batch):
+    prompts = []
 
-    key_features = {
-        "Flow Duration": example.get(" Flow Duration", 0),
-        "Total Fwd Packets": example.get(" Total Fwd Packets", 0),
-        "Total Bwd Packets": example.get(" Total Backward Packets", 0),
-        "Flow Bytes/s": example.get("Flow Bytes/s", 0),
-        "Label": label,
-    }
+    labels = batch[LABEL_COL]
+    flow_durations = batch.get(" Flow Duration", [0] * len(labels))
+    fwd_packets = batch.get(" Total Fwd Packets", [0] * len(labels))
+    bwd_packets = batch.get(" Total Backward Packets", [0] * len(labels))
+    flow_bytes = batch.get("Flow Bytes/s", [0] * len(labels))
 
-    prompt = f"""Analyze network flow:
+    for i in range(len(labels)):
+        label = str(labels[i]).strip()
+
+        key_features = {
+            "Flow Duration": flow_durations[i],
+            "Total Fwd Packets": fwd_packets[i],
+            "Total Bwd Packets": bwd_packets[i],
+            "Flow Bytes/s": flow_bytes[i],
+            "Label": label,
+        }
+
+        prompt = f"""Analyze network flow:
 {key_features}
 
 Malicious? {label}"""
 
-    return [prompt]
+        prompts.append(prompt)
+
+    return prompts  
+
 
 
 # Ultra-conservative training args
@@ -130,7 +142,7 @@ args = TrainingArguments(
     dataloader_num_workers=0,
     gradient_checkpointing=False,
     optim="adamw_hf",
-    remove_unused_columns=False,
+    remove_unused_columns=True,
     report_to=None,  # Disable wandb/tensorboard
     save_total_limit=2,
     load_best_model_at_end=False,
