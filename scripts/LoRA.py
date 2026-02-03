@@ -11,6 +11,9 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from trl import SFTTrainer
 
+import warnings
+warnings.filterwarnings("ignore", category=torch.cuda._utils._CreationPolicyWarning) 
+
 # -------------------------------------------------------------------
 # Environment (safe on ARM)
 # -------------------------------------------------------------------
@@ -42,8 +45,9 @@ COLUMN_DESCS = """<your column description here>""".strip()
 # -------------------------------------------------------------------
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID,
-    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    torch_dtype=torch.float16,
     device_map="auto",
+    low_cpu_mem_usage=True,
 )
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
@@ -63,7 +67,7 @@ lora_config = LoraConfig(
     lora_dropout=0.05,
     bias="none",
     task_type="CAUSAL_LM",
-    target_modules=["c_attn"],  # GPT-2 / DialoGPT attention
+    target_modules=["c_attn", "c_proj", "c_fc"],
 )
 
 model = get_peft_model(model, lora_config)
@@ -107,18 +111,18 @@ Answer ONLY with either BENIGN or MALICIOUS.
 args = TrainingArguments(
     output_dir=OUTPUT_DIR,
     per_device_train_batch_size=1,
-    gradient_accumulation_steps=4,
+    gradient_accumulation_steps=8,  # Effective batch=8
     learning_rate=5e-4,
     max_steps=50,
     logging_steps=5,
     save_steps=25,
     evaluation_strategy="steps",
     eval_steps=25,
-    fp16=torch.cuda.is_available(),
-    report_to=None,
-    remove_unused_columns=True,
+    fp16=True,  # Enforce for A30X
     dataloader_pin_memory=False,
+    dataloader_num_workers=0,  # Stable on shared FS
 )
+
 
 # -------------------------------------------------------------------
 # Trainer
