@@ -11,9 +11,6 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from trl import SFTTrainer
 
-import warnings
-warnings.filterwarnings("ignore", category=torch.cuda._utils._CreationPolicyWarning) 
-
 # export hugging face cache to external drive
 os.environ["HF_HOME"] = "/mnt/share/huggingface"
 os.environ["TRANSFORMERS_CACHE"] = "/mnt/share/huggingface/hub"
@@ -21,7 +18,7 @@ os.environ["HF_DATASETS_CACHE"] = "/mnt/share/huggingface/datasets"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 print("Starting LoRA fine-tuning (ARM-safe)...")
-print("CUDA available:", torch.cuda.is_available())
+# print("CUDA available:", torch.cuda.is_available())
 
 # meta data
 MODEL_ID = "microsoft/DialoGPT-small"
@@ -116,8 +113,8 @@ COLUMN_DESCS = """
 # loading of model and tokenizer
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID,
-    torch_dtype=torch.float16,
-    device_map="auto",
+    torch_dtype=torch.float32,
+    device_map=None,
     low_cpu_mem_usage=True,
 )
 
@@ -181,7 +178,7 @@ args = TrainingArguments(
     save_steps=25,
     evaluation_strategy="steps",
     eval_steps=25,
-    fp16=True,
+    fp16=False,
     dataloader_pin_memory=False,
     dataloader_num_workers=0,
 )
