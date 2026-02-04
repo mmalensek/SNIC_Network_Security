@@ -6,25 +6,23 @@ pip install \
   transformers==4.36.2 \
   trl==0.7.11 \
   peft==0.7.1 \
-  tokenizers==0.15.2
+  tokenizers==0.15.2 \
+  accelerate==0.27.2
 """
 
 import os
 import gc
 import torch
 import logging
+import subprocess
+import shutil
 from datasets import load_dataset
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    TrainingArguments,
-)
-
-import peft
-peft.utils.other.is_bnb_available = lambda: False
-
+from transformers import (AutoModelForCausalLM,AutoTokenizer,TrainingArguments)
+from pathlib import Path
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from trl import SFTTrainer
+import peft
+peft.utils.other.is_bnb_available = lambda: False
 
 # Disable parallelism and set memory-safe environment
 os.environ["HF_HOME"] = "/mnt/share/huggingface"
@@ -33,6 +31,7 @@ os.environ["HF_DATASETS_CACHE"] = "/mnt/share/huggingface/datasets"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -48,6 +47,7 @@ CSV_PATH = {
     "eval": "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv",
 }
 LABEL_COL = " Label"
+OLLAMA_MODELS_DIR = Path("/mnt/share/ollama/models")
 
 # Load model with minimal memory usage
 model = AutoModelForCausalLM.from_pretrained(
@@ -177,5 +177,103 @@ trainer.save_model(OUTPUT_DIR)
 tokenizer.save_pretrained(OUTPUT_DIR)
 print(f"LoRA adapter saved to {OUTPUT_DIR}")
 
-# Skip merging for now (common crash point on ARM)
-print("Skipping model merge to avoid core dump. Use PEFT model directly.")
+# =========================
+# Export LoRA → Ollama (CPU / ARM safe)
+# =========================
+
+model_name = "nids_dialogpt"
+lora_path = Path(OUTPUT_DIR)
+
+print(f"\nExporting '{model_name}' to Ollama...")
+
+# 1. Merge LoRA with base model (SAFE on CPU)
+print("1. Merging LoRA adapter into base model...")
+
+merged_model = AutoPeftModelForCausalLM.from_pretrained(
+    lora_path,
+    torch_dtype=torch.float32,
+    device_map=None,
+)
+merged_model = merged_model.merge_and_unload()
+
+merged_path = lora_path / "merged"
+merged_path.mkdir(exist_ok=True)
+
+merged_model.save_pretrained(merged_path)
+tokenizer.save_pretrained(merged_path)
+
+print(f"✅ Merged model saved to: {merged_path}")
+
+# Free memory early (important on ARM)
+del merged_model
+gc.collect()
+
+# 2. Convert merged HF model → GGUF
+print("2. Converting merged model to GGUF...")
+
+gguf_path = lora_path / f"{model_name}.gguf"
+
+convert_cmd = [
+    "python", "-m", "llama_cpp.convert",
+    "--model-path", str(merged_path),
+    "--outfile", str(gguf_path),
+    "--outtype", "f16",
+    "--vocab-type", "bpe",
+]
+
+result = subprocess.run(convert_cmd, capture_output=True, text=True)
+
+if result.returncode != 0:
+    logger.error("❌ GGUF conversion failed")
+    logger.error(result.stderr)
+    raise RuntimeError("GGUF conversion failed")
+
+print(f"✅ GGUF created at: {gguf_path}")
+
+# 3. Create Ollama Modelfile
+print("3. Creating Ollama Modelfile...")
+
+modelfile_content = f"""FROM {gguf_path}
+
+TEMPLATE \"\"\"{{{{ .Prompt }}}}\"\"\"
+
+PARAMETER temperature 0.1
+PARAMETER top_p 0.9
+
+SYSTEM \"\"\"You are a Network Intrusion Detection System (NIDS).
+Analyze network flows and respond ONLY with BENIGN or MALICIOUS.\"\"\"
+"""
+
+modelfile_path = lora_path / "Modelfile"
+modelfile_path.write_text(modelfile_content)
+
+print(f"✅ Modelfile written to: {modelfile_path}")
+
+# 4. Copy GGUF to Ollama blobs directory
+print("4. Copying model into Ollama directory...")
+
+OLLAMA_MODELS_DIR.mkdir(parents=True, exist_ok=True)
+ollama_blobs_dir = OLLAMA_MODELS_DIR / "blobs"
+ollama_blobs_dir.mkdir(parents=True, exist_ok=True)
+
+shutil.copy2(gguf_path, ollama_blobs_dir / gguf_path.name)
+
+print("✅ GGUF copied to Ollama blobs")
+
+# 5. Create Ollama model
+print("5. Creating Ollama model...")
+
+ollama_cmd = [
+    "ollama", "create", model_name,
+    "-f", str(modelfile_path)
+]
+
+result = subprocess.run(ollama_cmd, capture_output=True, text=True)
+
+if result.returncode == 0:
+    print(f"\n🎉 SUCCESS! Ollama model '{model_name}' is ready")
+    print(f"👉 Test it with:  ollama run {model_name}")
+else:
+    logger.error("❌ Ollama model creation failed")
+    logger.error(result.stderr)
+    raise RuntimeError("Ollama create failed")
