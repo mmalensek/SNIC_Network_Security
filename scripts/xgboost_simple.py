@@ -22,6 +22,12 @@ def main():
     datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv" # temp dataset
     dataframe = pd.read_csv(datasetLocation)
 
+    # converting all string to numeric
+    for col in dataframe.columns:
+        if col != " Label":  # Skip target
+            # encountering an error string becomes NaN
+            dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
+
     # loading input columns to X and target variable to y
     X = dataframe.drop(" Label", axis = 1).copy()
     le = LabelEncoder()
