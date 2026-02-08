@@ -14,8 +14,14 @@ import xgboost as xgb
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import balanced_accuracy_score, roc_auc_score, make_scorer, confusion_matrix
 
-# loading of dataset
-datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"
-currentDataframe = pd.read_csv(datasetLocation)
+def main():
 
-print(currentDataframe.head())
+    # loading of dataset
+    datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"
+    currentDataframe = pd.read_csv(datasetLocation)
+
+    print(currentDataframe.head())
+
+
+if __name__ == "__main__":
+    main()
