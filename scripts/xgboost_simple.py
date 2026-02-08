@@ -27,6 +27,8 @@ def main():
         if col != " Label":  # Skip target
             # encountering an error string becomes NaN
             dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
+            dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)  # Prevent inf
+            dataframe[col] = dataframe[col].replace([np.inf, -np.inf], 0).fillna(0)
 
     # loading input columns to X and target variable to y
     X = dataframe.drop(" Label", axis = 1).copy()
