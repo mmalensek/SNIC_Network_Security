@@ -2,17 +2,19 @@
 Simplified XGBoost implementation
 
 Prerequisites:
-pandas >= 0.25.1
-numpy >= 1.17.2
-sklearn >= 0.22.1
 xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
 """
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import xgboost as xgb
-from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import balanced_accuracy_score, roc_auc_score, make_scorer, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split, GridSearchCV
+
 
 def main():
 
@@ -22,7 +24,8 @@ def main():
 
     # loading input columns to X and target variable to y
     X = dataframe.drop(" Label", axis = 1).copy()
-    y = dataframe[" Label"].copy()
+    le = LabelEncoder()
+    y = le.fit_transform(dataframe[" Label"])
 
     # splitting training data
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, stratify=y)
