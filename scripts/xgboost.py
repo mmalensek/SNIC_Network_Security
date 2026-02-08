@@ -20,7 +20,6 @@ def main():
     datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"
     currentDataframe = pd.read_csv(datasetLocation)
 
-    print(currentDataframe.head())
 
 
 if __name__ == "__main__":
