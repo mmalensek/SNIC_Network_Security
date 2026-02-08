@@ -30,6 +30,5 @@ def main():
     classification_xgb = xgb.XGBClassifier(objective="binary:logistic", seed=42)
     classification_xgb.fit(X_train, y_train, verbose=True, early_stopping_rounds=10, eval_metric="aucpr", eval_set=[(X_test, y_test)])
 
-
 if __name__ == "__main__":
     main()
