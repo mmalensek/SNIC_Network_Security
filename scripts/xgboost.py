@@ -18,6 +18,4 @@ from sklearn.metrics import balanced_accuracy_score, roc_auc_score, make_scorer,
 datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"
 currentDataframe = pd.read_csv(datasetLocation)
 
-print(currentDataframe.shape)  # Verify rows/columns exist
-print(currentDataframe.empty)  # True if no data
-print(currentDataframe.head())
+currentDataframe.head()
