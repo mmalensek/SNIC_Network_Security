@@ -18,9 +18,11 @@ def main():
 
     # loading of dataset
     datasetLocation = "../../dataset/TrafficLabelling/Friday-DDos-SHORTENED.csv"
-    currentDataframe = pd.read_csv(datasetLocation)
+    dataframe = pd.read_csv(datasetLocation)
 
-
+    X = dataframe.drop(" Label", axis = 1).copy()
+    y = dataframe[" Label"].copy()
+    print(y.head())
 
 if __name__ == "__main__":
     main()
