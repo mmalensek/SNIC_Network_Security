@@ -32,6 +32,7 @@ def main():
 
     # loading input columns to X and target variable to y
     X = dataframe.drop(" Label", axis = 1).copy()
+    X = X.loc[:, X.nunique() > 1]
     le = LabelEncoder()
     y = le.fit_transform(dataframe[" Label"])
 
