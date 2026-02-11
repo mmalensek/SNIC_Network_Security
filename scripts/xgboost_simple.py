@@ -40,7 +40,7 @@ def main():
     print("Label distribution (%):")
     print(pd.Series(y).value_counts(normalize=True).sort_index())
     print("\nFeature correlations with label (top 10 highest):")
-    corr_series = X.corrwith(pd.Series(le.inverse_transform(y)), method='spearman').abs()
+    corr_series = X.corrwith(pd.Series(y), method='spearman').abs()
     high_corr_features = corr_series.nlargest(10)
     for feature, corr in high_corr_features.items():
         print(f"  {feature}: {corr:.4f}")
