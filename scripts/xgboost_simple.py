@@ -40,20 +40,24 @@ def main():
 
     classification_xgb = xgb.XGBClassifier(
         objective="binary:logistic", 
-        n_estimators=50,           # reduce from default 100
-        max_depth=3,               # add tree complexity limit
-        min_child_weight=5,        # prevent overfitting to small splits
-        subsample=0.8,             # use 80% of samples per tree
-        colsample_bytree=0.8,      # use 80% of features per tree
+        n_estimators=50,           # Reduce from default 100
+        max_depth=3,               # Add tree complexity limit
+        min_child_weight=5,        # Prevent overfitting to small splits
+        subsample=0.8,             # Use 80% of samples per tree
+        colsample_bytree=0.8,      # Use 80% of features per tree
         seed=42, 
-        early_stopping_rounds=5,   # tighter stopping
+        early_stopping_rounds=5,   # Tighter stopping
         eval_metric="aucpr"
-    )    
+    )
+
     classification_xgb.fit(
         X_train, y_train, 
         eval_set=[(X_test, y_test)],
         verbose=True
     )
+    print(f"Best iteration: {classification_xgb.best_iteration}")
+    print(f"Final AUCPR: {classification_xgb.best_score:.4f}")
+
 
 if __name__ == "__main__":
     main()
