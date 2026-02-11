@@ -36,8 +36,8 @@ def main():
     le = LabelEncoder()
     y = le.fit_transform(dataframe[" Label"])
 
-    ### DIAGNOSIS CODE STARTS HERE ###
-    print("=== DATASET DIAGNOSIS ===")
+    # diagnosis
+    print("")
     print("Label distribution (%):")
     print(pd.Series(y).value_counts(normalize=True).sort_index())
     print("\nFeature correlations with label (top 10 highest):")
@@ -45,14 +45,8 @@ def main():
     high_corr_features = corr_series.nlargest(10)
     for feature, corr in high_corr_features.items():
         print(f"  {feature}: {corr:.4f}")
-    print("\n🚨 LEAKY FEATURES (>0.8 corr):")
-    leaky = corr_series[corr_series > 0.8].index.tolist()
-    if leaky:
-        print(leaky)
-    else:
-        print("None found")
-    print("======================\n")
-    ### DIAGNOSIS CODE ENDS HERE ###
+
+    print("")
 
     # splitting training data
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, stratify=y)
