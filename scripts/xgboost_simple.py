@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 def main():
 
     # loading of dataset
-    datasetLocation = "../../dataset/TrafficLabelling/Traffic-WorkingHours-COMBINED.csv"
+    datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
     dataframe = pd.read_csv(datasetLocation)
 
     # converting all string to numeric
