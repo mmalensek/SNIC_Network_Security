@@ -68,7 +68,7 @@ def main():
         verbose=True
     )
     print(f"Best iteration: {classification_xgb.best_iteration}")
-    print(f"Final AUCPR: {classification_xgb.best_score:.4f}")
+    print(f"Final AUCPR: {classification_xgb.best_score:.6f}")
 
 
 if __name__ == "__main__":
