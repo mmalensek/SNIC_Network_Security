@@ -24,17 +24,16 @@ def main():
 
     # converting all string to numeric
     for col in dataframe.columns:
-        if col != " Label":  # Skip target
-            # encountering an error string becomes NaN
+        if col != " Label":  # skip the target column
+            # encountering an error string transforms it to NaN
             dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
-            dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)  # Prevent inf
+            dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)
             dataframe[col] = dataframe[col].replace([np.inf, -np.inf], 0).fillna(0)
 
     # loading input columns to X and target variable to y
     X = dataframe.drop(" Label", axis = 1).copy()
     X = X.loc[:, X.nunique() > 1]
-    le = LabelEncoder()
-    y = le.fit_transform(dataframe[" Label"])
+    y = np.where(dataframe[" Label"] == "BENIGN", 0, 1) # encodes BENIGN as 0 and anything else as 1
 
     # diagnosis
     print("")
@@ -53,13 +52,13 @@ def main():
 
     classification_xgb = xgb.XGBClassifier(
         objective="binary:logistic", 
-        n_estimators=50,           # Reduce from default 100
-        max_depth=3,               # Add tree complexity limit
-        min_child_weight=5,        # Prevent overfitting to small splits
-        subsample=0.8,             # Use 80% of samples per tree
-        colsample_bytree=0.8,      # Use 80% of features per tree
+        n_estimators=50,         
+        max_depth=3,             
+        min_child_weight=5,       
+        subsample=0.8,            
+        colsample_bytree=0.8,     
         seed=42, 
-        early_stopping_rounds=5,   # Tighter stopping
+        early_stopping_rounds=5,   
         eval_metric="aucpr"
     )
 
