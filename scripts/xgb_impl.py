@@ -70,6 +70,9 @@ def main():
     print(f"Best iteration: {classification_xgb.best_iteration}")
     print(f"Final AUCPR: {classification_xgb.best_score:.6f}")
 
+    # save the model
+    classification_xgb.save_model("classifier/xgb_model.json")
+
 
 if __name__ == "__main__":
     main()
