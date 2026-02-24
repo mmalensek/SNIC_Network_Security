@@ -42,8 +42,8 @@ def main():
 
     # row selection for prediction
     print("Prediction row selection..")
-    leftBoundary = input(int("Enter lower bound: "))
-    rightBoundary = input(int("Enter higher boundary: "))
+    leftBoundary = int(input("Enter lower bound: "))
+    rightBoundary = int(input("Enter higher boundary: "))
     test_rows = X.iloc[leftBoundary:rightBoundary]
     true_labels = y[leftBoundary:rightBoundary]
 
