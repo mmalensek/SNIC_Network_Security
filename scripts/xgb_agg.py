@@ -21,11 +21,11 @@ np.set_printoptions(suppress=True, precision=6)
 
 def main():
 
-    print("Prediction row selection..")
+    print("\nPrediction row selection..")
     leftBoundary = int(input("Enter lower bound: "))
     rightBoundary = int(input("Enter higher boundary: "))
+    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
     print("")
-    printSettings = int(input("Print every row separately (1), print json (2), print both (3): "))
 
     # load the trained classifier
     model = xgb.XGBClassifier()
