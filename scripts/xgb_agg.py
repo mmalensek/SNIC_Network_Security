@@ -20,10 +20,11 @@ def main():
     # load the trained classifier
     model = xgb.XGBClassifier()
     model.load_model(modelLocation)
-    print("Model loaded")
+    print("Model loaded..")
 
     # loading the dataset
     dataframe = pd.read_csv(datasetLocation)
+    print("Dataset loaded..")
 
     # apply same preprocessing as in training
     for col in dataframe.columns:
@@ -36,6 +37,8 @@ def main():
     X = dataframe.drop(" Label", axis=1).copy()
     X = X.loc[:, X.nunique() > 1]
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
+    print("Dataset preprocessed..")
+
 
     # row selection for prediction
     print("Prediction row selection..")
