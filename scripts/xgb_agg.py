@@ -72,7 +72,7 @@ def main():
         "total_flows": int(len(test_rows)),
         "flow duration": float(test_rows[" Flow Duration"].mean()),
         "total fwd packets": float(test_rows[" Total Fwd Packets"].mean()),
-        "fwd packet length": float(test_rows[" Total Length of Fwd Packets"].mean()),
+        "fwd packet length": float(test_rows["Total Length of Fwd Packets"].mean()),
         "flow bytes per second": float(test_rows[" Flow Bytes/s"].mean()),
     }
 
