@@ -9,6 +9,7 @@ sklearn >= 0.22.1
 """
 
 import numpy as np
+np.set_printoptions(suppress=True, precision=6)
 import pandas as pd
 import xgboost as xgb
 
