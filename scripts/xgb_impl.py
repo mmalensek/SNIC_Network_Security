@@ -71,8 +71,8 @@ def main():
     print(f"Final AUCPR: {classification_xgb.best_score:.6f}")
 
     # save the model
-    print("Saving the model to classifier/xgb_model.json")
     classification_xgb.save_model("classifier/xgb_model.json")
+    print("Saved the model to classifier/xgb_model.json")
 
 
 if __name__ == "__main__":
