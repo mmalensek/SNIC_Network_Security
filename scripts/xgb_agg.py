@@ -21,6 +21,12 @@ np.set_printoptions(suppress=True, precision=6)
 
 def main():
 
+    print("Prediction row selection..")
+    leftBoundary = int(input("Enter lower bound: "))
+    rightBoundary = int(input("Enter higher boundary: "))
+    print("")
+    printSettings = int(input("Print every row separately (1), print json (2), print both (3): "))
+
     # load the trained classifier
     model = xgb.XGBClassifier()
     model.load_model(modelLocation)
@@ -45,9 +51,6 @@ def main():
 
 
     # row selection for prediction
-    print("Prediction row selection..")
-    leftBoundary = int(input("Enter lower bound: "))
-    rightBoundary = int(input("Enter higher boundary: "))
     test_rows = X.iloc[leftBoundary:rightBoundary]
     true_labels = y[leftBoundary:rightBoundary]
 
@@ -55,14 +58,17 @@ def main():
     predictions = model.predict(test_rows)
     probabilities = model.predict_proba(test_rows)
 
-    # printing of results per flow
-    print("------------------------------------")
-    for i in range(len(test_rows)):
-        print(f"\nRow {i}")
-        print("True label:", true_labels[i])
-        print("Predicted:", predictions[i])
-        print("Probabilities [BENIGN, ATTACK]:", probabilities[i])
-    print("------------------------------------")
+    print("\n------------------------------------\n")
+
+    if(printSettings == 1 or printSettings == 3):
+        # printing of results per flow
+        for i in range(len(test_rows)):
+            print(f"Row {i}")
+            print("True label:", true_labels[i])
+            print("Predicted:", predictions[i])
+            print("Probabilities [BENIGN, ATTACK]:", probabilities[i])
+            print("")
+        print("------------------------------------")
 
     # aggregated prediction
     avg_attack_prob = float(np.mean(probabilities[:, 1]))
@@ -85,10 +91,9 @@ def main():
         "features": aggregated_features
     }
 
-    print("\nFinal JSON output:")
-    print(json.dumps(output, indent=2))
-
-
+    if(printSettings == 2 or printSettings == 3):
+        print("\nFinal JSON output:")
+        print(json.dumps(output, indent=2))
 
 
 if __name__ == "__main__":
