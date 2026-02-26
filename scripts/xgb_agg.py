@@ -87,7 +87,7 @@ def main():
             "total_flows": int(len(test_rows)),
             "avg_flow_duration": float(test_rows[" Flow Duration"].mean()),
             "packets_per_second": float(test_rows[" Flow Packets/s"].mean()),
-            "bytes_per_second": float(test_rows[" Flow Bytes/s"].mean()),
+            "bytes_per_second": float(test_rows["Flow Bytes/s"].mean()),
             "total_fwd_packets": total_fwd,
             "total_bwd_packets": total_bwd,
             "fwd_bwd_ratio": round(fwd_bwd_ratio, 3)
