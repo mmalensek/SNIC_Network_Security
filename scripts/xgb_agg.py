@@ -97,7 +97,7 @@ def main():
             "syn_count": syn_count,
             "ack_count": ack_count,
             "rst_count": float(test_rows[" RST Flag Count"].sum()),
-            "fin_count": float(test_rows[" FIN Flag Count"].sum()),
+            "fin_count": float(test_rows["FIN Flag Count"].sum()),
             "syn_ack_ratio": round(syn_ack_ratio, 3)
         },
 
