@@ -111,7 +111,7 @@ def main():
         "timing": {
             "flow_iat_mean": float(test_rows[" Flow IAT Mean"].mean()),
             "flow_iat_std": float(test_rows[" Flow IAT Std"].mean()),
-            "idle_mean": float(test_rows[" Idle Mean"].mean()),
+            "idle_mean": float(test_rows["Idle Mean"].mean()),
             "active_mean": float(test_rows[" Active Mean"].mean())
         }
     }
