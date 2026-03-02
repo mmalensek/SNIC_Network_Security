@@ -10,17 +10,19 @@ json
 """
 
 import json
+import os
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 
 modelLocation = "classifier/xgb_model.json"
 datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
+json_log_dir = "json_log"
 
 np.set_printoptions(suppress=True, precision=6)
 
 def main():
-
+    
     print("\nPrediction row selection..")
     leftBoundary = int(input("Enter lower bound: "))
     rightBoundary = int(input("Enter higher boundary: "))
@@ -48,7 +50,6 @@ def main():
     X = X.loc[:, X.nunique() > 1]
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
     print("Dataset preprocessed..")
-
 
     # row selection for prediction
     test_rows = X.iloc[leftBoundary:rightBoundary]
@@ -124,6 +125,15 @@ def main():
         "avg_attack_probability": round(avg_attack_prob, 4),
         "features": aggregated_features
     }
+
+    # save to json_log folder with timestamped filename
+    timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"json_log/prediction_{leftBoundary}_{rightBoundary}_{timestamp}.json"
+    
+    with open(filename, 'w') as f:
+        json.dump(output, f, indent=2)
+    
+    print(f"JSON saved to: {filename}")
 
     # printing of row data / json based on settings
     if(printSettings == 2 or printSettings == 3):
