@@ -22,7 +22,7 @@ json_log_dir = "json_log"
 np.set_printoptions(suppress=True, precision=6)
 
 def main():
-    
+
     print("\nPrediction row selection..")
     leftBoundary = int(input("Enter lower bound: "))
     rightBoundary = int(input("Enter higher boundary: "))
@@ -51,6 +51,15 @@ def main():
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
     print("Dataset preprocessed..")
 
+    # set a true label array for accuracy testing
+    original_labels = dataframe[" Label"].copy()
+    true_labels = original_labels.iloc[leftBoundary:rightBoundary]
+
+    # compute actual majority for the true label
+    majority_label = true_labels.value_counts().idxmax()
+    majority_ratio = float(true_labels.value_counts().max() / len(true_labels))
+    print("True label calculated..")
+    
     # row selection for prediction
     test_rows = X.iloc[leftBoundary:rightBoundary]
     true_labels = y[leftBoundary:rightBoundary]
@@ -126,14 +135,23 @@ def main():
         "features": aggregated_features
     }
 
+    ground_truth_output = {
+        "most_common_true_label": majority_label,
+        "true_label_ratio": majority_ratio
+    }
+
     # save to json_log folder with timestamped filename
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"json_log/prediction_{leftBoundary}_{rightBoundary}_{timestamp}.json"
-    
+    filename = f"json_log/prediction_{timestamp}.json"    
     with open(filename, 'w') as f:
         json.dump(output, f, indent=2)
-    
     print(f"JSON saved to: {filename}")
+
+    # save ground truth to separate json file
+    ground_truth_filename = f"json_log/ground_truth_{timestamp}.json"
+    with open(ground_truth_filename, 'w') as f:
+        json.dump(ground_truth_output, f, indent=2)
+    print(f"Ground truth JSON saved to: {ground_truth_filename}")
 
     # printing of row data / json based on settings
     if(printSettings == 2 or printSettings == 3):
