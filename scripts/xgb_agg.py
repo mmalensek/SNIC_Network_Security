@@ -23,9 +23,7 @@ np.set_printoptions(suppress=True, precision=6)
 
 def main():
 
-    print("\nPrediction row selection..")
-    leftBoundary = int(input("Enter lower bound: "))
-    rightBoundary = int(input("Enter higher boundary: "))
+    print("\nPrediction selection by label..")
     printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
     print("")
 
@@ -37,6 +35,28 @@ def main():
     # loading the dataset
     dataframe = pd.read_csv(datasetLocation)
     print("Dataset loaded..")
+
+    # show label distribution and ask set selection for test
+    label_counts = dataframe[" Label"].value_counts()
+    print("\nAvailable labels and counts:")
+    for label, count in label_counts.items():
+        print(f"  {label}: {count}")
+
+    selected_input = input("\nEnter labels to include in test (comma-separated), or 'all': ").strip()
+    if selected_input.lower() == "all" or selected_input == "":
+        selected_labels = label_counts.index.tolist()
+    else:
+        selected_labels = [l.strip() for l in selected_input.split(",") if l.strip()]
+
+    invalid_labels = [l for l in selected_labels if l not in label_counts.index]
+    if invalid_labels:
+        raise ValueError(f"Invalid label(s) provided: {invalid_labels}. Choose from {list(label_counts.index)}")
+
+    filtered_df = dataframe[dataframe[" Label"].isin(selected_labels)].reset_index(drop=True)
+    if filtered_df.empty:
+        raise ValueError("No rows match selected label(s).")
+
+    dataframe = filtered_df
 
     # apply same preprocessing as in training
     for col in dataframe.columns:
@@ -53,16 +73,16 @@ def main():
 
     # set a true label array for accuracy testing
     original_labels = dataframe[" Label"].copy()
-    true_labels = original_labels.iloc[leftBoundary:rightBoundary]
+    true_labels = original_labels.copy()
 
     # compute actual majority for the true label
     majority_label = true_labels.value_counts().idxmax()
     majority_ratio = float(true_labels.value_counts().max() / len(true_labels))
     print("True label calculated..")
     
-    # row selection for prediction
-    test_rows = X.iloc[leftBoundary:rightBoundary]
-    true_labels = y[leftBoundary:rightBoundary]
+    # row selection for prediction (all selected rows)
+    test_rows = X
+    true_labels = y
 
     # prediction per flow
     predictions = model.predict(test_rows)
@@ -127,8 +147,7 @@ def main():
     }
 
     output = {
-        "window_left": leftBoundary,
-        "window_right": rightBoundary,
+        "selected_labels": selected_labels,
         "model_prediction": final_prediction,
         "confidence": confidence,
         "avg_attack_probability": round(avg_attack_prob, 4),
