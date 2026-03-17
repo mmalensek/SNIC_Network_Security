@@ -1,5 +1,5 @@
 """
-XGBoost classifier aggregator
+XGBoost classifier aggregator (label-based selection)
 
 Prerequisites:
 xgboost >= 0.90
@@ -23,11 +23,7 @@ np.set_printoptions(suppress=True, precision=6)
 
 def main():
 
-    print("\nPrediction row selection..")
-    leftBoundary = int(input("Enter lower bound: "))
-    rightBoundary = int(input("Enter higher boundary: "))
-    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
-    print("")
+    print("\nLoading model and dataset...")
 
     # load the trained classifier
     model = xgb.XGBClassifier()
@@ -49,49 +45,80 @@ def main():
     X = dataframe.drop(" Label", axis=1).copy()
     X = X.loc[:, X.nunique() > 1]
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
+    original_labels = dataframe[" Label"].copy()
+
     print("Dataset preprocessed..")
 
-    # set a true label array for accuracy testing
-    original_labels = dataframe[" Label"].copy()
-    true_labels = original_labels.iloc[leftBoundary:rightBoundary]
+    # ---------------- LABEL SELECTION ----------------
+    print("\nAvailable labels in dataset:")
 
-    # compute actual majority for the true label
-    majority_label = true_labels.value_counts().idxmax()
-    majority_ratio = float(true_labels.value_counts().max() / len(true_labels))
+    labels = dataframe[" Label"].unique()
+    for i, label in enumerate(labels):
+        print(f"{i}: {label}")
+
+    selected_indices = input("\nSelect labels to include (e.g. 0,2,3): ")
+    selected_indices = [int(i.strip()) for i in selected_indices.split(",")]
+
+    selected_labels = [labels[i] for i in selected_indices]
+
+    print("\nSelected labels:", selected_labels)
+
+    # filter dataset
+    mask = dataframe[" Label"].isin(selected_labels)
+    test_rows = X[mask]
+    true_labels = pd.Series(y)[mask]
+    true_label_names = original_labels[mask]
+
+    # ---------------- OPTIONAL SAMPLING ----------------
+    limit = int(input("\nHow many samples to test (0 = all): "))
+
+    if limit > 0:
+        sampled_indices = np.random.choice(
+            test_rows.index,
+            size=min(limit, len(test_rows)),
+            replace=False
+        )
+        test_rows = test_rows.loc[sampled_indices]
+        true_labels = true_labels.loc[sampled_indices]
+        true_label_names = true_label_names.loc[sampled_indices]
+
+    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
+    print("")
+
+    # ---------------- GROUND TRUTH ----------------
+    majority_label = true_label_names.value_counts().idxmax()
+    majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
+
     print("True label calculated..")
-    
-    # row selection for prediction
-    test_rows = X.iloc[leftBoundary:rightBoundary]
-    true_labels = y[leftBoundary:rightBoundary]
 
-    # prediction per flow
+    # ---------------- PREDICTIONS ----------------
     predictions = model.predict(test_rows)
     probabilities = model.predict_proba(test_rows)
 
     print("\n------------------------------------\n")
 
-    if(printSettings == 1 or printSettings == 3):
-        # printing of results per flow
+    if printSettings == 1 or printSettings == 3:
         for i in range(len(test_rows)):
             print(f"Row {i}")
-            print("True label:", true_labels[i])
+            print("True label:", true_labels.iloc[i])
             print("Predicted:", predictions[i])
             print("Probabilities [BENIGN, ATTACK]:", probabilities[i])
             print("")
         print("------------------------------------")
 
-    # getting data for json output
+    # ---------------- AGGREGATION ----------------
     avg_attack_prob = float(np.mean(probabilities[:, 1]))
     final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
     confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
+
     syn_count = float(test_rows[" SYN Flag Count"].sum())
     ack_count = float(test_rows[" ACK Flag Count"].sum())
     syn_ack_ratio = syn_count / ack_count if ack_count != 0 else syn_count
+
     total_fwd = float(test_rows[" Total Fwd Packets"].sum())
     total_bwd = float(test_rows[" Total Backward Packets"].sum())
     fwd_bwd_ratio = total_fwd / total_bwd if total_bwd != 0 else total_fwd
-   
-    # aggregated prediction, formatting for json
+
     aggregated_features = {
         "traffic_summary": {
             "total_flows": int(len(test_rows)),
@@ -127,8 +154,7 @@ def main():
     }
 
     output = {
-        "window_left": leftBoundary,
-        "window_right": rightBoundary,
+        "selected_labels": selected_labels,
         "model_prediction": final_prediction,
         "confidence": confidence,
         "avg_attack_probability": round(avg_attack_prob, 4),
@@ -140,21 +166,22 @@ def main():
         "true_label_ratio": majority_ratio
     }
 
-    # save to json_log folder with timestamped filename
+    # ---------------- SAVE JSON ----------------
+    os.makedirs(json_log_dir, exist_ok=True)
+
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"json_log/prediction_{timestamp}.json"    
+
+    filename = f"{json_log_dir}/prediction_{timestamp}.json"
     with open(filename, 'w') as f:
         json.dump(output, f, indent=2)
     print(f"JSON saved to: {filename}")
 
-    # save ground truth to separate json file
-    ground_truth_filename = f"json_log/ground_truth_{timestamp}.json"
+    ground_truth_filename = f"{json_log_dir}/ground_truth_{timestamp}.json"
     with open(ground_truth_filename, 'w') as f:
         json.dump(ground_truth_output, f, indent=2)
     print(f"Ground truth JSON saved to: {ground_truth_filename}")
 
-    # printing of row data / json based on settings
-    if(printSettings == 2 or printSettings == 3):
+    if printSettings == 2 or printSettings == 3:
         print("\nFinal JSON output:")
         print(json.dumps(output, indent=2))
 
