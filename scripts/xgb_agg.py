@@ -67,8 +67,22 @@ def main():
 
     # prepare X and y exactly like in training
     X = dataframe.drop(" Label", axis=1).copy()
-    X = X.loc[:, X.nunique() > 1]
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
+
+    # align features to what model expects
+    model_features = model.get_booster().feature_names
+    if model_features is not None:
+        missing = [c for c in model_features if c not in X.columns]
+        if missing:
+            print(f"Adding missing feature cols with 0: {missing}")
+            for c in missing:
+                X[c] = 0
+        extra = [c for c in X.columns if c not in model_features]
+        if extra:
+            print(f"Dropping extra feature cols: {extra}")
+            X = X.drop(columns=extra)
+        X = X[model_features]
+
     print("Dataset preprocessed..")
 
     # set a true label array for accuracy testing
