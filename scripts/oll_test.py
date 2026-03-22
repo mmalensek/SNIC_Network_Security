@@ -144,10 +144,10 @@ def evaluate(models, pred_json, ground_truth):
         print("\n---Reasoning---")
         print(reasoning)
         print("\n---Solution---")
-        print("solution")
+        print(solution)
 
     return results
-    
+
 
 # main
 def main():
