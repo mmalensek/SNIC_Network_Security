@@ -42,6 +42,37 @@ def query_model(model, prompt):
     return response.json()["response"]
 
 
+# extract reasoning, solution, and label from model response
+def extract_response_parts(text):
+    reasoning = ""
+    solution = ""
+    label = "UNKNOWN"
+    
+    # Extract REASONING section
+    if "REASONING:" in text:
+        reasoning_start = text.index("REASONING:") + len("REASONING:")
+        reasoning_end = text.find("SOLUTION:") if "SOLUTION:" in text else text.find("LABEL:")
+        reasoning = text[reasoning_start:reasoning_end].strip() if reasoning_end != -1 else text[reasoning_start:].strip()
+    
+    # Extract SOLUTION section
+    if "SOLUTION:" in text:
+        solution_start = text.index("SOLUTION:") + len("SOLUTION:")
+        solution_end = text.find("LABEL:")
+        solution = text[solution_start:solution_end].strip() if solution_end != -1 else text[solution_start:].strip()
+    
+    # Extract LABEL
+    if "LABEL:" in text:
+        label_start = text.index("LABEL:") + len("LABEL:")
+        label_text = text[label_start:].split("\n")[0].strip()
+        label = extract_label(label_text)
+    
+    return {
+        "reasoning": reasoning,
+        "solution": solution,
+        "label": label
+    }
+
+
 # extract label from model response
 def extract_label(text):
     text = text.lower()
@@ -56,6 +87,8 @@ def extract_label(text):
     return "UNKNOWN"
 
 
+
+
 # build prompt for model
 def build_prompt(pred_json):
     return f"""
@@ -63,12 +96,14 @@ You are a cybersecurity expert.
 
 Analyze the following network traffic summary produced by an XGBoost classifier.
 
-Explain:
-1. What is happening in the traffic
-2. Whether it is an attack
-3. What type of attack (be specific)
+Provide your response in the following format:
 
-At the end, output ONLY the final label in this format:
+REASONING:
+[Analyze what is happening in the traffic, whether it is an attack, and what type of attack if applicable]
+
+SOLUTION:
+[Provide specific recommendations or mitigation strategies for this traffic pattern]
+
 LABEL: <label>
 
 JSON:
@@ -87,7 +122,10 @@ def evaluate(models, pred_json, ground_truth):
         prompt = build_prompt(pred_json)
         response = query_model(model, prompt)
 
-        predicted_label = extract_label(response)
+        response_parts = extract_response_parts(response)
+        predicted_label = response_parts["label"]
+        reasoning = response_parts["reasoning"]
+        solution = response_parts["solution"]
 
         correct = predicted_label == true_label
 
@@ -96,6 +134,8 @@ def evaluate(models, pred_json, ground_truth):
             "predicted": predicted_label,
             "true": true_label,
             "correct": correct,
+            "reasoning": reasoning,
+            "solution": solution,
             "response": response
         })
 
@@ -131,16 +171,16 @@ def main():
 
     results = evaluate(selected_models, pred_json, ground_truth)
 
-    # summary
+    # summary of results
     correct = sum(r["correct"] for r in results)
     total = len(results)
 
-    print("\n=== SUMMARY ===")
+    print("\n--- Summary ---")
     print(f"Accuracy: {correct}/{total} = {correct/total:.2f}")
 
     # saving results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_file = f"evaluation_{timestamp}.json"
+    out_file = f"{JSON_LOG_DIR}/evaluation_{timestamp}.json"
 
     with open(out_file, "w") as f:
         json.dump(results, f, indent=2)
