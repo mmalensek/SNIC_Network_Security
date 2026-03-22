@@ -141,11 +141,13 @@ def evaluate(models, pred_json, ground_truth):
         print(f"Predicted: {predicted_label}")
         print(f"True: {true_label}")
         print(f"Correct: {correct}")
-        print(f"\nReasoning: {reasoning}")
-        print(f"Solution: {solution}")
+        print("\n---Reasoning---")
+        print(reasoning)
+        print("\n---Solution---")
+        print("solution")
 
     return results
-
+    
 
 # main
 def main():
