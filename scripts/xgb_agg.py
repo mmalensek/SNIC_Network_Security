@@ -28,11 +28,11 @@ def main():
     # load the trained classifier
     model = xgb.XGBClassifier()
     model.load_model(modelLocation)
-    print("Model loaded..")
+    print("Model loaded...")
 
     # loading the dataset
     dataframe = pd.read_csv(datasetLocation)
-    print("Dataset loaded..")
+    print("Dataset loaded...")
 
     # apply same preprocessing as in training
     for col in dataframe.columns:
@@ -47,7 +47,7 @@ def main():
     y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
     original_labels = dataframe[" Label"].copy()
 
-    print("Dataset preprocessed..")
+    print("Dataset preprocessed...")
 
     # ---------------- LABEL SELECTION ----------------
     print("\nAvailable labels in dataset:")
