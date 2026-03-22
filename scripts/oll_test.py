@@ -8,9 +8,7 @@ OLLAMA_API = "http://localhost:11434/api/generate"
 JSON_LOG_DIR = "json_log"
 
 
-# ---------------------------
-# Get local Ollama models
-# ---------------------------
+# getting local Ollama models
 def get_ollama_models():
     result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
     lines = result.stdout.strip().split("\n")[1:]  # skip header
@@ -18,9 +16,7 @@ def get_ollama_models():
     return models
 
 
-# ---------------------------
-# Load latest JSON files
-# ---------------------------
+# load latest prediction and ground truth files
 def get_latest_files():
     files = os.listdir(JSON_LOG_DIR)
 
@@ -33,9 +29,7 @@ def get_latest_files():
     )
 
 
-# ---------------------------
-# Query Ollama model
-# ---------------------------
+# query Ollama model
 def query_model(model, prompt):
     response = requests.post(
         OLLAMA_API,
@@ -48,9 +42,7 @@ def query_model(model, prompt):
     return response.json()["response"]
 
 
-# ---------------------------
-# Extract label from response
-# ---------------------------
+# extract label from model response
 def extract_label(text):
     text = text.lower()
 
@@ -64,9 +56,7 @@ def extract_label(text):
     return "UNKNOWN"
 
 
-# ---------------------------
-# Build prompt
-# ---------------------------
+# build prompt for model
 def build_prompt(pred_json):
     return f"""
 You are a cybersecurity expert.
@@ -85,10 +75,7 @@ JSON:
 {json.dumps(pred_json, indent=2)}
 """
 
-
-# ---------------------------
-# Run evaluation
-# ---------------------------
+# run evaluation
 def evaluate(models, pred_json, ground_truth):
     results = []
 
@@ -119,13 +106,11 @@ def evaluate(models, pred_json, ground_truth):
     return results
 
 
-# ---------------------------
-# Main
-# ---------------------------
+# main
 def main():
     models = get_ollama_models()
 
-    print("Available models:")
+    print("\nAvailable models:")
     for i, m in enumerate(models):
         print(f"{i}: {m}")
 
@@ -146,14 +131,14 @@ def main():
 
     results = evaluate(selected_models, pred_json, ground_truth)
 
-    # Summary
+    # summary
     correct = sum(r["correct"] for r in results)
     total = len(results)
 
     print("\n=== SUMMARY ===")
     print(f"Accuracy: {correct}/{total} = {correct/total:.2f}")
 
-    # Save results
+    # saving results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     out_file = f"evaluation_{timestamp}.json"
 
