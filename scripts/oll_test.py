@@ -135,13 +135,14 @@ def evaluate(models, pred_json, ground_truth):
             "true": true_label,
             "correct": correct,
             "reasoning": reasoning,
-            "solution": solution,
-            "response": response
+            "solution": solution
         })
 
         print(f"Predicted: {predicted_label}")
         print(f"True: {true_label}")
         print(f"Correct: {correct}")
+        print(f"\nReasoning: {reasoning}")
+        print(f"Solution: {solution}")
 
     return results
 
@@ -185,7 +186,7 @@ def main():
     with open(out_file, "w") as f:
         json.dump(results, f, indent=2)
 
-    print(f"Saved results to {out_file}")
+    print(f"\nSaved results to {out_file}")
 
 
 if __name__ == "__main__":
