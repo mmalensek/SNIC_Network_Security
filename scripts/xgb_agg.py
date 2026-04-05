@@ -49,7 +49,7 @@ def main():
 
     print("Dataset preprocessed...")
 
-    # ---------------- LABEL SELECTION ----------------
+    # label selection
     print("\nAvailable labels in dataset:")
 
     labels = dataframe[" Label"].unique()
@@ -69,7 +69,7 @@ def main():
     true_labels = pd.Series(y)[mask]
     true_label_names = original_labels[mask]
 
-    # ---------------- OPTIONAL SAMPLING ----------------
+    # optional sampling
     limit = int(input("\nHow many samples to test (0 = all): "))
 
     if limit > 0:
@@ -85,13 +85,13 @@ def main():
     printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
     print("")
 
-    # ---------------- GROUND TRUTH ----------------
+    # ground truth summary
     majority_label = true_label_names.value_counts().idxmax()
     majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
 
     print("True label calculated..")
 
-    # ---------------- PREDICTIONS ----------------
+    # predictions and probabilities
     predictions = model.predict(test_rows)
     probabilities = model.predict_proba(test_rows)
 
@@ -106,7 +106,7 @@ def main():
             print("")
         print("------------------------------------")
 
-    # ---------------- AGGREGATION ----------------
+    # aggregate probabilities and make final prediction
     avg_attack_prob = float(np.mean(probabilities[:, 1]))
     final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
     confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
@@ -166,7 +166,7 @@ def main():
         "true_label_ratio": majority_ratio
     }
 
-    # ---------------- SAVE JSON ----------------
+    # save json output
     os.makedirs(json_log_dir, exist_ok=True)
 
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
