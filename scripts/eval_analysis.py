@@ -15,6 +15,7 @@ json
 import os
 import json
 import re
+from datetime import datetime
 from collections import Counter
 
 from sklearn.metrics import (
@@ -277,11 +278,18 @@ def main():
         "label_distribution_predicted": dict(Counter(normalize_label(r["predicted_label"]) for r in records)),
     }
 
-    out_path = os.path.join(JSON_LOG_DIR, "/../3_analysis_of_evaluation/latest_evaluation_metrics.json")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    out_dir = os.path.normpath(os.path.join(JSON_LOG_DIR, "..", "3_analysis_of_evaluation"))
+    os.makedirs(out_dir, exist_ok=True)
+
+    out_path = os.path.join(out_dir, f"evaluation_metrics_{timestamp}.json")
+
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(final_output, f, indent=2, ensure_ascii=False)
 
     print(json.dumps(final_output, indent=2, ensure_ascii=False))
+    print(f"\nSaved to: {out_path}")
 
 
 if __name__ == "__main__":
