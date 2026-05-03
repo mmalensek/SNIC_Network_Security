@@ -20,7 +20,7 @@ import xgboost as xgb
 
 modelLocation = "classifier/xgb_model.json"
 datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
-JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction/"
+JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 np.set_printoptions(suppress=True, precision=6)
 

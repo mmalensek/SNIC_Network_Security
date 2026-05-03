@@ -19,7 +19,7 @@ import requests
 from datetime import datetime
 
 OLLAMA_API = "http://localhost:11434/api/generate"
-JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction/"
+JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 
 # getting local Ollama models
