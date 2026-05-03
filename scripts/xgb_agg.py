@@ -1,4 +1,7 @@
 """
+
+(2/4)
+
 XGBoost classifier aggregator (label-based selection)
 
 Prerequisites:
@@ -17,7 +20,7 @@ import xgboost as xgb
 
 modelLocation = "classifier/xgb_model.json"
 datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
-json_log_dir = "json_log"
+json_log_dir = "json_log/1_groundtruth_and_xgboost_prediction"
 
 np.set_printoptions(suppress=True, precision=6)
 

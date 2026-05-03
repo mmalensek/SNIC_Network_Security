@@ -1,3 +1,17 @@
+"""
+
+(3/4)
+
+Ollama testing script for evaluating model reasoning and solution quality 
+
+Prerequisites:
+xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
+json
+"""
+
 import os
 import json
 import subprocess
@@ -5,7 +19,7 @@ import requests
 from datetime import datetime
 
 OLLAMA_API = "http://localhost:11434/api/generate"
-JSON_LOG_DIR = "json_log"
+JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 
 # getting local Ollama models
@@ -96,7 +110,7 @@ You are a cybersecurity expert.
 
 Analyze the following network traffic summary produced by an XGBoost classifier.
 
-Provide your response in the following format:
+Provide your response EXACTLY and ONLY in the following format:
 
 REASONING:
 [Analyze what is happening in the traffic, whether it is an attack, and what type of attack if applicable]
@@ -131,9 +145,9 @@ def evaluate(models, pred_json, ground_truth):
 
         results.append({
             "model": model,
-            "predicted": predicted_label,
-            "true": true_label,
-            "correct": correct,
+            "predicted_label": predicted_label,
+            "actual_label": true_label,
+            "is_model_correct": correct,
             "reasoning": reasoning,
             "solution": solution
         })
@@ -183,7 +197,7 @@ def main():
 
     # saving results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_file = f"{JSON_LOG_DIR}/evaluation_{timestamp}.json"
+    out_file = f"{JSON_LOG_DIR}/../2_ollama_evaluation/evaluation_{timestamp}.json"
 
     with open(out_file, "w") as f:
         json.dump(results, f, indent=2)
