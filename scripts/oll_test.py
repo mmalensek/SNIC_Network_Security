@@ -189,7 +189,7 @@ def main():
     results = evaluate(selected_models, pred_json, ground_truth)
 
     # summary of results
-    correct = sum(r["correct"] for r in results)
+    correct = sum(r["is_model_correct"] for r in results)
     total = len(results)
 
     print("\n--- Summary ---")
