@@ -25,7 +25,7 @@ from sklearn.metrics import (
     cohen_kappa_score,
 )
 
-JSON_LOG_DIR = "json_log/2_ollama_evaluation"
+JSON_LOG_DIR = "json_log/2_ollama_evaluation/"
 
 
 def get_latest_files():

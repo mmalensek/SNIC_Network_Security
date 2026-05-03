@@ -20,7 +20,7 @@ import xgboost as xgb
 
 modelLocation = "classifier/xgb_model.json"
 datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
-json_log_dir = "json_log/1_groundtruth_and_xgboost_prediction"
+JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction/"
 
 np.set_printoptions(suppress=True, precision=6)
 
@@ -170,16 +170,16 @@ def main():
     }
 
     # save json output
-    os.makedirs(json_log_dir, exist_ok=True)
+    os.makedirs(JSON_LOG_DIR, exist_ok=True)
 
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
 
-    filename = f"{json_log_dir}/prediction_{timestamp}.json"
+    filename = f"{JSON_LOG_DIR}/prediction_{timestamp}.json"
     with open(filename, 'w') as f:
         json.dump(output, f, indent=2)
     print(f"JSON saved to: {filename}")
 
-    ground_truth_filename = f"{json_log_dir}/ground_truth_{timestamp}.json"
+    ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}.json"
     with open(ground_truth_filename, 'w') as f:
         json.dump(ground_truth_output, f, indent=2)
     print(f"Ground truth JSON saved to: {ground_truth_filename}")
