@@ -1,5 +1,4 @@
 """
-
 (2/4)
 
 XGBoost classifier aggregator (label-based selection)
@@ -24,77 +23,13 @@ JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 np.set_printoptions(suppress=True, precision=6)
 
-def main():
 
-    print("\nLoading model and dataset...")
+def generate_outputs(model, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix):
+    print(f"\nGenerating output set {suffix}...")
 
-    # load the trained classifier
-    model = xgb.XGBClassifier()
-    model.load_model(modelLocation)
-    print("Model loaded...")
-
-    # loading the dataset
-    dataframe = pd.read_csv(datasetLocation)
-    print("Dataset loaded...")
-
-    # apply same preprocessing as in training
-    for col in dataframe.columns:
-        if col != " Label":
-            dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
-            dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)
-            dataframe[col] = dataframe[col].replace([np.inf, -np.inf], 0).fillna(0)
-
-    # prepare X and y exactly like in training
-    X = dataframe.drop(" Label", axis=1).copy()
-    X = X.loc[:, X.nunique() > 1]
-    y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
-    original_labels = dataframe[" Label"].copy()
-
-    print("Dataset preprocessed...")
-
-    # label selection
-    print("\nAvailable labels in dataset:")
-
-    labels = dataframe[" Label"].unique()
-    for i, label in enumerate(labels):
-        print(f"{i}: {label}")
-
-    selected_indices = input("\nSelect labels to include (e.g. 0,2,3): ")
-    selected_indices = [int(i.strip()) for i in selected_indices.split(",")]
-
-    selected_labels = [labels[i] for i in selected_indices]
-
-    print("\nSelected labels:", selected_labels)
-
-    # filter dataset
-    mask = dataframe[" Label"].isin(selected_labels)
-    test_rows = X[mask]
-    true_labels = pd.Series(y)[mask]
-    true_label_names = original_labels[mask]
-
-    # optional sampling
-    limit = int(input("\nHow many samples to test (0 = all): "))
-
-    if limit > 0:
-        sampled_indices = np.random.choice(
-            test_rows.index,
-            size=min(limit, len(test_rows)),
-            replace=False
-        )
-        test_rows = test_rows.loc[sampled_indices]
-        true_labels = true_labels.loc[sampled_indices]
-        true_label_names = true_label_names.loc[sampled_indices]
-
-    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
-    print("")
-
-    # ground truth summary
     majority_label = true_label_names.value_counts().idxmax()
     majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
 
-    print("True label calculated..")
-
-    # predictions and probabilities
     predictions = model.predict(test_rows)
     probabilities = model.predict_proba(test_rows)
 
@@ -109,7 +44,6 @@ def main():
             print("")
         print("------------------------------------")
 
-    # aggregate probabilities and make final prediction
     avg_attack_prob = float(np.mean(probabilities[:, 1]))
     final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
     confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
@@ -132,7 +66,6 @@ def main():
             "total_bwd_packets": total_bwd,
             "fwd_bwd_ratio": round(fwd_bwd_ratio, 3)
         },
-
         "tcp_flags": {
             "syn_count": syn_count,
             "ack_count": ack_count,
@@ -140,14 +73,12 @@ def main():
             "fin_count": float(test_rows["FIN Flag Count"].sum()),
             "syn_ack_ratio": round(syn_ack_ratio, 3)
         },
-
         "packet_statistics": {
             "avg_packet_size": float(test_rows[" Average Packet Size"].mean()),
             "packet_length_std": float(test_rows[" Packet Length Std"].mean()),
             "min_packet_length": float(test_rows[" Min Packet Length"].mean()),
             "max_packet_length": float(test_rows[" Max Packet Length"].mean())
         },
-
         "timing": {
             "flow_iat_mean": float(test_rows[" Flow IAT Mean"].mean()),
             "flow_iat_std": float(test_rows[" Flow IAT Std"].mean()),
@@ -169,24 +100,99 @@ def main():
         "true_label_ratio": majority_ratio
     }
 
-    # save json output
-    os.makedirs(JSON_LOG_DIR, exist_ok=True)
+    return output, ground_truth_output
 
+
+def main():
+    print("\nLoading model and dataset...")
+
+    model = xgb.XGBClassifier()
+    model.load_model(modelLocation)
+    print("Model loaded...")
+
+    dataframe = pd.read_csv(datasetLocation)
+    print("Dataset loaded...")
+
+    for col in dataframe.columns:
+        if col != " Label":
+            dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
+            dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)
+            dataframe[col] = dataframe[col].replace([np.inf, -np.inf], 0).fillna(0)
+
+    X = dataframe.drop(" Label", axis=1).copy()
+    X = X.loc[:, X.nunique() > 1]
+    y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
+    original_labels = dataframe[" Label"].copy()
+
+    print("Dataset preprocessed...")
+
+    print("\nAvailable labels in dataset:")
+    labels = dataframe[" Label"].unique()
+    for i, label in enumerate(labels):
+        print(f"{i}: {label}")
+
+    selected_indices = input("\nSelect labels to include (e.g. 0,2,3): ")
+    selected_indices = [int(i.strip()) for i in selected_indices.split(",")]
+    selected_labels = [labels[i] for i in selected_indices]
+
+    print("\nSelected labels:", selected_labels)
+
+    mask = dataframe[" Label"].isin(selected_labels)
+    filtered_rows = X[mask]
+    filtered_true_labels = pd.Series(y, index=dataframe.index)[mask]
+    filtered_true_label_names = original_labels[mask]
+
+    limit = int(input("\nHow many samples to test per output (0 = all): "))
+    n = int(input("How many different prediction/groundtruth pairs to generate: "))
+    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
+    print("")
+
+    if len(filtered_rows) == 0:
+        print("No rows found for selected labels.")
+        return
+
+    os.makedirs(JSON_LOG_DIR, exist_ok=True)
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
 
-    filename = f"{JSON_LOG_DIR}/prediction_{timestamp}.json"
-    with open(filename, 'w') as f:
-        json.dump(output, f, indent=2)
-    print(f"JSON saved to: {filename}")
+    for run_idx in range(1, n + 1):
+        if limit > 0:
+            sample_size = min(limit, len(filtered_rows))
+            sampled_indices = np.random.choice(
+                filtered_rows.index,
+                size=sample_size,
+                replace=False
+            )
+            test_rows = filtered_rows.loc[sampled_indices]
+            true_labels = filtered_true_labels.loc[sampled_indices]
+            true_label_names = filtered_true_label_names.loc[sampled_indices]
+        else:
+            test_rows = filtered_rows.copy()
+            true_labels = filtered_true_labels.copy()
+            true_label_names = filtered_true_label_names.copy()
 
-    ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}.json"
-    with open(ground_truth_filename, 'w') as f:
-        json.dump(ground_truth_output, f, indent=2)
-    print(f"Ground truth JSON saved to: {ground_truth_filename}")
+        output, ground_truth_output = generate_outputs(
+            model=model,
+            test_rows=test_rows,
+            true_labels=true_labels,
+            true_label_names=true_label_names,
+            selected_labels=selected_labels,
+            printSettings=printSettings,
+            suffix=run_idx
+        )
 
-    if printSettings == 2 or printSettings == 3:
-        print("\nFinal JSON output:")
-        print(json.dumps(output, indent=2))
+        filename = f"{JSON_LOG_DIR}/prediction_{timestamp}_{run_idx}.json"
+        with open(filename, 'w') as f:
+            json.dump(output, f, indent=2)
+        print(f"JSON saved to: {filename}")
+
+        ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}_{run_idx}.json"
+        with open(ground_truth_filename, 'w') as f:
+            json.dump(ground_truth_output, f, indent=2)
+        print(f"Ground truth JSON saved to: {ground_truth_filename}")
+
+        if printSettings == 2 or printSettings == 3:
+            print(f"\nFinal JSON output {run_idx}:")
+            print(json.dumps(output, indent=2))
 
 
 if __name__ == "__main__":

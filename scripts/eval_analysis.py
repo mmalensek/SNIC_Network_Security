@@ -1,5 +1,4 @@
 """
-
 (4/4)
 
 Evaluation analysis script for model predictions and reasoning quality
@@ -29,27 +28,54 @@ from sklearn.metrics import (
 JSON_LOG_DIR = "json_log/2_ollama_evaluation"
 
 
-def get_latest_files():
+def get_latest_file_batch():
     files = os.listdir(JSON_LOG_DIR)
-    eval_files = sorted([f for f in files if f.startswith("evaluation_") and f.endswith(".json")])
+    eval_pattern = re.compile(r"^evaluation_(\d{8}_\d{6})_(\d+)\.json$")
 
-    if not eval_files:
-        raise FileNotFoundError(f"No evaluation_*.json files found in {JSON_LOG_DIR}")
+    matches = []
+    for f in files:
+        m = eval_pattern.match(f)
+        if m:
+            timestamp = m.group(1)
+            idx = int(m.group(2))
+            matches.append((timestamp, idx, f))
 
-    return (
-        os.path.join(JSON_LOG_DIR, eval_files[-1]),
-    )
+    if not matches:
+        raise FileNotFoundError(f"No evaluation_<timestamp>_<n>.json files found in {JSON_LOG_DIR}")
+
+    latest_timestamp = max(ts for ts, _, _ in matches)
+
+    batch_files = [
+        (idx, os.path.join(JSON_LOG_DIR, fname))
+        for ts, idx, fname in matches
+        if ts == latest_timestamp
+    ]
+    batch_files.sort(key=lambda x: x[0])
+
+    return latest_timestamp, batch_files
 
 
-def load_latest_evaluation():
-    (latest_file,) = get_latest_files()
+def load_latest_evaluations():
+    batch_timestamp, batch_files = get_latest_file_batch()
 
-    with open(latest_file, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    all_records = []
+    per_file_records = []
 
-    if not isinstance(data, list):
-        raise ValueError("Evaluation JSON mora biti seznam objektov.")
-    return latest_file, data
+    for idx, filepath in batch_files:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if not isinstance(data, list):
+            raise ValueError(f"Evaluation JSON must be array of objects: {filepath}")
+
+        all_records.extend(data)
+        per_file_records.append({
+            "file_index": idx,
+            "file_path": filepath,
+            "records": data
+        })
+
+    return batch_timestamp, per_file_records, all_records
 
 
 def normalize_label(label):
@@ -110,7 +136,6 @@ def evaluate_reasoning_text(reasoning, predicted_label, actual_label):
     if pred and pred != "unknown" and pred.lower() in text:
         score += 1
         reasons.append("mentions_predicted_label")
-
     elif actual and actual != "unknown" and actual.lower() in text:
         score += 1
         reasons.append("mentions_actual_label")
@@ -259,23 +284,64 @@ def evaluate_text_fields(records):
     }
 
 
-def main():
-    latest_file, records = load_latest_evaluation()
+def build_per_file_summary(per_file_records):
+    summaries = []
 
-    label_eval = evaluate_labels(records)
-    text_eval = evaluate_text_fields(records)
+    for item in per_file_records:
+        idx = item["file_index"]
+        filepath = item["file_path"]
+        records = item["records"]
 
-    final_output = {
-        "source_file": latest_file,
-        "num_records": len(records),
-        "label_evaluation": label_eval,
-        "text_evaluation": {
+        label_eval = evaluate_labels(records)
+        text_eval = evaluate_text_fields(records)
+
+        summaries.append({
+            "file_index": idx,
+            "source_file": filepath,
+            "num_records": len(records),
+            "accuracy": label_eval["accuracy"],
+            "f1_macro": label_eval["f1_macro"],
+            "f1_weighted": label_eval["f1_weighted"],
             "avg_reasoning_score": text_eval["avg_reasoning_score"],
             "avg_solution_score": text_eval["avg_solution_score"],
+            "correct_count": label_eval["correct_count"],
+            "incorrect_count": label_eval["incorrect_count"],
+        })
+
+    return summaries
+
+
+def main():
+    batch_timestamp, per_file_records, all_records = load_latest_evaluations()
+
+    label_eval = evaluate_labels(all_records)
+    text_eval = evaluate_text_fields(all_records)
+    per_file_summary = build_per_file_summary(per_file_records)
+
+    final_output = {
+        "source_batch_timestamp": batch_timestamp,
+        "source_files": [item["file_path"] for item in per_file_records],
+        "num_source_files": len(per_file_records),
+        "num_records_total": len(all_records),
+        "averaged_across_files": {
+            "accuracy_mean": sum(x["accuracy"] for x in per_file_summary) / len(per_file_summary) if per_file_summary else 0.0,
+            "f1_macro_mean": sum(x["f1_macro"] for x in per_file_summary) / len(per_file_summary) if per_file_summary else 0.0,
+            "f1_weighted_mean": sum(x["f1_weighted"] for x in per_file_summary) / len(per_file_summary) if per_file_summary else 0.0,
+            "avg_reasoning_score_mean": sum(x["avg_reasoning_score"] for x in per_file_summary) / len(per_file_summary) if per_file_summary else 0.0,
+            "avg_solution_score_mean": sum(x["avg_solution_score"] for x in per_file_summary) / len(per_file_summary) if per_file_summary else 0.0,
         },
+        "combined_record_evaluation": {
+            "num_records": len(all_records),
+            "label_evaluation": label_eval,
+            "text_evaluation": {
+                "avg_reasoning_score": text_eval["avg_reasoning_score"],
+                "avg_solution_score": text_eval["avg_solution_score"],
+            },
+            "label_distribution_actual": dict(Counter(normalize_label(r["actual_label"]) for r in all_records)),
+            "label_distribution_predicted": dict(Counter(normalize_label(r["predicted_label"]) for r in all_records)),
+        },
+        "per_file_summary": per_file_summary,
         "sample_details": text_eval["details"][:20],
-        "label_distribution_actual": dict(Counter(normalize_label(r["actual_label"]) for r in records)),
-        "label_distribution_predicted": dict(Counter(normalize_label(r["predicted_label"]) for r in records)),
     }
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -283,7 +349,7 @@ def main():
     out_dir = os.path.normpath(os.path.join(JSON_LOG_DIR, "..", "3_analysis_of_evaluation"))
     os.makedirs(out_dir, exist_ok=True)
 
-    out_path = os.path.join(out_dir, f"evaluation_metrics_{timestamp}.json")
+    out_path = os.path.join(out_dir, f"evaluation_metrics_{batch_timestamp}.json")
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(final_output, f, indent=2, ensure_ascii=False)

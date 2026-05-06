@@ -1,5 +1,4 @@
 """
-
 (3/4)
 
 Ollama testing script for evaluating model reasoning and solution quality 
@@ -14,33 +13,66 @@ json
 
 import os
 import json
+import re
 import subprocess
 import requests
 from datetime import datetime
 
 OLLAMA_API = "http://localhost:11434/api/generate"
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
+EVAL_LOG_DIR = "json_log/2_ollama_evaluation"
 
 
 # getting local Ollama models
 def get_ollama_models():
     result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
-    lines = result.stdout.strip().split("\n")[1:]  # skip header
+    lines = result.stdout.strip().split("\n")[1:]
     models = [line.split()[0] for line in lines if line]
     return models
 
 
-# load latest prediction and ground truth files
-def get_latest_files():
+# get latest batch of numbered prediction/ground truth files
+def get_latest_file_pairs():
     files = os.listdir(JSON_LOG_DIR)
 
-    pred_files = sorted([f for f in files if f.startswith("prediction_")])
-    gt_files = sorted([f for f in files if f.startswith("ground_truth_")])
+    pred_pattern = re.compile(r"^prediction_(\d{8}_\d{6})_(\d+)\.json$")
+    gt_pattern = re.compile(r"^ground_truth_(\d{8}_\d{6})_(\d+)\.json$")
 
-    return (
-        os.path.join(JSON_LOG_DIR, pred_files[-1]),
-        os.path.join(JSON_LOG_DIR, gt_files[-1]),
-    )
+    pred_matches = []
+    gt_matches = []
+
+    for f in files:
+        pred_match = pred_pattern.match(f)
+        if pred_match:
+            pred_matches.append((pred_match.group(1), int(pred_match.group(2)), f))
+
+        gt_match = gt_pattern.match(f)
+        if gt_match:
+            gt_matches.append((gt_match.group(1), int(gt_match.group(2)), f))
+
+    if not pred_matches or not gt_matches:
+        raise FileNotFoundError("No numbered prediction/ground truth files found.")
+
+    latest_timestamp = max(ts for ts, _, _ in pred_matches)
+
+    pred_map = {
+        idx: os.path.join(JSON_LOG_DIR, fname)
+        for ts, idx, fname in pred_matches
+        if ts == latest_timestamp
+    }
+
+    gt_map = {
+        idx: os.path.join(JSON_LOG_DIR, fname)
+        for ts, idx, fname in gt_matches
+        if ts == latest_timestamp
+    }
+
+    common_indices = sorted(set(pred_map.keys()) & set(gt_map.keys()))
+
+    if not common_indices:
+        raise FileNotFoundError("No matching prediction/ground truth pairs found for latest timestamp.")
+
+    return latest_timestamp, [(idx, pred_map[idx], gt_map[idx]) for idx in common_indices]
 
 
 # query Ollama model
@@ -61,25 +93,22 @@ def extract_response_parts(text):
     reasoning = ""
     solution = ""
     label = "UNKNOWN"
-    
-    # Extract REASONING section
+
     if "REASONING:" in text:
         reasoning_start = text.index("REASONING:") + len("REASONING:")
         reasoning_end = text.find("SOLUTION:") if "SOLUTION:" in text else text.find("LABEL:")
         reasoning = text[reasoning_start:reasoning_end].strip() if reasoning_end != -1 else text[reasoning_start:].strip()
-    
-    # Extract SOLUTION section
+
     if "SOLUTION:" in text:
         solution_start = text.index("SOLUTION:") + len("SOLUTION:")
         solution_end = text.find("LABEL:")
         solution = text[solution_start:solution_end].strip() if solution_end != -1 else text[solution_start:].strip()
-    
-    # Extract LABEL
+
     if "LABEL:" in text:
         label_start = text.index("LABEL:") + len("LABEL:")
         label_text = text[label_start:].split("\n")[0].strip()
         label = extract_label(label_text)
-    
+
     return {
         "reasoning": reasoning,
         "solution": solution,
@@ -99,8 +128,6 @@ def extract_label(text):
         return "BENIGN"
 
     return "UNKNOWN"
-
-
 
 
 # build prompt for model
@@ -124,7 +151,8 @@ JSON:
 {json.dumps(pred_json, indent=2)}
 """
 
-# run evaluation
+
+# run evaluation for one prediction/ground truth pair
 def evaluate(models, pred_json, ground_truth):
     results = []
 
@@ -178,31 +206,47 @@ def main():
     else:
         selected_models = [models[int(choice)]]
 
-    pred_file, gt_file = get_latest_files()
+    latest_timestamp, file_pairs = get_latest_file_pairs()
 
-    with open(pred_file) as f:
-        pred_json = json.load(f)
+    print(f"\nFound {len(file_pairs)} prediction/ground truth pairs for batch {latest_timestamp}")
 
-    with open(gt_file) as f:
-        ground_truth = json.load(f)
+    os.makedirs(EVAL_LOG_DIR, exist_ok=True)
 
-    results = evaluate(selected_models, pred_json, ground_truth)
+    overall_correct = 0
+    overall_total = 0
 
-    # summary of results
-    correct = sum(r["is_model_correct"] for r in results)
-    total = len(results)
+    for idx, pred_file, gt_file in file_pairs:
+        print(f"\n==============================")
+        print(f"Processing pair {idx}")
+        print(f"Prediction file: {pred_file}")
+        print(f"Ground truth file: {gt_file}")
+        print(f"==============================\n")
 
-    print("\n--- Summary ---")
-    print(f"Accuracy: {correct}/{total} = {correct/total:.2f}")
+        with open(pred_file) as f:
+            pred_json = json.load(f)
 
-    # saving results
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_file = f"{JSON_LOG_DIR}/../2_ollama_evaluation/evaluation_{timestamp}.json"
+        with open(gt_file) as f:
+            ground_truth = json.load(f)
 
-    with open(out_file, "w") as f:
-        json.dump(results, f, indent=2)
+        results = evaluate(selected_models, pred_json, ground_truth)
 
-    print(f"\nSaved results to {out_file}")
+        correct = sum(r["is_model_correct"] for r in results)
+        total = len(results)
+
+        overall_correct += correct
+        overall_total += total
+
+        print("\n--- Pair Summary ---")
+        print(f"Accuracy for pair {idx}: {correct}/{total} = {correct/total:.2f}")
+
+        out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}_{idx}.json")
+        with open(out_file, "w") as f:
+            json.dump(results, f, indent=2)
+
+        print(f"Saved results to {out_file}")
+
+    print("\n=== Overall Summary ===")
+    print(f"Accuracy: {overall_correct}/{overall_total} = {overall_correct/overall_total:.2f}")
 
 
 if __name__ == "__main__":
