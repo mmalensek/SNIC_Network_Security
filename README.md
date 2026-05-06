@@ -1,6 +1,5 @@
-# Smart Network Interface Cards for in-network AI Network Security
-In this explorative diploma thesis I am investigating the capabilities of **Smart NIC's**, their integration with the hosting server, and the SDKs used for controlling the cards.
-I am also implementing a case study of in-network computation harnessing the GPU of the **A30X**, in this case the computation involves machine learning-based **network traffic filtering**.
+# Explainable network intrusion detection with large language models
+In this explorative diploma thesis, I investigate the use of large language models for explainable network intrusion detection. The work focuses on integrating machine learning-based detection methods with LLMs to provide interpretable insights into network traffic anomalies and malicious behavior. As part of the study, I implement a case study that combines traditional intrusion detection techniques with LLM-driven explanations, enabling more transparent and human-understandable network traffic analysis and filtering.
 
 ## Running of the code
 
