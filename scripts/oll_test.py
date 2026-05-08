@@ -145,7 +145,8 @@ REASONING:
 SOLUTION:
 [Provide specific recommendations or mitigation strategies for this traffic pattern]
 
-LABEL: <label>
+LABEL:
+[Provide specific name of the attack type if you think it is an attack, or 'BENIGN' if you think it is normal traffic]
 
 JSON:
 {json.dumps(pred_json, indent=2)}
