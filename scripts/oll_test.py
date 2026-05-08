@@ -118,14 +118,29 @@ def extract_response_parts(text):
 
 # extract label from model response
 def extract_label(text):
-    text = text.lower()
+    text = text.lower().strip()
 
-    if "dos" in text:
-        return "DoS Slowhttptest"
-    if "attack" in text:
-        return "ATTACK"
-    if "benign" in text or "normal" in text:
-        return "BENIGN"
+    patterns = [
+        (r"\bbenign\b|\bnormal\b", "BENIGN"),
+        (r"\bftp[-\s]?patator\b", "FTP-Patator"),
+        (r"\bssh[-\s]?patator\b", "SSH-Patator"),
+        (r"\bdos\s*slowloris\b", "DoS slowloris"),
+        (r"\bdos\s*slowhttptest\b", "DoS Slowhttptest"),
+        (r"\bdos\s*hulk\b", "DoS Hulk"),
+        (r"\bdos\s*goldeneye\b", "DoS GoldenEye"),
+        (r"\bheartbleed\b", "Heartbleed"),
+        (r"\binfiltration\b", "Infiltration"),
+        (r"\bweb attack\b.*\bbrute force\b|\bbrute force\b", "Web Attack  Brute Force"),
+        (r"\bweb attack\b.*\bxss\b|\bxss\b", "Web Attack  XSS"),
+        (r"\bweb attack\b.*\bsql injection\b|\bsql injection\b", "Web Attack  Sql Injection"),
+        (r"\bddos\b", "DDoS"),
+        (r"\bportscan\b|\bport scan\b", "PortScan"),
+        (r"\bbot\b", "Bot"),
+    ]
+
+    for pattern, label in patterns:
+        if re.search(pattern, text):
+            return label
 
     return "UNKNOWN"
 
