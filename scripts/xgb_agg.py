@@ -1,7 +1,7 @@
 """
 (2/4)
 
-XGBoost classifier aggregator (label-based selection)
+XGBoost classifier aggregator (label-based selection + classifier selection)
 
 Prerequisites:
 xgboost >= 0.90
@@ -13,18 +13,88 @@ json
 
 import json
 import os
+import argparse
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 
-modelLocation = "classifier/xgb_model.json"
 datasetLocation = "../../dataset/TrafficLabelling/Traffic-COMBINED.csv"
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 np.set_printoptions(suppress=True, precision=6)
 
+AVAILABLE_MODELS = {
+    "binary": {
+        "path": "classifier/xgb_model.json",
+        "type": "binary",
+        "description": "Binary classifier (BENIGN vs ATTACK)"
+    },
+    "multiclass": {
+        "path": "classifier/xgb_model_multiclass.json",
+        "type": "multiclass",
+        "description": "15-class classifier"
+    }
+}
 
-def generate_outputs(model, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix):
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="XGBoost classifier aggregator with selectable classifier"
+    )
+    parser.add_argument(
+        "--model-key",
+        type=str,
+        choices=list(AVAILABLE_MODELS.keys()),
+        help="Predefined model key to load"
+    )
+    parser.add_argument(
+        "--model-path",
+        type=str,
+        help="Custom path to a model file (.json). Overrides --model-key path if provided"
+    )
+    parser.add_argument(
+        "--model-type",
+        type=str,
+        choices=["binary", "multiclass"],
+        help="Model type for custom --model-path"
+    )
+    return parser.parse_args()
+
+
+def choose_model(args):
+    # Case 1: custom path passed manually
+    if args.model_path:
+        if not args.model_type:
+            raise ValueError("When using --model-path, you must also provide --model-type (binary or multiclass).")
+        return {
+            "key": "custom",
+            "path": args.model_path,
+            "type": args.model_type,
+            "description": "Custom user-provided model"
+        }
+
+    # Case 2: predefined key passed in CLI
+    if args.model_key:
+        selected = AVAILABLE_MODELS[args.model_key].copy()
+        selected["key"] = args.model_key
+        return selected
+
+    # Case 3: interactive selection
+    print("\nAvailable classifiers:")
+    model_keys = list(AVAILABLE_MODELS.keys())
+    for i, key in enumerate(model_keys):
+        info = AVAILABLE_MODELS[key]
+        print(f"{i}: {key} -> {info['description']} ({info['path']})")
+
+    selected_index = int(input("\nSelect classifier index: ").strip())
+    selected_key = model_keys[selected_index]
+
+    selected = AVAILABLE_MODELS[selected_key].copy()
+    selected["key"] = selected_key
+    return selected
+
+
+def generate_outputs(model, model_type, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix):
     print(f"\nGenerating output set {suffix}...")
 
     majority_label = true_label_names.value_counts().idxmax()
@@ -40,13 +110,33 @@ def generate_outputs(model, test_rows, true_labels, true_label_names, selected_l
             print(f"Row {i}")
             print("True label:", true_labels.iloc[i])
             print("Predicted:", predictions[i])
-            print("Probabilities [BENIGN, ATTACK]:", probabilities[i])
+
+            if model_type == "binary":
+                print("Probabilities [BENIGN, ATTACK]:", probabilities[i])
+            else:
+                print("Probabilities [all classes]:", probabilities[i])
+
             print("")
         print("------------------------------------")
 
-    avg_attack_prob = float(np.mean(probabilities[:, 1]))
-    final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
-    confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
+    if model_type == "binary":
+        avg_attack_prob = float(np.mean(probabilities[:, 1]))
+        final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
+        confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
+        probability_summary = {
+            "avg_attack_probability": round(avg_attack_prob, 4)
+        }
+
+    else:
+        avg_class_probs = np.mean(probabilities, axis=0)
+        final_class_idx = int(np.argmax(avg_class_probs))
+        final_prediction = str(final_class_idx)
+        confidence = float(avg_class_probs[final_class_idx])
+
+        probability_summary = {
+            "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
+            "predicted_class_index": final_class_idx
+        }
 
     syn_count = float(test_rows[" SYN Flag Count"].sum())
     ack_count = float(test_rows[" ACK Flag Count"].sum())
@@ -89,11 +179,13 @@ def generate_outputs(model, test_rows, true_labels, true_label_names, selected_l
 
     output = {
         "selected_labels": selected_labels,
+        "classifier_used": model_type,
         "model_prediction": final_prediction,
-        "confidence": confidence,
-        "avg_attack_probability": round(avg_attack_prob, 4),
+        "confidence": round(float(confidence), 4),
         "features": aggregated_features
     }
+
+    output.update(probability_summary)
 
     ground_truth_output = {
         "most_common_true_label": majority_label,
@@ -104,7 +196,20 @@ def generate_outputs(model, test_rows, true_labels, true_label_names, selected_l
 
 
 def main():
+    args = parse_args()
+    selected_model = choose_model(args)
+
+    modelLocation = selected_model["path"]
+    modelType = selected_model["type"]
+
     print("\nLoading model and dataset...")
+    print(f"Selected classifier: {selected_model['key']}")
+    print(f"Description: {selected_model['description']}")
+    print(f"Model path: {modelLocation}")
+    print(f"Model type: {modelType}")
+
+    if not os.path.exists(modelLocation):
+        raise FileNotFoundError(f"Model file not found: {modelLocation}")
 
     model = xgb.XGBClassifier()
     model.load_model(modelLocation)
@@ -115,14 +220,25 @@ def main():
 
     for col in dataframe.columns:
         if col != " Label":
-            dataframe[col] = pd.to_numeric(dataframe[col], errors='coerce')
+            dataframe[col] = pd.to_numeric(dataframe[col], errors="coerce")
             dataframe[col] = dataframe[col].clip(lower=-1e15, upper=1e15)
             dataframe[col] = dataframe[col].replace([np.inf, -np.inf], 0).fillna(0)
 
     X = dataframe.drop(" Label", axis=1).copy()
     X = X.loc[:, X.nunique() > 1]
-    y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
     original_labels = dataframe[" Label"].copy()
+
+    # ground-truth encoding depends on selected classifier
+    if modelType == "binary":
+        y = np.where(dataframe[" Label"] == "BENIGN", 0, 1)
+    else:
+        labels_sorted = sorted(dataframe[" Label"].unique())
+        label_to_idx = {label: idx for idx, label in enumerate(labels_sorted)}
+        y = dataframe[" Label"].map(label_to_idx).astype(int).values
+
+        print("\nMulticlass label mapping used in this script:")
+        for label, idx in label_to_idx.items():
+            print(f"{idx}: {label}")
 
     print("Dataset preprocessed...")
 
@@ -172,6 +288,7 @@ def main():
 
         output, ground_truth_output = generate_outputs(
             model=model,
+            model_type=modelType,
             test_rows=test_rows,
             true_labels=true_labels,
             true_label_names=true_label_names,
@@ -181,18 +298,18 @@ def main():
         )
 
         filename = f"{JSON_LOG_DIR}/prediction_{timestamp}_{run_idx}.json"
-        with open(filename, 'w') as f:
-            json.dump(output, f, indent=2)
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2, ensure_ascii=False)
         print(f"JSON saved to: {filename}")
 
         ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}_{run_idx}.json"
-        with open(ground_truth_filename, 'w') as f:
-            json.dump(ground_truth_output, f, indent=2)
+        with open(ground_truth_filename, "w", encoding="utf-8") as f:
+            json.dump(ground_truth_output, f, indent=2, ensure_ascii=False)
         print(f"Ground truth JSON saved to: {ground_truth_filename}")
 
         if printSettings == 2 or printSettings == 3:
             print(f"\nFinal JSON output {run_idx}:")
-            print(json.dumps(output, indent=2))
+            print(json.dumps(output, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

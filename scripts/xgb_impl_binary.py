@@ -1,8 +1,8 @@
 """
 
-(1/4)
+(1a/4)
 
-Simplified XGBoost implementation
+Simplified XGBoost implementation - binary version (benign vs malicious)
 
 Prerequisites:
 xgboost >= 0.90
