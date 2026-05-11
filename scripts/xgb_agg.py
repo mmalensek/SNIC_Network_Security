@@ -148,9 +148,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
             }
 
         output = {
-            "selected_labels": selected_labels,
             "classifier_used": model_type,
-            "true_label": true_label_names.iloc[0],
             "model_prediction": int(prediction) if isinstance(prediction, (np.integer, np.int64)) else prediction,
             "row_data": row_data
         }
@@ -235,9 +233,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
     }
 
     output = {
-        "selected_labels": selected_labels,
         "classifier_used": model_type,
-        "model_prediction": final_prediction,
         "confidence": round(float(confidence), 4),
         "features": aggregated_features
     }
