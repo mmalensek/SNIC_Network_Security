@@ -97,9 +97,6 @@ def choose_model(args):
 def generate_outputs(model, model_type, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix, dataframe):
     print(f"\nGenerating output set {suffix}...")
 
-    majority_label = true_label_names.value_counts().idxmax()
-    majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
-
     predictions = model.predict(test_rows)
     probabilities = model.predict_proba(test_rows)
 
@@ -119,10 +116,65 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
             print("")
         print("------------------------------------")
 
+    # ==========================================
+    # SINGLE SAMPLE MODE
+    # ==========================================
+    if len(test_rows) == 1:
+        row_data = test_rows.iloc[0].to_dict()
+
+        # convert numpy values to python native types
+        row_data = {
+            k: float(v) if isinstance(v, (np.floating, np.integer)) else v
+            for k, v in row_data.items()
+        }
+
+        prediction = predictions[0]
+
+        if model_type == "binary":
+            probability_info = {
+                "probabilities": {
+                    "BENIGN": round(float(probabilities[0][0]), 4),
+                    "ATTACK": round(float(probabilities[0][1]), 4)
+                }
+            }
+        else:
+            labels_sorted = sorted(dataframe[" Label"].unique())
+
+            probability_info = {
+                "probabilities": {
+                    label: round(float(probabilities[0][idx]), 4)
+                    for idx, label in enumerate(labels_sorted)
+                }
+            }
+
+        output = {
+            "selected_labels": selected_labels,
+            "classifier_used": model_type,
+            "true_label": true_label_names.iloc[0],
+            "model_prediction": int(prediction) if isinstance(prediction, (np.integer, np.int64)) else prediction,
+            "row_data": row_data
+        }
+
+        output.update(probability_info)
+
+        ground_truth_output = {
+            "true_label": true_label_names.iloc[0]
+        }
+
+        return output, ground_truth_output
+
+    # ==========================================
+    # MULTI SAMPLE MODE (original aggregation)
+    # ==========================================
+
+    majority_label = true_label_names.value_counts().idxmax()
+    majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
+
     if model_type == "binary":
         avg_attack_prob = float(np.mean(probabilities[:, 1]))
         final_prediction = "ATTACK" if avg_attack_prob > 0.5 else "BENIGN"
         confidence = avg_attack_prob if final_prediction == "ATTACK" else 1 - avg_attack_prob
+
         probability_summary = {
             "avg_attack_probability": round(avg_attack_prob, 4)
         }
@@ -137,11 +189,11 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
         final_prediction = idx_to_label[final_class_idx]
         confidence = float(avg_class_probs[final_class_idx])
 
-    probability_summary = {
-        "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
-        "predicted_class_index": final_class_idx,
-        "predicted_class_label": final_prediction
-    }
+        probability_summary = {
+            "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
+            "predicted_class_index": final_class_idx,
+            "predicted_class_label": final_prediction
+        }
 
     syn_count = float(test_rows[" SYN Flag Count"].sum())
     ack_count = float(test_rows[" ACK Flag Count"].sum())
