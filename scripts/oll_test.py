@@ -209,7 +209,9 @@ def evaluate(models, pred_json, ground_truth):
 
 # main
 def main():
+    print("Starting Ollama evaluation script...")
     models = get_ollama_models()
+    print(f"Found {len(models)} local Ollama models.")
 
     print("\nAvailable models:")
     for i, m in enumerate(models):
