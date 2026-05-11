@@ -94,7 +94,7 @@ def choose_model(args):
     return selected
 
 
-def generate_outputs(model, model_type, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix):
+def generate_outputs(model, model_type, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix, dataframe):
     print(f"\nGenerating output set {suffix}...")
 
     majority_label = true_label_names.value_counts().idxmax()
@@ -128,15 +128,20 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
         }
 
     else:
+        labels_sorted = sorted(dataframe[" Label"].unique())
+        label_to_idx = {label: idx for idx, label in enumerate(labels_sorted)}
+        idx_to_label = {idx: label for label, idx in label_to_idx.items()}
+
         avg_class_probs = np.mean(probabilities, axis=0)
         final_class_idx = int(np.argmax(avg_class_probs))
-        final_prediction = str(final_class_idx)
+        final_prediction = idx_to_label[final_class_idx]
         confidence = float(avg_class_probs[final_class_idx])
 
-        probability_summary = {
-            "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
-            "predicted_class_index": final_class_idx
-        }
+    probability_summary = {
+        "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
+        "predicted_class_index": final_class_idx,
+        "predicted_class_label": final_prediction
+    }
 
     syn_count = float(test_rows[" SYN Flag Count"].sum())
     ack_count = float(test_rows[" ACK Flag Count"].sum())
@@ -294,7 +299,8 @@ def main():
             true_label_names=true_label_names,
             selected_labels=selected_labels,
             printSettings=printSettings,
-            suffix=run_idx
+            suffix=run_idx,
+            dataframe=dataframe
         )
 
         filename = f"{JSON_LOG_DIR}/prediction_{timestamp}_{run_idx}.json"
