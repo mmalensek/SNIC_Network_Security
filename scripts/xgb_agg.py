@@ -156,7 +156,8 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
         output.update(probability_info)
 
         ground_truth_output = {
-            "true_label": true_label_names.iloc[0]
+            "most_common_true_label": true_label_names.iloc[0],
+            "true_label_ratio": 1.0
         }
 
         return output, ground_truth_output
