@@ -1,7 +1,13 @@
 """
-(3a/4)
+(3b/4)
 
-Ollama testing script for evaluating model reasoning and solution quality 
+Ollama explanation script for evaluating model reasoning and solution quality
+
+* this script is similar to oll_test.py but focuses on extracting and saving the reasoning 
+and solution from the model response, without asking for a label prediction from the LLM
+
+** the evaluation will still compare the XGBoost predicted label to the true label, 
+but the LLM's response will be evaluated qualitatively based on the reasoning and solution sections
 
 Prerequisites:
 xgboost >= 0.90
@@ -88,61 +94,24 @@ def query_model(model, prompt):
     return response.json()["response"]
 
 
-# extract reasoning, solution, and label from model response
+# extract reasoning and solution from model response (no label expected from LLM)
 def extract_response_parts(text):
     reasoning = ""
     solution = ""
-    label = "UNKNOWN"
 
     if "REASONING:" in text:
         reasoning_start = text.index("REASONING:") + len("REASONING:")
-        reasoning_end = text.find("SOLUTION:") if "SOLUTION:" in text else text.find("LABEL:")
-        reasoning = text[reasoning_start:reasoning_end].strip() if reasoning_end != -1 else text[reasoning_start:].strip()
+        reasoning_end = text.find("SOLUTION:") if "SOLUTION:" in text else len(text)
+        reasoning = text[reasoning_start:reasoning_end].strip()
 
     if "SOLUTION:" in text:
         solution_start = text.index("SOLUTION:") + len("SOLUTION:")
-        solution_end = text.find("LABEL:")
-        solution = text[solution_start:solution_end].strip() if solution_end != -1 else text[solution_start:].strip()
-
-    if "LABEL:" in text:
-        label_start = text.index("LABEL:") + len("LABEL:")
-        label_text = text[label_start:].split("\n")[0].strip()
-        label = extract_label(label_text)
+        solution = text[solution_start:].strip()
 
     return {
         "reasoning": reasoning,
-        "solution": solution,
-        "label": label
+        "solution": solution
     }
-
-
-# extract label from model response
-def extract_label(text):
-    text = text.lower().strip()
-
-    patterns = [
-        (r"\bbenign\b|\bnormal\b", "BENIGN"),
-        (r"\bftp[-\s]?patator\b", "FTP-Patator"),
-        (r"\bssh[-\s]?patator\b", "SSH-Patator"),
-        (r"\bdos\s*slowloris\b", "DoS slowloris"),
-        (r"\bdos\s*slowhttptest\b", "DoS Slowhttptest"),
-        (r"\bdos\s*hulk\b", "DoS Hulk"),
-        (r"\bdos\s*goldeneye\b", "DoS GoldenEye"),
-        (r"\bheartbleed\b", "Heartbleed"),
-        (r"\binfiltration\b", "Infiltration"),
-        (r"\bweb attack\b.*\bbrute force\b|\bbrute force\b", "Web Attack  Brute Force"),
-        (r"\bweb attack\b.*\bxss\b|\bxss\b", "Web Attack  XSS"),
-        (r"\bweb attack\b.*\bsql injection\b|\bsql injection\b", "Web Attack  Sql Injection"),
-        (r"\bddos\b", "DDoS"),
-        (r"\bportscan\b|\bport scan\b", "PortScan"),
-        (r"\bbot\b", "Bot"),
-    ]
-
-    for pattern, label in patterns:
-        if re.search(pattern, text):
-            return label
-
-    return "UNKNOWN"
 
 
 # build prompt for model
@@ -160,9 +129,6 @@ REASONING:
 SOLUTION:
 [Provide specific recommendations or mitigation strategies for this traffic pattern]
 
-LABEL:
-[Provide specific name of the attack type if you think it is an attack, or 'BENIGN' if you think it is normal traffic]
-
 JSON:
 {json.dumps(pred_json, indent=2)}
 """
@@ -173,6 +139,9 @@ def evaluate(models, pred_json, ground_truth):
     results = []
 
     true_label = ground_truth["most_common_true_label"]
+    # XGBoost predicted label comes from the prediction JSON, not the LLM
+    xgboost_label = pred_json.get("most_common_predicted_label", "UNKNOWN")
+    xgboost_correct = xgboost_label == true_label
 
     for model in models:
         print(f"\n--- Testing model: {model} ---")
@@ -181,24 +150,21 @@ def evaluate(models, pred_json, ground_truth):
         response = query_model(model, prompt)
 
         response_parts = extract_response_parts(response)
-        predicted_label = response_parts["label"]
         reasoning = response_parts["reasoning"]
         solution = response_parts["solution"]
 
-        correct = predicted_label == true_label
-
         results.append({
             "model": model,
-            "predicted_label": predicted_label,
+            "xgboost_predicted_label": xgboost_label,
             "actual_label": true_label,
-            "is_model_correct": correct,
+            "is_xgboost_correct": xgboost_correct,
             "reasoning": reasoning,
             "solution": solution
         })
 
-        print(f"Predicted: {predicted_label}")
-        print(f"True: {true_label}")
-        print(f"Correct: {correct}")
+        print(f"XGBoost Predicted: {xgboost_label}")
+        print(f"True Label:        {true_label}")
+        print(f"XGBoost Correct:   {xgboost_correct}")
         print("\n--- Reasoning ---")
         print(reasoning)
         print("\n--- Solution ---")
@@ -248,14 +214,14 @@ def main():
 
         results = evaluate(selected_models, pred_json, ground_truth)
 
-        correct = sum(r["is_model_correct"] for r in results)
+        correct = sum(r["is_xgboost_correct"] for r in results)
         total = len(results)
 
         overall_correct += correct
         overall_total += total
 
         print("\n--- Pair Summary ---")
-        print(f"Accuracy for pair {idx}: {correct}/{total} = {correct/total:.2f}")
+        print(f"XGBoost accuracy for pair {idx}: {correct}/{total} = {correct/total:.2f}")
 
         out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}_{idx}.json")
         with open(out_file, "w") as f:
@@ -264,7 +230,7 @@ def main():
         print(f"Saved results to {out_file}")
 
     print("\n=== Overall Summary ===")
-    print(f"Accuracy: {overall_correct}/{overall_total} = {overall_correct/overall_total:.2f}")
+    print(f"XGBoost Accuracy: {overall_correct}/{overall_total} = {overall_correct/overall_total:.2f}")
 
 
 if __name__ == "__main__":
