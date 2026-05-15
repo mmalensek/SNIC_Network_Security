@@ -135,8 +135,10 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
                 "probabilities": {
                     "BENIGN": round(float(probabilities[0][0]), 4),
                     "ATTACK": round(float(probabilities[0][1]), 4)
-                }
+                },
+                "predicted_class_label": "ATTACK" if prediction == 1 else "BENIGN"
             }
+
         else:
             labels_sorted = sorted(dataframe[" Label"].unique())
 
@@ -144,12 +146,15 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
                 "probabilities": {
                     label: round(float(probabilities[0][idx]), 4)
                     for idx, label in enumerate(labels_sorted)
-                }
+                },
+                "predicted_class_index": int(prediction),
+                "predicted_class_label": labels_sorted[int(prediction)]
             }
+
 
         output = {
             "classifier_used": model_type,
-            "model_prediction": int(prediction) if isinstance(prediction, (np.integer, np.int64)) else prediction,
+            "model_prediction": probability_info["predicted_class_label"],
             "row_data": row_data
         }
 
@@ -189,9 +194,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
         confidence = float(avg_class_probs[final_class_idx])
 
         probability_summary = {
-            "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs],
-            "predicted_class_index": final_class_idx,
-            "predicted_class_label": final_prediction
+            "avg_class_probabilities": [round(float(p), 4) for p in avg_class_probs]
         }
 
     syn_count = float(test_rows[" SYN Flag Count"].sum())
@@ -236,6 +239,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
     output = {
         "classifier_used": model_type,
         "confidence": round(float(confidence), 4),
+        "model_prediction": final_prediction,
         "features": aggregated_features
     }
 
