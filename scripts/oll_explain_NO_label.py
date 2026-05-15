@@ -140,7 +140,7 @@ def evaluate(models, pred_json, ground_truth):
 
     true_label = ground_truth["most_common_true_label"]
     # XGBoost predicted label comes from the prediction JSON, not the LLM
-    xgboost_label = pred_json.get("most_common_predicted_label", "UNKNOWN")
+    xgboost_label = pred_json.get("true_label", "UNKNOWN")
     xgboost_correct = xgboost_label == true_label
 
     for model in models:
