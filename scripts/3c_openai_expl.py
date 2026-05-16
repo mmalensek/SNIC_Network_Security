@@ -18,7 +18,7 @@ import re
 from openai import OpenAI
 
 # configuration
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
 
 AVAILABLE_MODELS = [
     "gpt-5.2",
@@ -34,7 +34,7 @@ EVAL_LOG_DIR = "json_log/2_openai_evaluation"
 
 
 def get_openai_client():
-    api_key = OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY", "")
+    api_key = (OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY", "")).strip()
     if not api_key:
         raise ValueError(
             "OpenAI API key not set. "
