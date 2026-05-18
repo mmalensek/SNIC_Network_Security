@@ -40,14 +40,16 @@ from sklearn.preprocessing import LabelEncoder
 
 
 # ============================================================
-# LOAD + CLEAN DATA
+# LOAD + CLEAN CSV
 # ============================================================
 
 def load_and_clean_csv(path):
 
     print(f"\nLoading: {path}")
 
+    # some CICIDS files are not UTF-8
     try:
+
         df = pd.read_csv(
             path,
             encoding="utf-8",
@@ -64,21 +66,24 @@ def load_and_clean_csv(path):
             low_memory=False
         )
 
-    # clean columns
+    # clean numeric columns
     for col in df.columns:
 
         if col != " Label":
 
+            # convert to numeric
             df[col] = pd.to_numeric(
                 df[col],
                 errors="coerce"
             )
 
+            # clip huge values
             df[col] = df[col].clip(
                 lower=-1e15,
                 upper=1e15
             )
 
+            # replace inf/nan
             df[col] = (
                 df[col]
                 .replace([np.inf, -np.inf], 0)
@@ -99,6 +104,7 @@ def temporal_split(df, split_ratio=0.5):
     split_idx = int(len(df) * split_ratio)
 
     train_df = df.iloc[:split_idx].copy()
+
     test_df = df.iloc[split_idx:].copy()
 
     return train_df, test_df
@@ -138,7 +144,7 @@ def main():
     )
 
     # ========================================================
-    # TEMPORAL SPLIT FOR WHOLE-DAY FILES
+    # TEMPORAL SPLITS
     # ========================================================
 
     monday_train, monday_test = temporal_split(monday)
@@ -224,70 +230,17 @@ def main():
     print("================================================")
 
     print(f"\nTraining rows: {len(train_df)}")
+
     print(f"Testing rows: {len(test_df)}")
 
-    print("\nTraining label distribution:")
+    print("\nTraining labels:")
     print(train_df[" Label"].value_counts())
 
-    print("\nTesting label distribution:")
+    print("\nTesting labels:")
     print(test_df[" Label"].value_counts())
 
     # ========================================================
-    # FEATURES
-    # ========================================================
-
-    X_train = train_df.drop(" Label", axis=1).copy()
-    X_test = test_df.drop(" Label", axis=1).copy()
-
-    # remove constant columns
-    valid_columns = X_train.columns[
-        X_train.nunique() > 1
-    ]
-
-    X_train = X_train[valid_columns]
-    X_test = X_test[valid_columns]
-
-    print(f"\nNumber of features: {X_train.shape[1]}")
-
-    # ========================================================
-    # LABEL ENCODING
-    # ========================================================
-
-    label_encoder = LabelEncoder()
-
-    # fit encoder on ALL labels
-    all_labels = pd.concat([
-        train_df[" Label"],
-        test_df[" Label"]
-    ])
-
-    label_encoder.fit(all_labels)
-
-    y_train = label_encoder.transform(
-        train_df[" Label"]
-    )
-
-    y_test = label_encoder.transform(
-        test_df[" Label"]
-    )
-
-    class_names = label_encoder.classes_
-
-    num_classes = len(class_names)
-
-    print("\n================================================")
-    print("CLASS INFORMATION")
-    print("================================================")
-
-    print(f"\nNumber of classes: {num_classes}")
-
-    print("\nClass mapping:")
-
-    for idx, label in enumerate(class_names):
-        print(f"{idx}: {label}")
-
-    # ========================================================
-    # UNSEEN TEST CLASSES
+    # HANDLE UNSEEN TEST CLASSES
     # ========================================================
 
     train_classes = set(
@@ -305,11 +258,85 @@ def main():
     print("================================================")
 
     if len(unseen_classes) == 0:
-        print("\nNo unseen classes.")
+
+        print("\nNo unseen classes found.")
+
+        filtered_test_df = test_df.copy()
+
     else:
-        print("\nUnseen classes found:")
+
+        print("\nRemoving unseen classes:")
+
         for c in unseen_classes:
             print(c)
+
+        # remove unseen classes from test set
+        filtered_test_df = test_df[
+            ~test_df[" Label"].isin(unseen_classes)
+        ].copy()
+
+    print(f"\nFiltered test rows: {len(filtered_test_df)}")
+
+    # ========================================================
+    # FEATURES
+    # ========================================================
+
+    X_train = train_df.drop(
+        " Label",
+        axis=1
+    ).copy()
+
+    X_test = filtered_test_df.drop(
+        " Label",
+        axis=1
+    ).copy()
+
+    # remove constant columns
+    valid_columns = X_train.columns[
+        X_train.nunique() > 1
+    ]
+
+    X_train = X_train[valid_columns]
+
+    X_test = X_test[valid_columns]
+
+    print(f"\nNumber of features: {X_train.shape[1]}")
+
+    # ========================================================
+    # LABEL ENCODING
+    # ========================================================
+
+    label_encoder = LabelEncoder()
+
+    # IMPORTANT:
+    # fit ONLY on training labels
+    label_encoder.fit(
+        train_df[" Label"]
+    )
+
+    y_train = label_encoder.transform(
+        train_df[" Label"]
+    )
+
+    y_test = label_encoder.transform(
+        filtered_test_df[" Label"]
+    )
+
+    class_names = label_encoder.classes_
+
+    num_classes = len(class_names)
+
+    print("\n================================================")
+    print("CLASS INFORMATION")
+    print("================================================")
+
+    print(f"\nNumber of classes: {num_classes}")
+
+    print("\nClass mapping:")
+
+    for idx, label in enumerate(class_names):
+
+        print(f"{idx}: {label}")
 
     # ========================================================
     # MODEL
@@ -320,6 +347,7 @@ def main():
     print("================================================")
 
     model = xgb.XGBClassifier(
+
         objective="multi:softprob",
 
         num_class=num_classes,
@@ -348,6 +376,7 @@ def main():
     )
 
     model.fit(
+
         X_train,
         y_train,
 
@@ -358,13 +387,17 @@ def main():
         verbose=True
     )
 
+    # ========================================================
+    # BEST MODEL INFO
+    # ========================================================
+
     print("\n================================================")
-    print("BEST MODEL INFO")
+    print("BEST MODEL")
     print("================================================")
 
     print(f"\nBest iteration: {model.best_iteration}")
 
-    print(f"Best validation score: {model.best_score}")
+    print(f"Best score: {model.best_score}")
 
     # ========================================================
     # PREDICTIONS
@@ -400,9 +433,13 @@ def main():
     try:
 
         auc_score = roc_auc_score(
+
             y_test,
+
             y_proba,
+
             multi_class="ovo",
+
             average="macro"
         )
 
@@ -452,22 +489,37 @@ def main():
     print("SAVING MODEL")
     print("================================================")
 
-    os.makedirs("classifier", exist_ok=True)
+    os.makedirs(
+        "classifier",
+        exist_ok=True
+    )
 
-    model_path = "classifier/xgb_temporal_model.json"
+    model_path = (
+        "classifier/xgb_temporal_model.json"
+    )
 
     model.save_model(model_path)
 
-    label_mapping_path = "classifier/label_mapping.txt"
+    label_mapping_path = (
+        "classifier/label_mapping.txt"
+    )
 
-    with open(label_mapping_path, "w", encoding="utf-8") as f:
+    with open(
+        label_mapping_path,
+        "w",
+        encoding="utf-8"
+    ) as f:
 
         for idx, label in enumerate(class_names):
+
             f.write(f"{idx}: {label}\n")
 
     print(f"\nSaved model to: {model_path}")
 
-    print(f"Saved label mapping to: {label_mapping_path}")
+    print(
+        f"Saved label mapping to: "
+        f"{label_mapping_path}"
+    )
 
     print("\nFinished.")
 
@@ -477,4 +529,5 @@ def main():
 # ============================================================
 
 if __name__ == "__main__":
+
     main()
