@@ -44,27 +44,41 @@ from sklearn.preprocessing import LabelEncoder
 # ============================================================
 
 def load_and_clean_csv(path):
+
     print(f"\nLoading: {path}")
 
-    df = pd.read_csv(path)
+    try:
+        df = pd.read_csv(
+            path,
+            encoding="utf-8",
+            low_memory=False
+        )
 
-    # clean all non-label columns
+    except UnicodeDecodeError:
+
+        print("UTF-8 failed, trying latin1...")
+
+        df = pd.read_csv(
+            path,
+            encoding="latin1",
+            low_memory=False
+        )
+
+    # clean columns
     for col in df.columns:
+
         if col != " Label":
 
-            # convert to numeric
             df[col] = pd.to_numeric(
                 df[col],
                 errors="coerce"
             )
 
-            # clip huge values
             df[col] = df[col].clip(
                 lower=-1e15,
                 upper=1e15
             )
 
-            # remove inf/nan
             df[col] = (
                 df[col]
                 .replace([np.inf, -np.inf], 0)
