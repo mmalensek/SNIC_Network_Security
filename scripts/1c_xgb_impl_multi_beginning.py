@@ -453,16 +453,34 @@ def main():
     # CLASSIFICATION REPORT
     # ========================================================
 
+    # ========================================================
+    # CLASSIFICATION REPORT
+    # ========================================================
+
     print("\n================================================")
     print("CLASSIFICATION REPORT")
     print("================================================")
+
+    # labels actually present in either predictions or test
+    present_labels = sorted(
+        np.unique(
+            np.concatenate([y_test, y_pred])
+        )
+    )
+
+    present_target_names = [
+        class_names[i]
+        for i in present_labels
+    ]
 
     print(
         classification_report(
             y_test,
             y_pred,
-            target_names=class_names,
-            digits=4
+            labels=present_labels,
+            target_names=present_target_names,
+            digits=4,
+            zero_division=0
         )
     )
 
@@ -474,12 +492,13 @@ def main():
     print("CONFUSION MATRIX")
     print("================================================")
 
-    print(
-        confusion_matrix(
-            y_test,
-            y_pred
-        )
+    cm = confusion_matrix(
+        y_test,
+        y_pred,
+        labels=present_labels
     )
+
+    print(cm)
 
     # ========================================================
     # SAVE MODEL
