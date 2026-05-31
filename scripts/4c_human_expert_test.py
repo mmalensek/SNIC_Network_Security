@@ -44,6 +44,41 @@ HTML = """
 
 <style>
 
+.panel h1,
+.panel h2,
+.panel h3,
+.panel h4 {
+    margin-top: 1em;
+}
+
+.panel p {
+    line-height: 1.5;
+}
+
+.panel ul,
+.panel ol {
+    padding-left: 25px;
+}
+
+.panel code {
+    background: #eeeeee;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.panel pre {
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+
+.panel blockquote {
+    border-left: 4px solid #cccccc;
+    padding-left: 12px;
+    color: #666666;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 30px;
@@ -95,6 +130,7 @@ pre {
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -114,20 +150,21 @@ pre {
         <h2>Candidate A</h2>
 
         <h3>Reasoning</h3>
-        <pre id="a_reasoning"></pre>
+        <div id="a_reasoning"></div>
+
 
         <h3>Solution</h3>
-        <pre id="a_solution"></pre>
+        <div id="a_solution"></div>
     </div>
 
     <div class="panel">
         <h2>Candidate B</h2>
 
         <h3>Reasoning</h3>
-        <pre id="b_reasoning"></pre>
+        <div id="b_reasoning"></div>
 
         <h3>Solution</h3>
-        <pre id="b_solution"></pre>
+        <div id="b_solution"></div>
     </div>
 
 </div>
@@ -172,17 +209,17 @@ function render() {
     document.getElementById("prediction").innerText =
         t.prediction;
 
-    document.getElementById("a_reasoning").innerText =
-        t.a.reasoning;
+    document.getElementById("a_reasoning").innerHTML =
+    marked.parse(t.a.reasoning || "");
 
-    document.getElementById("a_solution").innerText =
-        t.a.solution;
+    document.getElementById("a_solution").innerHTML =
+        marked.parse(t.a.solution || "");
 
-    document.getElementById("b_reasoning").innerText =
-        t.b.reasoning;
+    document.getElementById("b_reasoning").innerHTML =
+        marked.parse(t.b.reasoning || "");
 
-    document.getElementById("b_solution").innerText =
-        t.b.solution;
+    document.getElementById("b_solution").innerHTML =
+        marked.parse(t.b.solution || "");
 }
 
 async function vote(choice) {
