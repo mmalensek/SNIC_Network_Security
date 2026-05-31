@@ -5,6 +5,10 @@ from datetime import datetime
 import json
 import random
 import re
+from datetime import datetime
+
+# CONNECT VIA: 
+# ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:5000 bluefield-z1
 
 app = Flask(__name__)
 
@@ -24,6 +28,12 @@ RESULT_DIR = (
 
 RESULT_DIR.mkdir(parents=True, exist_ok=True)
 
+SESSION_ID = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+SESSION_FILE = (
+    RESULT_DIR
+    / f"human_evaluation_session_{SESSION_ID}.json"
+)
 
 HTML = """
 <!DOCTYPE html>
@@ -351,34 +361,35 @@ def vote():
     task = data["task"]
     winner = data["winner"]
 
-    sample_id = task["sample_id"]
+    if SESSION_FILE.exists():
 
-    output_file = (
-        RESULT_DIR
-        / f"evaluation_{sample_id}.json"
-    )
-
-    if output_file.exists():
-
-        with open(output_file, "r") as f:
-            existing = json.load(f)
+        with open(SESSION_FILE, "r") as f:
+            session_data = json.load(f)
 
     else:
 
-        existing = {
-            "sample_id": sample_id,
+        session_data = {
+            "session_id": SESSION_ID,
+            "created": datetime.now().isoformat(),
             "comparisons": []
         }
 
-    existing["comparisons"].append({
-        "candidate_a": task["a"]["model"],
-        "candidate_b": task["b"]["model"],
-        "winner": winner,
-        "timestamp": datetime.now().isoformat()
+    session_data["comparisons"].append({
+        "timestamp": datetime.now().isoformat(),
+
+        "sample_id": task["sample_id"],
+
+        "ground_truth": task["ground_truth"],
+        "xgboost_prediction": task["prediction"],
+
+        "candidate_a_model": task["a"]["model"],
+        "candidate_b_model": task["b"]["model"],
+
+        "winner": winner
     })
 
-    with open(output_file, "w") as f:
-        json.dump(existing, f, indent=2)
+    with open(SESSION_FILE, "w") as f:
+        json.dump(session_data, f, indent=2)
 
     return jsonify({"status": "ok"})
 
