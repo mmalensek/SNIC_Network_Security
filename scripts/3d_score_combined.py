@@ -339,12 +339,20 @@ for model in sorted(all_models):
     )
 
     combined[model] = {
-        "deterministic_score": d,
-        "expert_system_score": e,
-        "human_expert_score": h,
-        "final_combined_score": final_score,
-    }
+        "deterministic_score":
+            round(d, 1) if d is not None else None,
 
+        "expert_system_score":
+            round(e, 1) if e is not None else None,
+
+        "human_expert_score":
+            round(h, 1) if h is not None else None,
+
+        "final_combined_score":
+            round(final_score, 1)
+            if final_score is not None
+            else None,
+    }
 
 # --------------------------------------------------
 # Ranking
@@ -354,14 +362,13 @@ ranking = sorted(
     [
         {
             "model": model,
-            "score": data[
-                "final_combined_score"
-            ]
+            "score": round(
+                data["final_combined_score"],
+                1
+            )
         }
         for model, data in combined.items()
-        if data[
-            "final_combined_score"
-        ] is not None
+        if data["final_combined_score"] is not None
     ],
     key=lambda x: x["score"],
     reverse=True
