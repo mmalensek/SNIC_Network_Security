@@ -7,8 +7,14 @@ import random
 import re
 from datetime import datetime
 
-# CONNECT VIA: 
+# instructions:
+# python 4c_human_expert_score.py
+#
+# ssh: 
 # ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:5000 bluefield-z1
+# 
+# and then the website will be available at (on local machine):
+# http://localhost:5000
 
 app = Flask(__name__)
 
