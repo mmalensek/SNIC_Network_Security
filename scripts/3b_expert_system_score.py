@@ -156,7 +156,7 @@ Return ONLY valid JSON:
 
     response = client.chat.completions.create(
         model="gpt-5",
-        temperature=0,
+        temperature=1,
         messages=[
             {
                 "role": "system",
