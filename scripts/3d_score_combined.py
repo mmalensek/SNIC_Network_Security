@@ -85,7 +85,7 @@ def latest_json(directory, max_age_minutes=30):
     file_mtime = datetime.fromtimestamp(latest_file.stat().st_mtime)
     age = datetime.now() - file_mtime
     
-    if age.totalseconds() > max_age_minutes * 60:
+    if age.total_seconds() > max_age_minutes * 60:
         return None  # File is too old
     
     return latest_file
