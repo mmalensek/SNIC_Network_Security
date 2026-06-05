@@ -151,57 +151,58 @@ if expert_file is None:
         "No expert system score file found"
     )
 
-# human may be None
+# Check deterministic vs expert
+det_time = datetime.fromtimestamp(
+    deterministic_file.stat().st_mtime
+)
 
-file_times = [
-    datetime.fromtimestamp(
-        deterministic_file.stat().st_mtime
-    ),
-    datetime.fromtimestamp(
-        expert_file.stat().st_mtime
-    ),
-]
+exp_time = datetime.fromtimestamp(
+    expert_file.stat().st_mtime
+)
 
+if abs(
+    (det_time - exp_time).total_seconds()
+) > 30 * 60:
+    raise RuntimeError(
+        "Deterministic and expert files differ "
+        "by more than 30 minutes"
+    )
+
+# Human file is optional
 if human_file is not None:
-    file_times.append(
-        datetime.fromtimestamp(
-            human_file.stat().st_mtime
+
+    human_time = datetime.fromtimestamp(
+        human_file.stat().st_mtime
+    )
+
+    newest_core = max(
+        det_time,
+        exp_time
+    )
+
+    oldest_core = min(
+        det_time,
+        exp_time
+    )
+
+    # Human must fit within 30 minutes of the core files
+    if (
+        abs(
+            (human_time - newest_core)
+            .total_seconds()
+        ) > 30 * 60
+        or
+        abs(
+            (human_time - oldest_core)
+            .total_seconds()
+        ) > 30 * 60
+    ):
+        print(
+            "Human evaluation file is outside "
+            "the 30 minute window. Ignoring it."
         )
-    )
 
-time_diff = max(file_times) - min(file_times)
-
-if time_diff.total_seconds() > 30 * 60:
-    raise RuntimeError(
-        "Latest evaluation files differ by "
-        f"{time_diff.total_seconds()/60:.1f} minutes"
-    )
-
-if deterministic_file is None:
-    raise RuntimeError(
-        "No deterministic score file found"
-    )
-
-if expert_file is None:
-    raise RuntimeError(
-        "No expert system score file found"
-    )
-
-deterministic = load_json(
-    deterministic_file
-)
-
-expert = load_json(
-    expert_file
-)
-
-human = None
-human_scores = {}
-
-if human_file is not None:
-    human = load_json(
-        human_file
-    )
+        human_file = None
 
     # --------------------------------------------------
     # Human comparison -> normalized score
