@@ -46,6 +46,10 @@ OUTPUT_DIR = (
     / "5_score_scraped"
 )
 
+OLLAMA_DIR = ROOT / "2_ollama_evaluation"
+OPENAI_DIR = ROOT / "2_openai_evaluation"
+RETRAINED_DIR = ROOT / "2_retrained_evaluation"
+
 OUTPUT_DIR.mkdir(
     parents=True,
     exist_ok=True
@@ -90,7 +94,46 @@ def latest_json(directory, max_age_minutes=30):
     
     return latest_file
 
+def find_model_output(model_name):
+    search_dirs = [
+        OLLAMA_DIR,
+        OPENAI_DIR,
+        RETRAINED_DIR,
+    ]
 
+    for directory in search_dirs:
+
+        if not directory.exists():
+            continue
+
+        for file in sorted(
+            directory.glob("*.json")
+        ):
+
+            try:
+                data = load_json(file)
+
+                if not isinstance(data, list):
+                    continue
+
+                for entry in data:
+
+                    if (
+                        isinstance(entry, dict)
+                        and entry.get("model") == model_name
+                    ):
+
+                        return {
+                            "source_file": str(file),
+                            "evaluation_record": entry,
+                        }
+
+            except Exception as e:
+                print(
+                    f"Warning reading {file}: {e}"
+                )
+
+    return None
 
 # --------------------------------------------------
 # Load latest files
@@ -365,32 +408,34 @@ for model in sorted(all_models):
             else None,
     }
 
-
 # --------------------------------------------------
-# Ranking
+# Find winner
 # --------------------------------------------------
 
-ranking = sorted(
-    [
-        {
-            "model": model,
-            "score": round(
-                data["final_combined_score"],
-                1
-            )
-        }
-        for model, data in combined.items()
-        if data["final_combined_score"] is not None
-    ],
-    key=lambda x: x["score"],
-    reverse=True
+winner_model = None
+winner_score = -1
+
+for model, scores in combined.items():
+
+    final_score = scores.get(
+        "final_combined_score"
+    )
+
+    if (
+        final_score is not None
+        and final_score > winner_score
+    ):
+        winner_model = model
+        winner_score = final_score
+
+if winner_model is None:
+    raise RuntimeError(
+        "No winning model found"
+    )
+
+winner_output = find_model_output(
+    winner_model
 )
-
-for rank, entry in enumerate(
-    ranking,
-    start=1
-):
-    entry["rank"] = rank
 
 
 # --------------------------------------------------
@@ -407,22 +452,19 @@ report = {
     "human_score_included":
         human_file is not None,
 
-    "source_files": {
-        "deterministic":
-            str(deterministic_file),
+    "winner": {
+        "model":
+            winner_model,
 
-        "expert":
-            str(expert_file),
+        "final_score":
+            round(winner_score, 1),
 
-        "human":
-            str(human_file) if human_file is not None else None,
+        "scores":
+            combined[winner_model],
     },
 
-    "ranking":
-        ranking,
-
-    "results":
-        combined,
+    "model_output":
+        winner_output,
 }
 
 
@@ -432,7 +474,7 @@ timestamp = datetime.now().strftime(
 
 output_file = (
     OUTPUT_DIR
-    / f"scraped_score_{timestamp}.json"
+    / f"winner_{timestamp}.json"
 )
 
 with open(
@@ -446,15 +488,38 @@ with open(
         indent=2
     )
 
+print()
+print("=" * 60)
+print("WINNER")
+print("=" * 60)
+
 print(
-    f"\nScraped report saved to:\n"
+    f"Model : {winner_model}"
+)
+
+print(
+    f"Score : {winner_score:.1f}"
+)
+
+if winner_output:
+
+    print(
+        "Output found in:"
+    )
+
+    print(
+        winner_output["source_file"]
+    )
+
+else:
+
+    print(
+        "No model output found."
+    )
+
+print()
+
+print(
+    f"Winner report saved to:\n"
     f"{output_file}"
-)
-
-print(
-    f"Human score included: {human_file is not None}"
-)
-
-print(
-    f"Weights used: {ACTIVE_WEIGHTS}"
 )
