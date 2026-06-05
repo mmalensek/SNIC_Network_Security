@@ -141,6 +141,10 @@ human_file = latest_json(
     HUMAN_DIR
 )
 
+# --------------------------------------------------
+# Required files
+# --------------------------------------------------
+
 if deterministic_file is None:
     raise RuntimeError(
         "No deterministic score file found"
@@ -151,7 +155,10 @@ if expert_file is None:
         "No expert system score file found"
     )
 
-# Check deterministic vs expert
+# --------------------------------------------------
+# Check timestamps
+# --------------------------------------------------
+
 det_time = datetime.fromtimestamp(
     deterministic_file.stat().st_mtime
 )
@@ -160,12 +167,15 @@ exp_time = datetime.fromtimestamp(
     expert_file.stat().st_mtime
 )
 
+# Deterministic and expert MUST belong
+# to the same run
+
 if abs(
     (det_time - exp_time).total_seconds()
 ) > 30 * 60:
     raise RuntimeError(
-        "Deterministic and expert files differ "
-        "by more than 30 minutes"
+        "Deterministic and expert files "
+        "differ by more than 30 minutes"
     )
 
 # Human file is optional
@@ -185,28 +195,54 @@ if human_file is not None:
         exp_time
     )
 
-    # Human must fit within 30 minutes of the core files
     if (
         abs(
-            (human_time - newest_core)
-            .total_seconds()
+            (
+                human_time
+                - newest_core
+            ).total_seconds()
         ) > 30 * 60
         or
         abs(
-            (human_time - oldest_core)
-            .total_seconds()
+            (
+                human_time
+                - oldest_core
+            ).total_seconds()
         ) > 30 * 60
     ):
         print(
-            "Human evaluation file is outside "
-            "the 30 minute window. Ignoring it."
+            "Human evaluation file is "
+            "outside the 30 minute window. "
+            "Ignoring it."
         )
 
         human_file = None
 
-    # --------------------------------------------------
-    # Human comparison -> normalized score
-    # --------------------------------------------------
+# --------------------------------------------------
+# Load JSON data
+# --------------------------------------------------
+
+deterministic = load_json(
+    deterministic_file
+)
+
+expert = load_json(
+    expert_file
+)
+
+human = None
+human_scores = {}
+
+if human_file is not None:
+    human = load_json(
+        human_file
+    )
+
+# --------------------------------------------------
+# Human comparison -> normalized score
+# --------------------------------------------------
+
+if human is not None:
 
     human_points = defaultdict(float)
     human_matches = defaultdict(int)
@@ -216,22 +252,33 @@ if human_file is not None:
         []
     ):
 
-        a = comparison["candidate_a_model"]
-        b = comparison["candidate_b_model"]
-        winner = comparison["winner"]
+        a = comparison[
+            "candidate_a_model"
+        ]
+
+        b = comparison[
+            "candidate_b_model"
+        ]
+
+        winner = comparison[
+            "winner"
+        ]
 
         human_matches[a] += 1
         human_matches[b] += 1
 
         if winner == "A":
             human_points[a] += 1
+
         elif winner == "B":
             human_points[b] += 1
+
         else:  # TIE
             human_points[a] += 0.5
             human_points[b] += 0.5
 
     for model in human_matches:
+
         human_scores[model] = (
             human_points[model]
             / human_matches[model]
