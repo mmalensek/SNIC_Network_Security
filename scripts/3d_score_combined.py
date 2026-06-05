@@ -36,12 +36,15 @@ OUTPUT_DIR.mkdir(
     exist_ok=True
 )
 
-# Weights for combining scores
-# human score is weighted more heavily since it reflects real-world preferences 
-WEIGHTS = {
+WEIGHTS_WITH_HUMAN = {
     "deterministic": 0.25,
     "expert": 0.25,
     "human": 0.50,
+}
+
+WEIGHTS_NO_HUMAN = {
+    "deterministic": 0.40,
+    "expert": 0.60,
 }
 
 
@@ -55,10 +58,7 @@ def load_json(path):
 
 
 def latest_json(directory):
-
-    files = sorted(
-        directory.glob("*.json")
-    )
+    files = sorted(directory.glob("*.json"))
 
     if not files:
         return None
@@ -92,11 +92,6 @@ if expert_file is None:
         "No expert system score file found"
     )
 
-if human_file is None:
-    raise RuntimeError(
-        "No human expert score file found"
-    )
-
 deterministic = load_json(
     deterministic_file
 )
@@ -105,53 +100,52 @@ expert = load_json(
     expert_file
 )
 
-human = load_json(
-    human_file
-)
-
-
-# --------------------------------------------------
-# Human comparison -> normalized score
-# --------------------------------------------------
-
-human_points = defaultdict(float)
-human_matches = defaultdict(int)
-
-for comparison in human.get(
-    "comparisons",
-    []
-):
-
-    a = comparison["candidate_a_model"]
-    b = comparison["candidate_b_model"]
-
-    winner = comparison["winner"]
-
-    human_matches[a] += 1
-    human_matches[b] += 1
-
-    if winner == "A":
-
-        human_points[a] += 1
-
-    elif winner == "B":
-
-        human_points[b] += 1
-
-    else:  # TIE
-
-        human_points[a] += 0.5
-        human_points[b] += 0.5
-
-
+human = None
 human_scores = {}
 
-for model in human_matches:
+if human_file is not None:
+    human = load_json(
+        human_file
+    )
 
-    human_scores[model] = (
-        human_points[model]
-        / human_matches[model]
-    ) * 100
+    # --------------------------------------------------
+    # Human comparison -> normalized score
+    # --------------------------------------------------
+
+    human_points = defaultdict(float)
+    human_matches = defaultdict(int)
+
+    for comparison in human.get(
+        "comparisons",
+        []
+    ):
+
+        a = comparison["candidate_a_model"]
+        b = comparison["candidate_b_model"]
+        winner = comparison["winner"]
+
+        human_matches[a] += 1
+        human_matches[b] += 1
+
+        if winner == "A":
+            human_points[a] += 1
+        elif winner == "B":
+            human_points[b] += 1
+        else:  # TIE
+            human_points[a] += 0.5
+            human_points[b] += 0.5
+
+    for model in human_matches:
+        human_scores[model] = (
+            human_points[model]
+            / human_matches[model]
+        ) * 100
+
+ACTIVE_WEIGHTS = (
+    WEIGHTS_WITH_HUMAN
+    if human_file is not None
+    else WEIGHTS_NO_HUMAN
+)
 
 
 # --------------------------------------------------
@@ -159,7 +153,6 @@ for model in human_matches:
 # --------------------------------------------------
 
 all_models = set()
-
 
 # deterministic models
 for system_data in deterministic.values():
@@ -178,7 +171,6 @@ for system_data in deterministic.values():
     all_models.update(
         models.keys()
     )
-
 
 # expert models
 for system_data in (
@@ -202,7 +194,6 @@ for system_data in (
     all_models.update(
         summary.keys()
     )
-
 
 # human models
 all_models.update(
@@ -230,7 +221,6 @@ def find_deterministic_score(model):
         )
 
         if model in models:
-
             return (
                 models[model]
                 .get("overall", 0)
@@ -261,7 +251,6 @@ def find_expert_score(model):
         )
 
         if model in summary:
-
             return (
                 summary[model]
                 .get("overall", 0)
@@ -272,7 +261,6 @@ def find_expert_score(model):
 
 
 def find_human_score(model):
-
     return human_scores.get(model)
 
 
@@ -300,36 +288,30 @@ for model in sorted(all_models):
     weight_total = 0
 
     if d is not None:
-
         weighted_sum += (
             d
-            * WEIGHTS["deterministic"]
+            * ACTIVE_WEIGHTS["deterministic"]
         )
-
         weight_total += (
-            WEIGHTS["deterministic"]
+            ACTIVE_WEIGHTS["deterministic"]
         )
 
     if e is not None:
-
         weighted_sum += (
             e
-            * WEIGHTS["expert"]
+            * ACTIVE_WEIGHTS["expert"]
         )
-
         weight_total += (
-            WEIGHTS["expert"]
+            ACTIVE_WEIGHTS["expert"]
         )
 
-    if h is not None:
-
+    if human_file is not None and h is not None:
         weighted_sum += (
             h
-            * WEIGHTS["human"]
+            * ACTIVE_WEIGHTS["human"]
         )
-
         weight_total += (
-            WEIGHTS["human"]
+            ACTIVE_WEIGHTS["human"]
         )
 
     final_score = (
@@ -353,6 +335,7 @@ for model in sorted(all_models):
             if final_score is not None
             else None,
     }
+
 
 # --------------------------------------------------
 # Ranking
@@ -378,7 +361,6 @@ for rank, entry in enumerate(
     ranking,
     start=1
 ):
-
     entry["rank"] = rank
 
 
@@ -391,7 +373,10 @@ report = {
         datetime.now().isoformat(),
 
     "weights":
-        WEIGHTS,
+        ACTIVE_WEIGHTS,
+
+    "human_score_included":
+        human_file is not None,
 
     "source_files": {
         "deterministic":
@@ -401,7 +386,7 @@ report = {
             str(expert_file),
 
         "human":
-            str(human_file),
+            str(human_file) if human_file is not None else None,
     },
 
     "ranking":
@@ -426,7 +411,6 @@ with open(
     "w",
     encoding="utf-8"
 ) as f:
-
     json.dump(
         report,
         f,
@@ -436,4 +420,12 @@ with open(
 print(
     f"\nCombined report saved to:\n"
     f"{output_file}"
+)
+
+print(
+    f"Human score included: {human_file is not None}"
+)
+
+print(
+    f"Weights used: {ACTIVE_WEIGHTS}"
 )
