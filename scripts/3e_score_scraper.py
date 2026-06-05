@@ -43,7 +43,7 @@ HUMAN_DIR = (
 OUTPUT_DIR = (
     ROOT
     / "3_evaluation_results"
-    / "4_score_combined"
+    / "5_score_scraped"
 )
 
 OUTPUT_DIR.mkdir(
@@ -432,7 +432,7 @@ timestamp = datetime.now().strftime(
 
 output_file = (
     OUTPUT_DIR
-    / f"combined_scores_{timestamp}.json"
+    / f"scraped_score_{timestamp}.json"
 )
 
 with open(
@@ -447,7 +447,7 @@ with open(
     )
 
 print(
-    f"\nCombined report saved to:\n"
+    f"\nScraped report saved to:\n"
     f"{output_file}"
 )
 
