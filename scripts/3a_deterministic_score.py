@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+"""
+(3a/4)
+
+Deterministic scoring script for evaluating model performance
+
+Prerequisites:
+openai >= 1.0.0
+xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
+json
+"""
+
 import re
 import json
 from pathlib import Path

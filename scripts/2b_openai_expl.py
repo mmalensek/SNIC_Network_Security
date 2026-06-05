@@ -1,5 +1,5 @@
 """
-(3c/4)
+(2b/4)
 
 OpenAI explanation script for evaluating model reasoning and solution quality
 

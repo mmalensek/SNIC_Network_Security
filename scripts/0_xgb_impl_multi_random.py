@@ -1,5 +1,5 @@
 """
-(1b/4)
+(0/4)
 
 Simplified XGBoost implementation - multiclass version (15 labels)
 

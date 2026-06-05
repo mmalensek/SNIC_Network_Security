@@ -1,5 +1,5 @@
 """
-(2/4)
+(1/4)
 
 XGBoost classifier aggregator (label-based selection + classifier selection)
 

@@ -1,5 +1,5 @@
 """
-(3b/4)
+(2a/4)
 
 Ollama explanation script for evaluating model reasoning and solution quality
 

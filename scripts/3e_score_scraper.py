@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 """
-(3d/4)
+(3e/4)
 
-Combined scoring script for evaluating model performance
+Score scraping script for extracting and processing evaluation scores for retraining of models
 
 Prerequisites:
 openai >= 1.0.0
@@ -18,7 +18,6 @@ import json
 from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
-from datetime import datetime, timedelta
 
 ROOT = Path("json_log")
 
@@ -72,32 +71,30 @@ def load_json(path):
         return json.load(f)
 
 
-def latest_json(directory, max_age_minutes=30):
+def latest_json(directory):
     files = sorted(directory.glob("*.json"))
-    
+
     if not files:
         return None
-    
-    # Get the latest file
-    latest_file = files[-1]
-    
-    # Check if it's within the time window
-    file_mtime = datetime.fromtimestamp(latest_file.stat().st_mtime)
-    age = datetime.now() - file_mtime
-    
-    if age.totalseconds() > max_age_minutes * 60:
-        return None  # File is too old
-    
-    return latest_file
+
+    return files[-1]
 
 
 # --------------------------------------------------
 # Load latest files
 # --------------------------------------------------
 
-deterministic_file = latest_json(DETERMINISTIC_DIR, max_age_minutes=30)
-expert_file = latest_json(EXPERT_DIR, max_age_minutes=30)
-human_file = latest_json(HUMAN_DIR, max_age_minutes=30)
+deterministic_file = latest_json(
+    DETERMINISTIC_DIR
+)
+
+expert_file = latest_json(
+    EXPERT_DIR
+)
+
+human_file = latest_json(
+    HUMAN_DIR
+)
 
 if deterministic_file is None:
     raise RuntimeError(

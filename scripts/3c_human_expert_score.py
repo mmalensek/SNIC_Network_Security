@@ -1,3 +1,17 @@
+"""
+(3c/4)
+
+Human Expert Score Evaluation via pairwise comparison of candidate solutions.
+
+Prerequisites:
+openai >= 1.0.0
+xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
+json
+"""
+
 from flask import Flask, render_template_string, request, jsonify
 from pathlib import Path
 from itertools import combinations

@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+"""
+(3b/4)
+
+Expert System Score Evaluation, with GPT-5 as the judge.
+
+Prerequisites:
+openai >= 1.0.0
+xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
+json
+"""
+
 import json
 import os
 import re
