@@ -76,23 +76,13 @@ def load_json(path):
         return json.load(f)
 
 
-def latest_json(directory, max_age_minutes=30):
+def latest_json(directory):
     files = sorted(directory.glob("*.json"))
-    
+
     if not files:
         return None
-    
-    # Get the latest file
-    latest_file = files[-1]
-    
-    # Check if it's within the time window
-    file_mtime = datetime.fromtimestamp(latest_file.stat().st_mtime)
-    age = datetime.now() - file_mtime
-    
-    if age.total_seconds() > max_age_minutes * 60:
-        return None  # File is too old
-    
-    return latest_file
+
+    return files[-1]
 
 def find_model_output(model_name):
     search_dirs = [
@@ -140,19 +130,52 @@ def find_model_output(model_name):
 # --------------------------------------------------
 
 deterministic_file = latest_json(
-    DETERMINISTIC_DIR,
-    max_age_minutes=30
+    DETERMINISTIC_DIR
 )
 
 expert_file = latest_json(
-    EXPERT_DIR,
-    max_age_minutes=30
+    EXPERT_DIR
 )
 
 human_file = latest_json(
-    HUMAN_DIR,
-    max_age_minutes=30
+    HUMAN_DIR
 )
+
+if deterministic_file is None:
+    raise RuntimeError(
+        "No deterministic score file found"
+    )
+
+if expert_file is None:
+    raise RuntimeError(
+        "No expert system score file found"
+    )
+
+# human may be None
+
+file_times = [
+    datetime.fromtimestamp(
+        deterministic_file.stat().st_mtime
+    ),
+    datetime.fromtimestamp(
+        expert_file.stat().st_mtime
+    ),
+]
+
+if human_file is not None:
+    file_times.append(
+        datetime.fromtimestamp(
+            human_file.stat().st_mtime
+        )
+    )
+
+time_diff = max(file_times) - min(file_times)
+
+if time_diff.total_seconds() > 30 * 60:
+    raise RuntimeError(
+        "Latest evaluation files differ by "
+        f"{time_diff.total_seconds()/60:.1f} minutes"
+    )
 
 if deterministic_file is None:
     raise RuntimeError(
