@@ -43,7 +43,7 @@ HUMAN_DIR = (
 OUTPUT_DIR = (
     ROOT
     / "3_evaluation_results"
-    / "5_score_scraped"
+    / "6_score_winner"
 )
 
 OLLAMA_DIR = ROOT / "2_ollama_evaluation"
