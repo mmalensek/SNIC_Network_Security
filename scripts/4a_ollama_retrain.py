@@ -27,9 +27,11 @@ from collections import Counter
 
 DEFAULT_SYSTEM = (
     "You are a network security expert specializing in intrusion detection. "
-    "Analyze network flow features to classify attacks such as DDoS, DoS variants, "
-    "PortScan, Bot, Infiltration, and benign traffic. Explain which features matter "
-    "and provide concise mitigation advice."
+    "Given a network flow, an actual label, and an XGBoost prediction, "
+    "produce a LABEL, REASONING, and SOLUTION section. "
+    "The REASONING should explain the traffic characteristics and why they "
+    "match the label. The SOLUTION should provide practical mitigation and "
+    "response recommendations."
 )
 
 
@@ -69,18 +71,25 @@ def extract_example(eval_obj, source_file):
     actual_label = record.get("actual_label", "")
 
     user_text = (
-        "Classify this network flow and explain the decision. Return the attack label, "
-        "reasoning, and mitigation steps.\n\n"
+        "Analyze this network flow.\n\n"
+        "Provide your response EXACTLY in the following format:\n\n"
+        "LABEL:\n"
+        "[attack label]\n\n"
+        "REASONING:\n"
+        "[analysis]\n\n"
+        "SOLUTION:\n"
+        "[recommended mitigations]\n\n"
         f"Source: {source_file}\n"
         f"Actual label: {actual_label}\n"
         f"XGBoost label: {xgb_label}\n\n"
-        f"Flow features:\n{json.dumps(row_data, indent=2, ensure_ascii=False)}"
+        f"Flow features:\n"
+        f"{json.dumps(row_data, indent=2, ensure_ascii=False)}"
     )
 
     assistant_text = (
-        f"Label: {label}\n\n"
-        f"Reasoning:\n{reasoning}\n\n"
-        f"Mitigation:\n{solution}"
+        f"LABEL:\n{label}\n\n"
+        f"REASONING:\n{reasoning}\n\n"
+        f"SOLUTION:\n{solution}"
     )
 
     return {
