@@ -153,9 +153,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input-glob", required=True)
     ap.add_argument("--max-samples", type=int, default=None)
-    ap.add_argument("--model-name", default="network-intrusion-ollama")
-    ap.add_argument("--base-model", default="llama3.1")
-    ap.add_argument("--output-dir", default="output/ollama_training")
+    ap.add_argument("--model-name", default="deepseek-r1:8b-intrusion-retrained")
+    ap.add_argument("--base-model", default="deepseek-r1:8b")
+    ap.add_argument("--output-dir", default="ollama_training")
     ap.add_argument("--system-prompt", default=DEFAULT_SYSTEM)
     args = ap.parse_args()
 
