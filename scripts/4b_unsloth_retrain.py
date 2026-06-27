@@ -32,7 +32,7 @@ model = FastLanguageModel.get_peft_model(
 
 dataset = load_dataset(
     "json",
-    data_files="training_dataset.jsonl",
+    data_files="/home/ubuntu/martinmalensek_diploma/SNIC_Network_Security/scripts/ollama_training/training_dataset.jsonl",
     split="train",
 )
 
