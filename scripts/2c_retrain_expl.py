@@ -49,7 +49,20 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     load_in_4bit=True,
 )
 
-FastLanguageModel.for_inference(model)
+base_model = "unsloth/DeepSeek-R1-Distill-Llama-8B"
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name=base_model,
+    max_seq_length=4096,
+    load_in_4bit=True,
+)
+
+from peft import PeftModel
+
+model = PeftModel.from_pretrained(
+    model,
+    MODEL_PATH,
+)
 
 print("Model loaded successfully.\n")
 
@@ -187,12 +200,12 @@ def query_model(prompt):
         eos_token_id=tokenizer.eos_token_id,
     )
 
-    generated = tokenizer.decode(
-        outputs[0],
-        skip_special_tokens=True,
-    )
+    generated_ids = outputs[0][inputs["input_ids"].shape[1]:]
 
-    response = generated[len(text):].strip()
+    response = tokenizer.decode(
+        generated_ids,
+        skip_special_tokens=True,
+    ).strip()
 
     return response
 
