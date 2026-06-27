@@ -62,7 +62,7 @@ trainer = SFTTrainer(
         gradient_accumulation_steps=8,
         learning_rate=2e-4,
         logging_steps=10,
-        save_steps=100,
+        save_strategy="no",
         bf16=True,
     ),
 )
