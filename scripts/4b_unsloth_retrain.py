@@ -5,6 +5,9 @@ from transformers import TrainingArguments
 
 MODEL_NAME = "unsloth/DeepSeek-R1-Distill-Llama-8B"
 
+# everything is saved to external storage
+OUTPUT_DIR = "/mnt/share/tmp/intrusion_lora"
+
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name=MODEL_NAME,
     max_seq_length=4096,
@@ -53,7 +56,7 @@ trainer = SFTTrainer(
     dataset_text_field="text",
     max_seq_length=4096,
     args=TrainingArguments(
-        output_dir="intrusion_lora",
+        output_dir=OUTPUT_DIR,
         num_train_epochs=3,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=8,
@@ -66,5 +69,5 @@ trainer = SFTTrainer(
 
 trainer.train()
 
-model.save_pretrained("intrusion_lora")
-tokenizer.save_pretrained("intrusion_lora")
+model.save_pretrained(OUTPUT_DIR)
+tokenizer.save_pretrained(OUTPUT_DIR)
