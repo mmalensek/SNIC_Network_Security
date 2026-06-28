@@ -143,7 +143,7 @@ The resulting LoRA adapter can then be converted into an Ollama model and used a
 
 **Co-mentor**
 
-* Miha Grohar
+* Assist. Miha Grohar
 
 ## Author
 
