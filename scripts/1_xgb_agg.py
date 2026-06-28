@@ -41,23 +41,52 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="XGBoost classifier aggregator with selectable classifier"
     )
+
     parser.add_argument(
         "--model-key",
         type=str,
         choices=list(AVAILABLE_MODELS.keys()),
         help="Predefined model key to load"
     )
+
     parser.add_argument(
         "--model-path",
         type=str,
-        help="Custom path to a model file (.json). Overrides --model-key path if provided"
+        help="Custom model path"
     )
+
     parser.add_argument(
         "--model-type",
         type=str,
         choices=["binary", "multiclass"],
-        help="Model type for custom --model-path"
+        help="Model type for custom model"
     )
+
+    parser.add_argument(
+        "--labels",
+        type=str,
+        help="Comma separated label indices, e.g. 0,2,3"
+    )
+
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Number of samples per output (0 = all)"
+    )
+
+    parser.add_argument(
+        "--pairs",
+        type=int,
+        help="Number of prediction/groundtruth pairs"
+    )
+
+    parser.add_argument(
+        "--print-settings",
+        type=int,
+        choices=[1,2,3],
+        help="1=rows, 2=json, 3=both"
+    )
+
     return parser.parse_args()
 
 
@@ -305,8 +334,20 @@ def main():
     for i, label in enumerate(labels):
         print(f"{i}: {label}")
 
-    selected_indices = input("\nSelect labels to include (e.g. 0,2,3): ")
-    selected_indices = [int(i.strip()) for i in selected_indices.split(",")]
+    if args.labels:
+        selected_indices = [
+            int(i.strip())
+            for i in args.labels.split(",")
+        ]
+    else:
+        selected_indices = input(
+            "\nSelect labels to include (e.g. 0,2,3): "
+        )
+        selected_indices = [
+            int(i.strip())
+            for i in selected_indices.split(",")
+        ]
+    
     selected_labels = [labels[i] for i in selected_indices]
 
     print("\nSelected labels:", selected_labels)
@@ -316,9 +357,27 @@ def main():
     filtered_true_labels = pd.Series(y, index=dataframe.index)[mask]
     filtered_true_label_names = original_labels[mask]
 
-    limit = int(input("\nHow many samples to test per output (0 = all): "))
-    n = int(input("How many different prediction/groundtruth pairs to generate: "))
-    printSettings = int(input("\nPrint every row separately (1), print json (2), print both (3): "))
+    if args.limit is not None:
+        limit = args.limit
+    else:
+        limit = int(input(
+            "\nHow many samples to test per output (0 = all): "
+        ))
+    
+    if args.pairs is not None:
+        n = args.pairs
+    else:
+        n = int(input(
+            "How many different prediction/groundtruth pairs to generate: "
+        ))
+    
+    if args.print_settings is not None:
+        printSettings = args.print_settings
+    else:
+        printSettings = int(input(
+            "\nPrint every row separately (1), print json (2), print both (3): "
+        ))
+
     print("")
 
     if len(filtered_rows) == 0:

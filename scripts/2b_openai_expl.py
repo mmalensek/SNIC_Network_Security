@@ -13,8 +13,9 @@ json
 """
 
 import os
-import json
 import re
+import json
+import argparse
 from openai import OpenAI
 
 # configuration
@@ -32,6 +33,18 @@ AVAILABLE_MODELS = [
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 EVAL_LOG_DIR = "json_log/2_openai_evaluation"
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Run Ollama explanation models."
+    )
+
+    parser.add_argument(
+        "--model",
+        type=str,
+        help="Model index or 'all'. Example: 0, 1 or all"
+    )
+
+    return parser.parse_args()
 
 def get_openai_client():
     api_key = (OPENAI_API_KEY or os.environ.get("OPENAI_API_KEY", "")).strip()
@@ -170,12 +183,24 @@ def main():
 
     client = get_openai_client()
 
+    args = parse_args()
+
     print("\nAvailable OpenAI models:")
     for i, m in enumerate(AVAILABLE_MODELS):
         print(f"  {i}: {m}")
 
-    choice = input("\nSelect model index or 'all': ").strip()
-    selected_models = AVAILABLE_MODELS if choice == "all" else [AVAILABLE_MODELS[int(choice)]]
+    if args.model is None:
+        choice = input("\nSelect model index or 'all': ").strip()
+    else:
+        choice = args.model
+        print(f"\nUsing model selection from CLI: {choice}")
+
+    selected_models = (
+        AVAILABLE_MODELS
+        if choice == "all"
+        else [AVAILABLE_MODELS[int(choice)]]
+    )
+
     print(f"Selected: {selected_models}")
 
     latest_timestamp, file_pairs = get_latest_file_pairs()

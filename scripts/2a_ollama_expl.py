@@ -18,16 +18,30 @@ json
 """
 
 import os
-import json
 import re
-import subprocess
+import json
 import requests
+import argparse
+import subprocess
 from datetime import datetime
 
 OLLAMA_API = "http://localhost:11434/api/generate"
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 EVAL_LOG_DIR = "json_log/2_ollama_evaluation"
 
+# parse command line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Run Ollama explanation models."
+    )
+
+    parser.add_argument(
+        "--model",
+        type=str,
+        help="Model index or 'all'. Example: 0, 1 or all"
+    )
+
+    return parser.parse_args()
 
 # getting local Ollama models
 def get_ollama_models():
@@ -175,6 +189,9 @@ def evaluate(models, pred_json, ground_truth):
 
 # main
 def main():
+
+    args = parse_args()
+
     print("Starting Ollama evaluation script...")
     models = get_ollama_models()
     print(f"Found {len(models)} local Ollama models.")
@@ -183,7 +200,10 @@ def main():
     for i, m in enumerate(models):
         print(f"{i}: {m}")
 
-    choice = input("\nSelect model index or 'all': ")
+    if args.model:
+     choice = args.model
+    else:
+      choice = input("\nSelect model index or 'all': ")
 
     if choice == "all":
         selected_models = models

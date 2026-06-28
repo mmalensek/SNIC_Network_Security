@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+(4b/4)
+
+Fine-tune a model using Unsloth.
+
+Usage:
+  python 4b_unsloth_finetune.py \
+    --input-glob "json_log/3_evaluation_results/6_score_winner/*.json" \
+    --max-samples 50 \
+    --model-name network-intrusion-ollama \
+    --base-model llama3.1 \
+    --output-dir output/ollama_training
+"""
+
 from unsloth import FastLanguageModel
 from datasets import load_dataset
 from trl import SFTTrainer
