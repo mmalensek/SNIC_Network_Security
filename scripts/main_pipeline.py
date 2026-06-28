@@ -19,7 +19,7 @@ Pipeline:
 
 USAGE: 
 
-Without a retrained model:
+Without a retrained model OR human evaluation:
 
 python main_pipeline.py \
     --classifier multiclass \
@@ -28,9 +28,10 @@ python main_pipeline.py \
     --pairs 100 \
     --ollama-model deepseek-r1:8b \
     --openai-model gpt-5.2 \
-    --skip-retrained
+    --skip-retrained \
+    --skip-human-evaluation
 
-With a retrained model:
+With a retrained model AND human evaluation:
 
 python main_pipeline.py \
     --classifier multiclass \
@@ -113,6 +114,12 @@ def parse_args():
         "--skip-retrained",
         action="store_true",
         help="Skip 2c_retrain_expl.py"
+    )
+
+    parser.add_argument(
+        "--skip-human-evaluation",
+        action="store_true",
+        help="Skip 3c_human_expert_score.py"
     )
 
     # ---------- training ----------
@@ -209,13 +216,18 @@ def main():
         "STEP 6/10 : Expert scoring",
     )
 
-    run(
-        [
-            "python",
-            "3c_human_expert_score.py",
-        ],
-        "STEP 7/10 : Human scoring",
-    )
+    if not args.skip_human_evaluation:
+
+        run(
+            [
+                "python",
+                "3c_human_expert_score.py",
+            ],
+            "STEP 7/11 : Human scoring",
+        )
+
+    else:
+        print("\nSkipping human expert scoring.")
 
     run(
         [
