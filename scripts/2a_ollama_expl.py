@@ -38,7 +38,7 @@ def parse_args():
     parser.add_argument(
         "--model",
         type=str,
-        help="Model index or 'all'. Example: 0, 1 or all"
+        help="Model index, model name or 'all'"
     )
 
     return parser.parse_args()
@@ -200,15 +200,34 @@ def main():
     for i, m in enumerate(models):
         print(f"{i}: {m}")
 
-    if args.model:
-     choice = args.model
+    if args.model is None:
+        choice = input("\nSelect model index, model name or 'all': ").strip()
     else:
-      choice = input("\nSelect model index or 'all': ")
+        choice = args.model.strip()
+        print(f"\nUsing model selection from CLI: {choice}")
 
     if choice == "all":
         selected_models = models
+
+    elif choice.isdigit():
+        idx = int(choice)
+
+        if idx < 0 or idx >= len(models):
+            raise ValueError(f"Invalid model index: {idx}")
+
+        selected_models = [models[idx]]
+
+    elif choice in models:
+        selected_models = [choice]
+
     else:
-        selected_models = [models[int(choice)]]
+        raise ValueError(
+            f"Unknown model '{choice}'.\n"
+            f"Available models:\n"
+            + "\n".join(models)
+        )
+
+    print(f"\nSelected: {selected_models}")
 
     latest_timestamp, file_pairs = get_latest_file_pairs()
 

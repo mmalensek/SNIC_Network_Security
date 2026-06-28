@@ -195,11 +195,21 @@ def main():
         choice = args.model
         print(f"\nUsing model selection from CLI: {choice}")
 
-    selected_models = (
-        AVAILABLE_MODELS
-        if choice == "all"
-        else [AVAILABLE_MODELS[int(choice)]]
-    )
+    if choice == "all":
+        selected_models = AVAILABLE_MODELS
+
+    elif choice.isdigit():
+        selected_models = [AVAILABLE_MODELS[int(choice)]]
+
+    elif choice in AVAILABLE_MODELS:
+        selected_models = [choice]
+
+    else:
+        raise ValueError(
+            f"Unknown model '{choice}'. "
+            f"Choose 'all', an index, or one of:\n"
+            + "\n".join(AVAILABLE_MODELS)
+        )
 
     print(f"Selected: {selected_models}")
 

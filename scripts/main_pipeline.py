@@ -17,7 +17,7 @@ Pipeline:
 4a_training_prepare.py
 4b_unsloth_finetune.py
 
-EXAMPLE USAGE: 
+USAGE: 
 
 Without a retrained model:
 
@@ -26,8 +26,8 @@ python main_pipeline.py \
     --labels 2 \
     --limit 1 \
     --pairs 100 \
-    --ollama-model all \
-    --openai-model 0 \
+    --ollama-model gpt-5.2 \
+    --openai-model deepseek-r1:8b \
     --skip-retrained
 
 With a retrained model:
@@ -37,8 +37,8 @@ python main_pipeline.py \
     --labels 2 \
     --limit 1 \
     --pairs 100 \
-    --ollama-model all \
-    --openai-model 0
+    --ollama-model gpt-5.2 \
+    --openai-model deepseek-r1:8b
 
 """
 
