@@ -264,6 +264,7 @@ def main():
             str(args.max_samples),
         ])
 
+    """
     run(
         cmd,
         "STEP 10/10 : Dataset generation",
@@ -276,9 +277,16 @@ def main():
         ],
         "STEP 11/11 : LoRA fine-tuning",
     )
-
+    """
+    
     print("\n" + "=" * 80)
-    print("PIPELINE FINISHED SUCCESSFULLY")
+    print("Pipeline finished successfully.")
+    print("\nTraining dataset created:")
+    print("\nollama_training/training_dataset.json")
+    print("\nollama_training/training_dataset.jsonl")
+    print("\nFor fine-tuning:")
+    print("\nconda activate retrain")
+    print("python 4b_unsloth_finetune.py")
     print("=" * 80)
 
 
