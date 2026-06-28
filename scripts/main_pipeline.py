@@ -26,8 +26,8 @@ python main_pipeline.py \
     --labels 2 \
     --limit 1 \
     --pairs 100 \
-    --ollama-model gpt-5.2 \
-    --openai-model deepseek-r1:8b \
+    --ollama-model deepseek-r1:8b \
+    --openai-model gpt-5.2 \
     --skip-retrained
 
 With a retrained model:
@@ -37,8 +37,8 @@ python main_pipeline.py \
     --labels 2 \
     --limit 1 \
     --pairs 100 \
-    --ollama-model gpt-5.2 \
-    --openai-model deepseek-r1:8b
+    --ollama-model deepseek-r1:8b \
+    --openai-model gpt-5.2
 
 """
 
