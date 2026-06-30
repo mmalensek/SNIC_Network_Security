@@ -10,25 +10,27 @@ numpy >= 1.17.2
 pandas >= 0.25.1
 sklearn >= 0.22.1
 json
+
+INSTRUCTIONS:
+
+firstly run:
+python 4c_human_expert_score.py
+
+ssh: 
+ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:5000 bluefield-z1
+
+and then the website will be available at (on local machine):
+http://localhost:5000
+
 """
 
-from flask import Flask, render_template_string, request, jsonify
-from pathlib import Path
-from itertools import combinations
-from datetime import datetime
+import re
 import json
 import random
-import re
+from pathlib import Path
 from datetime import datetime
-
-# instructions:
-# python 4c_human_expert_score.py
-#
-# ssh: 
-# ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:5000 bluefield-z1
-# 
-# and then the website will be available at (on local machine):
-# http://localhost:5000
+from itertools import combinations
+from flask import Flask, render_template_string, request, jsonify
 
 app = Flask(__name__)
 
@@ -112,6 +114,23 @@ body {
     margin-bottom: 20px;
 }
 
+.log-box {
+    display: none;
+    margin-top: 15px;
+    background: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    max-height: 400px;
+    font-size: 13px;
+}
+
+.toggle-btn {
+    padding: 8px 16px;
+    margin-top: 10px;
+}
+
 .container {
     display: flex;
     gap: 20px;
@@ -162,6 +181,12 @@ pre {
 
     <p><strong>Ground Truth:</strong> <span id="groundtruth"></span></p>
     <p><strong>XGBoost Prediction:</strong> <span id="prediction"></span></p>
+
+    <button class="toggle-btn" onclick="toggleLog()">
+        Show Original JSON Log
+    </button>
+
+    <pre id="original_log" class="log-box"></pre>
 </div>
 
 <div class="container">
@@ -199,6 +224,16 @@ pre {
 
 let tasks = [];
 let current = 0;
+
+function toggleLog() {
+
+    const box = document.getElementById("original_log");
+
+    if(box.style.display === "block")
+        box.style.display = "none";
+    else
+        box.style.display = "block";
+}
 
 async function loadTasks() {
 
@@ -240,6 +275,11 @@ function render() {
 
     document.getElementById("b_solution").innerHTML =
         marked.parse(t.b.solution || "");
+
+    document.getElementById("original_log").textContent =
+        JSON.stringify(t.original_log, null, 2);
+
+    document.getElementById("original_log").style.display = "none";
 }
 
 async function vote(choice) {
@@ -392,6 +432,9 @@ def build_tasks():
                         "Unknown"
                     )
                 ),
+
+                "original_log": gt,
+
                 "a": pair[0],
                 "b": pair[1]
             })
