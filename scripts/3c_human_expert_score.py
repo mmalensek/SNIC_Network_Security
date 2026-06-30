@@ -14,7 +14,7 @@ json
 INSTRUCTIONS:
 
 firstly run:
-python 4c_human_expert_score.py
+python 3c_human_expert_score.py
 
 ssh: 
 ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:5000 bluefield-z1
@@ -433,7 +433,7 @@ def build_tasks():
                     )
                 ),
 
-                "original_log": gt,
+                "original_log": pred.get("original_dataset_rows", []),   
 
                 "a": pair[0],
                 "b": pair[1]
