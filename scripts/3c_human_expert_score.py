@@ -183,7 +183,7 @@ pre {
     <p><strong>XGBoost Prediction:</strong> <span id="prediction"></span></p>
 
     <button class="toggle-btn" onclick="toggleLog()">
-        Show Original JSON Log
+        Show Input JSON Log
     </button>
 
     <pre id="original_log" class="log-box"></pre>
