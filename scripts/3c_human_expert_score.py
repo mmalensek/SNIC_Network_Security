@@ -363,7 +363,8 @@ def load_original_log(sample_id):
 
     data = load_json(path)
 
-    return data.get("original_log", [])
+    print(data.keys())
+    return data
 
 def load_json(path):
     with open(path, "r") as f:
