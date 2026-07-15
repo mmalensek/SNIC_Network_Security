@@ -326,6 +326,44 @@ def extract_sample_id(filename):
     match = re.search(r'(\d{8}_\d{6}_\d+)', filename)
     return match.group(1) if match else None
 
+def latest_prediction_batch():
+
+    files = sorted(GROUNDTRUTH_DIR.glob("prediction_*.json"))
+
+    if not files:
+        return None
+
+    latest = max(
+        files,
+        key=lambda p: extract_sample_id(p.name)
+    )
+
+    sample_id = extract_sample_id(latest.name)
+
+    # remove the trailing "_n"
+    return sample_id.rsplit("_", 1)[0]
+
+
+def load_original_log(sample_id):
+
+    batch = latest_prediction_batch()
+
+    if batch is None:
+        return []
+
+    number = sample_id.rsplit("_", 1)[1]
+
+    path = (
+        GROUNDTRUTH_DIR
+        / f"prediction_{batch}_{number}.json"
+    )
+
+    if not path.exists():
+        return []
+
+    data = load_json(path)
+
+    return data.get("original_log", [])
 
 def load_json(path):
     with open(path, "r") as f:
@@ -433,7 +471,7 @@ def build_tasks():
                     )
                 ),
 
-                "original_log": pred.get("original_dataset_rows", []),   
+                "original_log": load_original_log(sample_id),
 
                 "a": pair[0],
                 "b": pair[1]

@@ -33,6 +33,8 @@ python main_pipeline.py \
 
 With a retrained model AND human evaluation:
 
+TUKI JE ŠE ZA POPRAVT KER HUMAN EVALUATION BO PREKINIL PIPELINE
+
 python main_pipeline.py \
     --classifier multiclass \
     --labels 2 \
@@ -218,12 +220,15 @@ def main():
 
     if not args.skip_human_evaluation:
 
-        run(
-            [
-                "python",
-                "3c_human_expert_score.py",
-            ],
-            "STEP 7/11 : Human scoring",
+        print("\n" + "=" * 80)
+        print("STEP 7/11 : Human scoring")
+        print("=" * 80)
+
+        input(
+            "\nRun the following command in another terminal:"
+            "python 3c_human_expert_score.py"
+            "\nPress ENTER after you have finished all human evaluations "
+            "and closed the Flask application..."
         )
 
     else:
