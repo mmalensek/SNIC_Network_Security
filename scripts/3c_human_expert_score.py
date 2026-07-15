@@ -349,7 +349,7 @@ def load_original_log(sample_id):
     batch = latest_prediction_batch()
 
     if batch is None:
-        return []
+        return ["BATCH NOT FOUND"]
 
     number = sample_id.rsplit("_", 1)[1]
 
@@ -359,7 +359,7 @@ def load_original_log(sample_id):
     )
 
     if not path.exists():
-        return []
+        return ["FILE NOT FOUND"]
 
     data = load_json(path)
 
