@@ -339,7 +339,7 @@ def verify_claim(claim, row_data):
 def score_feature_grounding(entry, prediction):
 
     row_data = prediction.get(
-        "row_data",
+        "current_flow",
         {}
     )
 
