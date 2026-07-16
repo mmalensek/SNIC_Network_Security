@@ -122,6 +122,17 @@ def choose_model(args):
     selected["key"] = selected_key
     return selected
 
+def serialize_row(row):
+    """
+    Convert a dataframe row to a JSON-serializable dict.
+    """
+    return {
+        k: (
+            float(v) if isinstance(v, (np.floating, np.integer))
+            else v
+        )
+        for k, v in row.to_dict().items()
+    }
 
 def generate_outputs(model, model_type, test_rows, true_labels, true_label_names, selected_labels, printSettings, suffix, dataframe):
     print(f"\nGenerating output set {suffix}...")
@@ -150,12 +161,29 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
     # ==========================================
     if len(test_rows) == 1:
         row_data = test_rows.iloc[0].to_dict()
+        row_index = test_rows.index[0]
 
         # convert numpy values to python native types
-        row_data = {
-            k: float(v) if isinstance(v, (np.floating, np.integer)) else v
-            for k, v in row_data.items()
-        }
+        row_index = test_rows.index[0]
+
+        current_flow = serialize_row(dataframe.loc[row_index])
+
+        previous_flows = []
+
+        for i in range(max(0, row_index - 5), row_index):
+            previous_flows.append(
+                serialize_row(dataframe.loc[i])
+            )
+
+        next_flows = []
+
+        for i in range(
+            row_index + 1,
+            min(len(dataframe), row_index + 6)
+        ):
+            next_flows.append(
+                serialize_row(dataframe.loc[i])
+            )
 
         prediction = predictions[0]
 
@@ -184,7 +212,12 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
         output = {
             "classifier_used": model_type,
             "model_prediction": probability_info["predicted_class_label"],
-            "row_data": row_data
+
+            "selected_row_index": int(row_index),
+
+            "current_flow": current_flow,
+            "previous_flows": previous_flows,
+            "next_flows": next_flows
         }
 
         output.update(probability_info)
@@ -193,6 +226,12 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
             "most_common_true_label": true_label_names.iloc[0],
             "true_label_ratio": 1.0
         }
+
+        print(
+            f"Selected dataset row: {row_index} "
+            f"(previous: {max(0, row_index - 5)} "
+            f"next: {min(len(dataframe) - 1, row_index + 5)})"
+        )
 
         return output, ground_truth_output
 
