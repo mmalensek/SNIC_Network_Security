@@ -215,8 +215,8 @@ pre {
         <div id="b_solution"></div>
     </div>
 
-    <div class="panel">
-        <h2>Candidate C</h2>
+    <div class="panel" id="panel-c">
+        <h2 id="panel-c-title">Candidate C</h2>
 
         <h3>Reasoning</h3>
         <div id="c_reasoning"></div>
@@ -230,7 +230,7 @@ pre {
 <div class="buttons">
     <button onclick="vote('A')">Choose A</button>
     <button onclick="vote('B')">Choose B</button>
-    <button onclick="vote('C')">Choose C</button>
+    <button id="button-c" onclick="vote('C')">Choose C</button>
 </div>
 
 <script>
@@ -269,21 +269,31 @@ function render() {
     const t = tasks[current];
 
     const buttonC = document.getElementById("button-c");
+    const panelC = document.getElementById("panel-c");
+    const panelCTitle = document.getElementById("panel-c-title");
 
     if (t.c.missing) {
+
         buttonC.disabled = true;
         buttonC.innerText = "Unavailable";
+
+        panelC.classList.add("unavailable");
+        panelCTitle.innerText = "Candidate C (Not available)";
+
+        document.getElementById("c_reasoning").innerHTML =
+            "<i>No third evaluation was generated.</i>";
+
+        document.getElementById("c_solution").innerHTML =
+            "<i>No explanation available.</i>";
+
     } else {
+
         buttonC.disabled = false;
         buttonC.innerText = "Choose C";
-    }
 
-    const panelC = document.getElementById("panel-c");
-
-    if (t.c.missing)
-        panelC.classList.add("unavailable");
-    else
         panelC.classList.remove("unavailable");
+        panelCTitle.innerText = "Candidate C";
+    }
 
     document.getElementById("progress").innerText =
         `Comparison ${current + 1} / ${tasks.length}`;
@@ -444,7 +454,8 @@ def load_candidate(folder, sample_id):
         return {
             "model": entry.get("model", "unknown"),
             "reasoning": entry.get("reasoning", ""),
-            "solution": entry.get("solution", "")
+            "solution": entry.get("solution", ""),
+            "missing": False
         }
 
     except Exception:
