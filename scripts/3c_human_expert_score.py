@@ -29,7 +29,6 @@ import json
 import random
 from pathlib import Path
 from datetime import datetime
-from itertools import combinations
 from flask import Flask, render_template_string, request, jsonify
 
 app = Flask(__name__)
@@ -168,6 +167,10 @@ pre {
     font-weight: bold;
 }
 
+.panel.unavailable {
+    opacity: 0.5;
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -212,12 +215,22 @@ pre {
         <div id="b_solution"></div>
     </div>
 
+    <div class="panel">
+        <h2>Candidate C</h2>
+
+        <h3>Reasoning</h3>
+        <div id="c_reasoning"></div>
+
+        <h3>Solution</h3>
+        <div id="c_solution"></div>
+    </div>
+
 </div>
 
 <div class="buttons">
-    <button onclick="vote('A')">A Better</button>
-    <button onclick="vote('TIE')">Tie</button>
-    <button onclick="vote('B')">B Better</button>
+    <button onclick="vote('A')">Choose A</button>
+    <button onclick="vote('B')">Choose B</button>
+    <button onclick="vote('C')">Choose C</button>
 </div>
 
 <script>
@@ -255,6 +268,23 @@ function render() {
 
     const t = tasks[current];
 
+    const buttonC = document.getElementById("button-c");
+
+    if (t.c.missing) {
+        buttonC.disabled = true;
+        buttonC.innerText = "Unavailable";
+    } else {
+        buttonC.disabled = false;
+        buttonC.innerText = "Choose C";
+    }
+
+    const panelC = document.getElementById("panel-c");
+
+    if (t.c.missing)
+        panelC.classList.add("unavailable");
+    else
+        panelC.classList.remove("unavailable");
+
     document.getElementById("progress").innerText =
         `Comparison ${current + 1} / ${tasks.length}`;
 
@@ -275,6 +305,12 @@ function render() {
 
     document.getElementById("b_solution").innerHTML =
         marked.parse(t.b.solution || "");
+
+    document.getElementById("c_reasoning").innerHTML =
+        marked.parse(t.c.reasoning || "");
+
+    document.getElementById("c_solution").innerHTML =
+        marked.parse(t.c.solution || "");
 
     document.getElementById("original_log").textContent =
         JSON.stringify(t.original_log, null, 2);
@@ -303,14 +339,14 @@ async function vote(choice) {
 
 document.addEventListener('keydown', function(e) {
 
-    if(e.key === 'ArrowLeft')
+    if(e.key === '1')
         vote('A');
 
-    if(e.key === 'ArrowRight')
+    if(e.key === '2')
         vote('B');
 
-    if(e.key === 'ArrowDown')
-        vote('TIE');
+    if(e.key === '3' && !tasks[current].c.missing)
+        vote('C');
 });
 
 loadTasks();
@@ -451,32 +487,45 @@ def build_tasks():
                 candidates.append(c)
 
         if len(candidates) < 2:
+            print("Skipping sample_id", sample_id, "because fewer than two candidates exist")
             continue
 
-        for left, right in combinations(candidates, 2):
+        random.shuffle(candidates)
 
-            pair = [left, right]
-            random.shuffle(pair)
-
-            tasks.append({
-                "sample_id": sample_id,
-                "ground_truth": gt.get(
-                    "most_common_true_label",
-                    "Unknown"
+        while len(candidates) < 3:
+            candidates.append({
+                "model": "No candidate available",
+                "reasoning": (
+                    "This candidate was not generated for this evaluation."
                 ),
-                "prediction": pred.get(
-                    "predicted_class_label",
-                    pred.get(
-                        "model_prediction",
-                        "Unknown"
-                    )
+                "solution": (
+                    "No explanation is available."
                 ),
-
-                "original_log": load_original_log(sample_id),
-
-                "a": pair[0],
-                "b": pair[1]
+                "missing": True
             })
+
+        task = {
+            "sample_id": sample_id,
+            "ground_truth": gt.get(
+                "most_common_true_label",
+                "Unknown"
+            ),
+            "prediction": pred.get(
+                "predicted_class_label",
+                pred.get(
+                    "model_prediction",
+                    "Unknown"
+                )
+            ),
+            "original_log": load_original_log(sample_id),
+        }
+
+        letters = ["a", "b", "c"]
+
+        for i, candidate in enumerate(candidates):
+            task[letters[i]] = candidate
+
+        tasks.append(task)
 
     return tasks
 
@@ -523,8 +572,14 @@ def vote():
 
         "candidate_a_model": task["a"]["model"],
         "candidate_b_model": task["b"]["model"],
+        "candidate_c_model": task["c"]["model"],
 
-        "winner": winner
+        "winner": winner,
+        "winner_model": {
+            "A": task["a"]["model"],
+            "B": task["b"]["model"],
+            "C": task["c"]["model"],
+        }[winner]
     })
 
     with open(SESSION_FILE, "w") as f:
