@@ -19,13 +19,27 @@ Pipeline:
 
 USAGE: 
 
+ADVISED to use the script using tmux:
+
+(tmux new -s retrain)
+
+To disconnect:
+Ctrl+B
+D
+
+To reconnect:
+tmux attach -t retrain
+
+Session names:
+tmux ls
+
 Without a retrained model OR human evaluation:
 
 python main_pipeline.py \
     --classifier multiclass \
-    --labels 2 \
+    --labels 5 \
     --limit 1 \
-    --pairs 100 \
+    --pairs 20 \
     --ollama-model deepseek-r1:8b \
     --openai-model gpt-5.2 \
     --skip-retrained \
@@ -33,13 +47,11 @@ python main_pipeline.py \
 
 With a retrained model AND human evaluation:
 
-TUKI JE ŠE ZA POPRAVT KER HUMAN EVALUATION BO PREKINIL PIPELINE
-
 python main_pipeline.py \
     --classifier multiclass \
-    --labels 2 \
+    --labels 5 \
     --limit 1 \
-    --pairs 100 \
+    --pairs 20 \
     --ollama-model deepseek-r1:8b \
     --openai-model gpt-5.2
 

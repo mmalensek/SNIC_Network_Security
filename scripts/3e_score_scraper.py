@@ -63,6 +63,11 @@ OUTPUT_DIR.mkdir(
     exist_ok=True
 )
 
+HISTORY_OUTPUT_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
 WEIGHTS_WITH_HUMAN = {
     "deterministic": 0.25,
     "expert": 0.25,
@@ -571,9 +576,9 @@ with open(
 # Save training history
 # --------------------------------------------------
 
-history_file = OUTPUT_DIR / "training_history.csv"
+history_file = HISTORY_FILE
 
-# score retrained modela
+# score retrained of model
 retrained_score = None
 for model_name, scores in combined.items():
     if "retrained" in model_name.lower():
@@ -582,12 +587,11 @@ for model_name, scores in combined.items():
 
 write_header = not history_file.exists()
 
-# avtomatska številka iteracije
+# automatic numbering of iterations based on existing history file
 if write_header:
     iteration = 1
 else:
     with open(history_file, "r", encoding="utf-8") as f:
-        # odštej glavo
         iteration = max(1, sum(1 for _ in f))
 
 with open(history_file, "a", encoding="utf-8") as f:
@@ -608,6 +612,7 @@ with open(history_file, "a", encoding="utf-8") as f:
         f"{winner_score:.1f},"
         f"{retrained_score if retrained_score is not None else ''}\n"
     )
+print(f"Saving history to: {history_file.resolve()}")
 
 print()
 print("=" * 60)
