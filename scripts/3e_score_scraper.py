@@ -46,9 +46,17 @@ OUTPUT_DIR = (
     / "6_score_winner"
 )
 
+HISTORY_OUTPUT_DIR = (
+    ROOT
+    / "3_evaluation_results"
+    / "5b_history_log"
+)
+
 OLLAMA_DIR = ROOT / "2_ollama_evaluation"
 OPENAI_DIR = ROOT / "2_openai_evaluation"
 RETRAINED_DIR = ROOT / "2_retrained_evaluation"
+
+HISTORY_FILE = HISTORY_OUTPUT_DIR / "training_history.csv"
 
 OUTPUT_DIR.mkdir(
     parents=True,
@@ -557,6 +565,48 @@ with open(
         report,
         f,
         indent=2
+    )
+
+# --------------------------------------------------
+# Save training history
+# --------------------------------------------------
+
+history_file = OUTPUT_DIR / "training_history.csv"
+
+# score retrained modela
+retrained_score = None
+for model_name, scores in combined.items():
+    if "retrained" in model_name.lower():
+        retrained_score = scores["final_combined_score"]
+        break
+
+write_header = not history_file.exists()
+
+# avtomatska številka iteracije
+if write_header:
+    iteration = 1
+else:
+    with open(history_file, "r", encoding="utf-8") as f:
+        # odštej glavo
+        iteration = max(1, sum(1 for _ in f))
+
+with open(history_file, "a", encoding="utf-8") as f:
+
+    if write_header:
+        f.write(
+            "iteration,"
+            "timestamp,"
+            "winner_model,"
+            "winner_score,"
+            "retrained_score\n"
+        )
+
+    f.write(
+        f"{iteration},"
+        f"{datetime.now().isoformat()},"
+        f"{winner_model},"
+        f"{winner_score:.1f},"
+        f"{retrained_score if retrained_score is not None else ''}\n"
     )
 
 print()
