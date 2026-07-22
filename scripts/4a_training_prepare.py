@@ -124,6 +124,12 @@ def extract_example(eval_obj, source_file):
 
     # print(prediction) 
 
+    if "current_flow" not in prediction:
+        raise ValueError(
+            f"'current_flow' missing in prediction file {prediction_file}. "
+            f"Top-level keys: {list(prediction.keys())}"
+        )
+
     current_flow = prediction["current_flow"]
 
     previous_flows = prediction.get("previous_flows", [])
