@@ -53,7 +53,7 @@ def parse_sample_number(name):
     return int(m.group(1))
 
 
-def find_winner_file(prediction_source):
+def find_prediction_file(prediction_source):
     pred_name = os.path.basename(prediction_source)
     pred_time = parse_timestamp(pred_name)
     sample = parse_sample_number(pred_name)
