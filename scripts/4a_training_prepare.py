@@ -18,10 +18,13 @@ Usage:
     --output-dir output/ollama_training
 """
 
-import argparse
+import os
+import re
 import glob
 import json
+import argparse
 from pathlib import Path
+from datetime import datetime
 from collections import Counter
 
 
@@ -34,6 +37,55 @@ DEFAULT_SYSTEM = (
     "response recommendations."
 )
 
+PREDICTION_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
+
+def parse_timestamp(name):
+    m = re.search(r'(\d{8}_\d{6})', name)
+    if not m:
+        return None
+    return datetime.strptime(m.group(1), "%Y%m%d_%H%M%S")
+
+
+def parse_sample_number(name):
+    m = re.search(r'_(\d+)\.json$', name)
+    if not m:
+        return None
+    return int(m.group(1))
+
+
+def find_prediction_file(evaluation_source):
+    """
+    Finds the newest prediction file that:
+      - has the same sample number
+      - is older than the evaluation
+    """
+
+    eval_name = os.path.basename(evaluation_source)
+
+    eval_time = parse_timestamp(eval_name)
+    sample = parse_sample_number(eval_name)
+
+    best = None
+    best_time = None
+
+    for file in glob.glob(os.path.join(PREDICTION_DIR, "prediction_*.json")):
+
+        name = os.path.basename(file)
+
+        if parse_sample_number(name) != sample:
+            continue
+
+        pred_time = parse_timestamp(name)
+
+        if pred_time is None:
+            continue
+
+        if pred_time <= eval_time:
+            if best is None or pred_time > best_time:
+                best = file
+                best_time = pred_time
+
+    return best
 
 def read_json(path: str):
     with open(path, "r", encoding="utf-8") as f:
@@ -60,10 +112,32 @@ def find_nested_record(obj):
 
 def extract_example(eval_obj, source_file):
     record = find_nested_record(eval_obj)
+
+    prediction_file = find_prediction_file(
+        eval_obj["model_output"]["source_file"]
+    )
+
+    if prediction_file is None:
+        raise ValueError("Matching prediction JSON not found.")
+
+    prediction = read_json(prediction_file)
+
     if not record:
         raise ValueError(f"No evaluation_record found in {source_file}")
 
-    row_data = record.get("row_data", {})
+    current_flow = prediction["current_flow"]
+
+    previous_flows = prediction.get("previous_flows", [])
+
+    next_flows = prediction.get("next_flows", [])
+
+    xgb_label = prediction.get(
+        "predicted_class_label",
+        prediction.get("model_prediction", "")
+    )
+
+    probabilities = prediction.get("probabilities", {})
+
     label = record.get("predicted_class_label") or record.get("model_prediction") or "UNKNOWN"
     reasoning = record.get("reasoning", "")
     solution = record.get("solution", "")
@@ -71,19 +145,33 @@ def extract_example(eval_obj, source_file):
     actual_label = record.get("actual_label", "")
 
     user_text = (
-        "Analyze this network flow.\n\n"
+        "Analyze this network traffic.\n\n"
+
         "Provide your response EXACTLY in the following format:\n\n"
+
         "LABEL:\n"
         "[attack label]\n\n"
+
         "REASONING:\n"
         "[analysis]\n\n"
+
         "SOLUTION:\n"
         "[recommended mitigations]\n\n"
-        f"Source: {source_file}\n"
+
         f"Actual label: {actual_label}\n"
-        f"XGBoost label: {xgb_label}\n\n"
-        f"Flow features:\n"
-        f"{json.dumps(row_data, indent=2, ensure_ascii=False)}"
+        f"XGBoost prediction: {xgb_label}\n\n"
+
+        "Current flow:\n"
+        f"{json.dumps(current_flow, indent=2)}\n\n"
+
+        "Previous flows:\n"
+        f"{json.dumps(previous_flows, indent=2)}\n\n"
+
+        "Next flows:\n"
+        f"{json.dumps(next_flows, indent=2)}\n\n"
+
+        "XGBoost probabilities:\n"
+        f"{json.dumps(probabilities, indent=2)}"
     )
 
     assistant_text = (
@@ -98,7 +186,11 @@ def extract_example(eval_obj, source_file):
         "actual_label": actual_label,
         "user": user_text,
         "assistant": assistant_text,
-        "row_data": row_data,
+        "current_flow": current_flow,
+        "previous_flows": previous_flows,
+        "next_flows": next_flows,
+        "xgb_label": xgb_label,
+        "probabilities": probabilities,
     }
 
 
