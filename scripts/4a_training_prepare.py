@@ -122,14 +122,6 @@ def extract_example(eval_obj, source_file):
     if not record:
         raise ValueError(f"No evaluation_record found in {source_file}")
 
-    # print(prediction) 
-
-    if "current_flow" not in prediction:
-        raise ValueError(
-            f"'current_flow' missing in prediction file {prediction_file}. "
-            f"Top-level keys: {list(prediction.keys())}"
-        )
-
     current_flow = prediction.get("current_flow") or prediction.get("row_data")
 
     if current_flow is None:
