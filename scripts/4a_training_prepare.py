@@ -41,48 +41,20 @@ PREDICTION_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 WINNER_DIR = "json_log/3_evaluation_results/6_score_winner"
 
-def parse_timestamp(name):
-    m = re.search(r'_(\d{8}_\d{6})(?:_\d+)?\.json$', name)
-    if not m:
+def find_prediction_file(run_id, sample_id):
+    if run_id is None or sample_id is None:
         return None
-    return datetime.strptime(m.group(1), "%Y%m%d_%H%M%S")
-
-
-def parse_sample_number(name):
-    m = re.search(r'_\d{8}_\d{6}_(\d+)\.json$', name)
-    return int(m.group(1)) if m else None
-
-def find_prediction_file(evaluation_source):
-    eval_name = os.path.basename(evaluation_source)
-    eval_time = parse_timestamp(eval_name)
-    sample = parse_sample_number(eval_name)
-
-    if eval_time is None:
-        return None
-
-    best = None
-    best_time = None
 
     for file in glob.glob(os.path.join(PREDICTION_DIR, "prediction_*.json")):
-        name = os.path.basename(file)
-
-        pred_sample = parse_sample_number(name)
-
-        if sample is not None and pred_sample != sample:
+        try:
+            data = read_json(file)
+        except (json.JSONDecodeError, OSError):
             continue
 
-        pred_time = parse_timestamp(name)
+        if data.get("run_id") == run_id and data.get("sample_id") == sample_id:
+            return file
 
-        if pred_time is None:
-            continue
-
-        # Find the newest prediction at or before the evaluation time
-        if pred_time <= eval_time:
-            if best is None or pred_time > best_time:
-                best = file
-                best_time = pred_time
-
-    return best
+    return None
 
 def read_json(path: str):
     with open(path, "r", encoding="utf-8") as f:
@@ -110,21 +82,32 @@ def find_nested_record(obj):
 def extract_example(eval_obj, source_file):
     record = find_nested_record(eval_obj)
 
-    evaluation_file = eval_obj["model_output"]["source_file"]
+    if not record:
+        raise ValueError(f"No evaluation_record found in {source_file}")
 
-    prediction_file = find_prediction_file(evaluation_file)
+    evaluation_file = eval_obj["model_output"]["source_file"]
+    run_id = record.get("run_id")
+    sample_id = record.get("sample_id")
 
     print(f"\nWinner file:     {source_file}")
     print(f"Evaluation file: {evaluation_file}")
+    print(f"run_id / sample_id: {run_id} / {sample_id}")
+
+    if run_id is None or sample_id is None:
+        raise ValueError(
+            f"Missing run_id/sample_id in evaluation_record for {source_file} — "
+            f"this winner file was likely produced before the run_id propagation fix "
+            f"and needs to be regenerated."
+        )
+
+    prediction_file = find_prediction_file(run_id, sample_id)
+
     print(f"Prediction file: {prediction_file}")
 
     if prediction_file is None:
         raise ValueError("Matching prediction JSON not found.")
 
     prediction = read_json(prediction_file)
-
-    if not record:
-        raise ValueError(f"No evaluation_record found in {source_file}")
 
     current_flow = prediction.get("current_flow") or prediction.get("row_data")
 

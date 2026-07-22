@@ -40,35 +40,34 @@ def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def normalize_label(label):
     return str(label).strip().lower()
 
-
-def extract_timestamp_and_n(filename):
-    """
-    evaluation_20260506_085644_1.json
-    ->
-    ("20260506_085644", 1)
-    """
-
-    m = re.match(
-        r".*?_(\d{8}_\d{6})_(\d+)\.json$",
-        filename
+def score_attack_alignment(entry, ground_truth):
+    predicted = normalize_label(
+        entry.get("xgboost_predicted_label", "")
     )
 
-    if not m:
-        return None, None
+    actual = normalize_label(
+        ground_truth.get("most_common_true_label", "")
+    )
 
-    return m.group(1), int(m.group(2))
+    return 1.0 if predicted == actual else 0.0
+
+def extract_timestamp(filename):
+    """
+    Only used to pick which batch is 'latest' - not used for pairing.
+    evaluation_20260506_085644_1.json -> "20260506_085644"
+    """
+    m = re.match(r".*?_(\d{8}_\d{6})_\d+\.json$", filename)
+    return m.group(1) if m else None
 
 
 def get_latest_timestamp(directory):
     timestamps = []
 
     for f in directory.glob("evaluation_*.json"):
-        ts, _ = extract_timestamp_and_n(f.name)
-
+        ts = extract_timestamp(f.name)
         if ts:
             timestamps.append(ts)
 
@@ -84,9 +83,9 @@ def get_latest_timestamp(directory):
 
 REQUIRED_FIELDS = {
     "model",
-    "predicted_label",
+    "xgboost_predicted_label",
     "actual_label",
-    "is_model_correct",
+    "is_xgboost_correct",
     "reasoning",
     "solution",
 }
@@ -394,24 +393,26 @@ def compute_overall_score(
 # Matching files
 # ----------------------------------------------------------------------
 
-def find_ground_truth_file(n):
-    matches = list(
-        GT_DIR.glob(
-            f"ground_truth_*_{n}.json"
-        )
-    )
+def find_ground_truth_file(run_id, sample_id):
+    for path in GT_DIR.glob("ground_truth_*.json"):
+        try:
+            data = load_json(path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        if data.get("run_id") == run_id and data.get("sample_id") == sample_id:
+            return path
+    return None
 
-    return matches[0] if matches else None
 
-
-def find_prediction_file(n):
-    matches = list(
-        GT_DIR.glob(
-            f"*prediction*_{n}.json"
-        )
-    )
-
-    return matches[0] if matches else None
+def find_prediction_file(run_id, sample_id):
+    for path in GT_DIR.glob("prediction_*.json"):
+        try:
+            data = load_json(path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        if data.get("run_id") == run_id and data.get("sample_id") == sample_id:
+            return path
+    return None
 
 
 # ----------------------------------------------------------------------
@@ -426,21 +427,27 @@ def evaluate_directory(name, directory):
         return None
 
     evaluation_files = sorted(
-        directory.glob(
-            f"evaluation_{latest_timestamp}_*.json"
-        )
+        directory.glob(f"evaluation_{latest_timestamp}_*.json")
     )
 
     model_results = defaultdict(list)
 
     for evaluation_file in evaluation_files:
 
-        _, n = extract_timestamp_and_n(
-            evaluation_file.name
-        )
+        # Load evaluations FIRST so we can read run_id/sample_id from them
+        evaluations = load_json(evaluation_file)
 
-        gt_file = find_ground_truth_file(n)
-        prediction_file = find_prediction_file(n)
+        if not isinstance(evaluations, list):
+            evaluations = [evaluations]
+
+        if not evaluations:
+            continue
+
+        run_id = evaluations[0].get("run_id")
+        sample_id = evaluations[0].get("sample_id")
+
+        gt_file = find_ground_truth_file(run_id, sample_id)
+        prediction_file = find_prediction_file(run_id, sample_id)
 
         if gt_file is None:
             continue
@@ -448,95 +455,36 @@ def evaluate_directory(name, directory):
         ground_truth = load_json(gt_file)
 
         prediction = {}
-
         if prediction_file:
-            prediction = load_json(
-                prediction_file
-            )
-
-        evaluations = load_json(
-            evaluation_file
-        )
-
-        if not isinstance(
-            evaluations,
-            list
-        ):
-            evaluations = [evaluations]
+            prediction = load_json(prediction_file)
 
         for entry in evaluations:
+            model_name = entry.get("model", "unknown")
 
-            model_name = entry.get(
-                "model",
-                "unknown"
-            )
+            format_score = score_format_compliance(entry)
+            attack_score = score_attack_alignment(entry, ground_truth)
+            grounding_score = score_feature_grounding(entry, prediction)
+            overall = compute_overall_score(format_score, attack_score, grounding_score)
 
-            format_score = (
-                score_format_compliance(
-                    entry
-                )
-            )
-
-            attack_score = (
-                score_attack_alignment(
-                    entry,
-                    ground_truth
-                )
-            )
-
-            grounding_score = (
-                score_feature_grounding(
-                    entry,
-                    prediction
-                )
-            )
-
-            overall = (
-                compute_overall_score(
-                    format_score,
-                    attack_score,
-                    grounding_score
-                )
-            )
-
-            model_results[
-                model_name
-            ].append(
-                {
-                    "format_compliance":
-                        format_score,
-                    "attack_alignment":
-                        attack_score,
-                    "feature_grounding":
-                        grounding_score,
-                    "overall":
-                        overall,
-                }
-            )
+            model_results[model_name].append({
+                "format_compliance": format_score,
+                "attack_alignment": attack_score,
+                "feature_grounding": grounding_score,
+                "overall": overall,
+            })
 
     aggregated = {}
 
     for model, scores in model_results.items():
-
         aggregated[model] = {
             "num_samples": len(scores),
-            "format_compliance": mean(
-                s["format_compliance"]
-                for s in scores
-            ),
-            "attack_alignment": mean(
-                s["attack_alignment"]
-                for s in scores
-            ),
+            "format_compliance": mean(s["format_compliance"] for s in scores),
+            "attack_alignment": mean(s["attack_alignment"] for s in scores),
             "feature_grounding": mean(
-                s["feature_grounding"]
-                for s in scores
+                s["feature_grounding"] for s in scores
                 if s["feature_grounding"] is not None
             ),
-            "overall": mean(
-                s["overall"]
-                for s in scores
-            ),
+            "overall": mean(s["overall"] for s in scores),
         }
 
     return {

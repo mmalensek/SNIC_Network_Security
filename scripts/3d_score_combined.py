@@ -72,22 +72,20 @@ def load_json(path):
         return json.load(f)
 
 
-def latest_json(directory, max_age_minutes=30):
+def latest_json(directory, warn_age_minutes=120):
     files = sorted(directory.glob("*.json"))
-    
+
     if not files:
         return None
-    
-    # Get the latest file
+
     latest_file = files[-1]
-    
-    # Check if it's within the time window
+
     file_mtime = datetime.fromtimestamp(latest_file.stat().st_mtime)
     age = datetime.now() - file_mtime
-    
-    if age.total_seconds() > max_age_minutes * 60:
-        return None  # File is too old
-    
+
+    if age.total_seconds() > warn_age_minutes * 60:
+        print(f"[WARN] {latest_file} is {age} old — continuing anyway.")
+
     return latest_file
 
 

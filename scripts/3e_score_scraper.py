@@ -97,44 +97,41 @@ def latest_json(directory):
 
     return files[-1]
 
-def find_model_output(model_name):
-    search_dirs = [
-        OLLAMA_DIR,
-        OPENAI_DIR,
-        RETRAINED_DIR,
-    ]
+SYSTEM_DIRS = {
+    "ollama": OLLAMA_DIR,
+    "openai": OPENAI_DIR,
+    "retrained": RETRAINED_DIR,
+}
 
-    for directory in search_dirs:
 
-        if not directory.exists():
+def find_model_output(model_name, model_origin):
+    origin = model_origin.get(model_name)
+
+    if origin is None:
+        return None
+
+    system_name, run_id = origin
+    directory = SYSTEM_DIRS.get(system_name)
+
+    if directory is None or run_id is None or not directory.exists():
+        return None
+
+    for file in sorted(directory.glob(f"evaluation_{run_id}_*.json")):
+        try:
+            data = load_json(file)
+        except Exception as e:
+            print(f"Warning reading {file}: {e}")
             continue
 
-        for file in sorted(
-            directory.glob("*.json")
-        ):
+        if not isinstance(data, list):
+            continue
 
-            try:
-                data = load_json(file)
-
-                if not isinstance(data, list):
-                    continue
-
-                for entry in data:
-
-                    if (
-                        isinstance(entry, dict)
-                        and entry.get("model") == model_name
-                    ):
-
-                        return {
-                            "source_file": str(file),
-                            "evaluation_record": entry,
-                        }
-
-            except Exception as e:
-                print(
-                    f"Warning reading {file}: {e}"
-                )
+        for entry in data:
+            if isinstance(entry, dict) and entry.get("model") == model_name:
+                return {
+                    "source_file": str(file),
+                    "evaluation_record": entry,
+                }
 
     return None
 
@@ -208,28 +205,17 @@ if human_file is not None:
         exp_time
     )
 
+    HUMAN_WINDOW_MINUTES = 24 * 60  # generous - human eval can take hours
+
     if (
-        abs(
-            (
-                human_time
-                - newest_core
-            ).total_seconds()
-        ) > 30 * 60
-        or
-        abs(
-            (
-                human_time
-                - oldest_core
-            ).total_seconds()
-        ) > 30 * 60
+        abs((human_time - newest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
+        or abs((human_time - oldest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
     ):
         print(
-            "Human evaluation file is "
-            "outside the 30 minute window. "
-            "Ignoring it."
+            f"[WARNING] Human evaluation file is more than "
+            f"{HUMAN_WINDOW_MINUTES} minutes away from the deterministic/expert "
+            f"scores. Proceeding anyway — verify this is the intended session."
         )
-
-        human_file = None
 
 # --------------------------------------------------
 # Load JSON data
@@ -242,6 +228,22 @@ deterministic = load_json(
 expert = load_json(
     expert_file
 )
+
+model_origin = {}
+
+for system_name, system_data in deterministic.items():
+    if not isinstance(system_data, dict):
+        continue
+    batch = system_data.get("latest_batch")
+    for model in system_data.get("models", {}):
+        model_origin[model] = (system_name, batch)
+
+for system_name, system_data in expert.get("results", {}).items():
+    if not isinstance(system_data, dict):
+        continue
+    batch = system_data.get("latest_batch")
+    for model in system_data.get("summary", {}):
+        model_origin.setdefault(model, (system_name, batch))
 
 human = None
 human_scores = {}
@@ -518,9 +520,9 @@ if winner_model is None:
     )
 
 winner_output = find_model_output(
-    winner_model
+    winner_model,
+    model_origin
 )
-
 
 # --------------------------------------------------
 # Final report

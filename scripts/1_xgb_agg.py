@@ -454,6 +454,11 @@ def main():
             dataframe=dataframe
         )
 
+        output["run_id"] = timestamp
+        output["sample_id"] = run_idx
+        ground_truth_output["run_id"] = timestamp
+        ground_truth_output["sample_id"] = run_idx
+
         filename = f"{JSON_LOG_DIR}/prediction_{timestamp}_{run_idx}.json"
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)

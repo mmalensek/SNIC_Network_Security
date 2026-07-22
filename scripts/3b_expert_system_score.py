@@ -69,59 +69,43 @@ def load_json(path):
         return json.load(f)
 
 
-def extract_timestamp_and_n(filename):
-
-    m = re.match(
-        r".*?_(\d{8}_\d{6})_(\d+)\.json$",
-        filename
-    )
-
-    if not m:
-        return None, None
-
-    return m.group(1), int(m.group(2))
+def extract_timestamp(filename):
+    """
+    Only used to pick which batch is 'latest' - not used for pairing.
+    """
+    m = re.match(r".*?_(\d{8}_\d{6})_\d+\.json$", filename)
+    return m.group(1) if m else None
 
 
 def get_latest_timestamp(directory):
-
     timestamps = []
-
-    for f in directory.glob(
-        "evaluation_*.json"
-    ):
-        ts, _ = extract_timestamp_and_n(
-            f.name
-        )
-
+    for f in directory.glob("evaluation_*.json"):
+        ts = extract_timestamp(f.name)
         if ts:
             timestamps.append(ts)
-
-    if not timestamps:
-        return None
-
-    return max(timestamps)
+    return max(timestamps) if timestamps else None
 
 
-def find_ground_truth_file(n):
+def find_ground_truth_file(run_id, sample_id):
+    for path in GT_DIR.glob("ground_truth_*.json"):
+        try:
+            data = load_json(path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        if data.get("run_id") == run_id and data.get("sample_id") == sample_id:
+            return path
+    return None
 
-    matches = list(
-        GT_DIR.glob(
-            f"ground_truth_*_{n}.json"
-        )
-    )
 
-    return matches[0] if matches else None
-
-
-def find_prediction_file(n):
-
-    matches = list(
-        GT_DIR.glob(
-            f"*prediction*_{n}.json"
-        )
-    )
-
-    return matches[0] if matches else None
+def find_prediction_file(run_id, sample_id):
+    for path in GT_DIR.glob("prediction_*.json"):
+        try:
+            data = load_json(path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        if data.get("run_id") == run_id and data.get("sample_id") == sample_id:
+            return path
+    return None
 
 
 # --------------------------------------------------
@@ -213,75 +197,51 @@ Return ONLY valid JSON:
 
 def evaluate_directory(directory):
 
-    latest_timestamp = (
-        get_latest_timestamp(directory)
-    )
+    latest_timestamp = get_latest_timestamp(directory)
 
     if latest_timestamp is None:
         return None
 
     files = sorted(
-        directory.glob(
-            f"evaluation_{latest_timestamp}_*.json"
-        )
+        directory.glob(f"evaluation_{latest_timestamp}_*.json")
     )
 
     aggregate = defaultdict(list)
-
     sample_details = []
 
     for evaluation_file in files:
 
-        _, n = extract_timestamp_and_n(
-            evaluation_file.name
-        )
+        evaluations = load_json(evaluation_file)
 
-        gt_file = find_ground_truth_file(n)
+        if not isinstance(evaluations, list):
+            evaluations = [evaluations]
 
-        pred_file = find_prediction_file(n)
+        if not evaluations:
+            continue
+
+        run_id = evaluations[0].get("run_id")
+        sample_id = evaluations[0].get("sample_id")
+
+        gt_file = find_ground_truth_file(run_id, sample_id)
+        pred_file = find_prediction_file(run_id, sample_id)
 
         if not gt_file:
             continue
 
-        ground_truth = load_json(
-            gt_file
-        )
-
-        prediction = (
-            load_json(pred_file)
-            if pred_file
-            else {}
-        )
-
-        evaluations = load_json(
-            evaluation_file
-        )
-
-        if not isinstance(
-            evaluations,
-            list
-        ):
-            evaluations = [evaluations]
+        ground_truth = load_json(gt_file)
+        prediction = load_json(pred_file) if pred_file else {}
 
         for evaluation in evaluations:
 
-            judge_result = judge_evaluation(
-                evaluation,
-                ground_truth,
-                prediction
-            )
+            judge_result = judge_evaluation(evaluation, ground_truth, prediction)
 
-            model_name = evaluation.get(
-                "model",
-                "unknown"
-            )
+            model_name = evaluation.get("model", "unknown")
 
-            aggregate[
-                model_name
-            ].append(judge_result)
+            aggregate[model_name].append(judge_result)
 
             sample_details.append({
-                "sample_id": n,
+                "run_id": run_id,          # NEW — was "sample_id": n
+                "sample_id": sample_id,    # NEW — now the real sample_id, not filename n
                 "model": model_name,
                 "judge_result": judge_result
             })
@@ -289,51 +249,19 @@ def evaluate_directory(directory):
     summary = {}
 
     for model, scores in aggregate.items():
-
         summary[model] = {
-            "num_samples":
-                len(scores),
-
-            "attack_reasoning":
-                mean(
-                    s["attack_reasoning"]
-                    for s in scores
-                ),
-
-            "feature_grounding":
-                mean(
-                    s["feature_grounding"]
-                    for s in scores
-                ),
-
-            "technical_accuracy":
-                mean(
-                    s["technical_accuracy"]
-                    for s in scores
-                ),
-
-            "actionability":
-                mean(
-                    s["actionability"]
-                    for s in scores
-                ),
-
-            "overall":
-                mean(
-                    s["overall"]
-                    for s in scores
-                )
+            "num_samples": len(scores),
+            "attack_reasoning": mean(s["attack_reasoning"] for s in scores),
+            "feature_grounding": mean(s["feature_grounding"] for s in scores),
+            "technical_accuracy": mean(s["technical_accuracy"] for s in scores),
+            "actionability": mean(s["actionability"] for s in scores),
+            "overall": mean(s["overall"] for s in scores)
         }
 
     return {
-        "latest_batch":
-            latest_timestamp,
-
-        "summary":
-            summary,
-
-        "samples":
-            sample_details
+        "latest_batch": latest_timestamp,
+        "summary": summary,
+        "samples": sample_details
     }
 
 

@@ -148,6 +148,9 @@ def evaluate(client, models, pred_json, ground_truth):
     xgboost_label  = pred_json.get("model_prediction", "UNKNOWN")
     xgboost_correct = xgboost_label == true_label
 
+    run_id = pred_json.get("run_id")
+    sample_id = pred_json.get("sample_id")
+
     for model in models:
         print(f"\n--- Testing model: {model} ---")
 
@@ -159,6 +162,8 @@ def evaluate(client, models, pred_json, ground_truth):
         solution  = parts["solution"]
 
         results.append({
+            "run_id": run_id,              
+            "sample_id": sample_id, 
             "model": model,
             "xgboost_predicted_label": xgboost_label,
             "actual_label":            true_label,
