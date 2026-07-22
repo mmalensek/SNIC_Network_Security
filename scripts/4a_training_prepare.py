@@ -125,6 +125,8 @@ def extract_example(eval_obj, source_file):
     if not record:
         raise ValueError(f"No evaluation_record found in {source_file}")
 
+    print(prediction) 
+
     current_flow = prediction["current_flow"]
 
     previous_flows = prediction.get("previous_flows", [])
