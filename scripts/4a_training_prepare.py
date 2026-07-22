@@ -39,6 +39,8 @@ DEFAULT_SYSTEM = (
 
 PREDICTION_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
+WINNER_DIR = "json_log/3_evaluation_results/6_score_winner"
+
 def parse_timestamp(name):
     m = re.search(r'(\d{8}_\d{6})', name)
     if not m:
