@@ -10,9 +10,9 @@ This script prepares:
 - a test command template
 
 Usage:
-  python train_ollama_intrusion_detection.py \
+  python 4a_training_prepare.py \
     --input-glob "json_log/3_evaluation_results/6_score_winner/*.json" \
-    --max-samples 50 \
+    --max-samples 1000 \
     --model-name network-intrusion-ollama \
     --base-model llama3.1 \
     --output-dir output/ollama_training
