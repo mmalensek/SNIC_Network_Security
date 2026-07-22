@@ -93,9 +93,9 @@ def latest_json(directory, warn_age_minutes=120):
 # Load latest files
 # --------------------------------------------------
 
-deterministic_file = latest_json(DETERMINISTIC_DIR, max_age_minutes=30)
-expert_file = latest_json(EXPERT_DIR, max_age_minutes=30)
-human_file = latest_json(HUMAN_DIR, max_age_minutes=30)
+deterministic_file = latest_json(DETERMINISTIC_DIR)
+expert_file = latest_json(EXPERT_DIR)
+human_file = latest_json(HUMAN_DIR)
 
 if deterministic_file is None:
     raise RuntimeError(
