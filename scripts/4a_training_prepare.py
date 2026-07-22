@@ -42,18 +42,15 @@ PREDICTION_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 WINNER_DIR = "json_log/3_evaluation_results/6_score_winner"
 
 def parse_timestamp(name):
-    m = re.search(r'(\d{8}_\d{6})', name)
+    m = re.search(r'_(\d{8}_\d{6})(?:_\d+)?\.json$', name)
     if not m:
         return None
     return datetime.strptime(m.group(1), "%Y%m%d_%H%M%S")
 
 
 def parse_sample_number(name):
-    m = re.search(r'_(\d+)\.json$', name)
-    if not m:
-        return None
-    return int(m.group(1))
-
+    m = re.search(r'_\d{8}_\d{6}_(\d+)\.json$', name)
+    return int(m.group(1)) if m else None
 
 def find_prediction_file(prediction_source):
     pred_name = os.path.basename(prediction_source)
@@ -63,12 +60,13 @@ def find_prediction_file(prediction_source):
     best = None
     best_time = None
 
-    for file in glob.glob(
-        os.path.join(WINNER_DIR, "winner_*.json")
-    ):
+    for file in glob.glob(os.path.join(WINNER_DIR, "winner_*.json")):
         name = os.path.basename(file)
 
-        if parse_sample_number(name) != sample:
+        winner_sample = parse_sample_number(name)
+
+        # Only enforce sample matching if winner file has a sample number
+        if winner_sample is not None and winner_sample != sample:
             continue
 
         winner_time = parse_timestamp(name)
