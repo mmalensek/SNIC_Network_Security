@@ -53,37 +53,32 @@ def parse_sample_number(name):
     return int(m.group(1))
 
 
-def find_prediction_file(evaluation_source):
-    """
-    Finds the newest prediction file that:
-      - has the same sample number
-      - is older than the evaluation
-    """
-
-    eval_name = os.path.basename(evaluation_source)
-
-    eval_time = parse_timestamp(eval_name)
-    sample = parse_sample_number(eval_name)
+def find_winner_file(prediction_source):
+    pred_name = os.path.basename(prediction_source)
+    pred_time = parse_timestamp(pred_name)
+    sample = parse_sample_number(pred_name)
 
     best = None
     best_time = None
 
-    for file in glob.glob(os.path.join(PREDICTION_DIR, "prediction_*.json")):
-
+    for file in glob.glob(
+        os.path.join(WINNER_DIR, "winner_*.json")
+    ):
         name = os.path.basename(file)
 
         if parse_sample_number(name) != sample:
             continue
 
-        pred_time = parse_timestamp(name)
+        winner_time = parse_timestamp(name)
 
-        if pred_time is None:
+        if winner_time is None:
             continue
 
-        if pred_time <= eval_time:
-            if best is None or pred_time > best_time:
+        # Find the earliest winner strictly later than the prediction
+        if winner_time > pred_time:
+            if best is None or winner_time < best_time:
                 best = file
-                best_time = pred_time
+                best_time = winner_time
 
     return best
 
