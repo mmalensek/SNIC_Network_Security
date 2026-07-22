@@ -130,7 +130,13 @@ def extract_example(eval_obj, source_file):
             f"Top-level keys: {list(prediction.keys())}"
         )
 
-    current_flow = prediction["current_flow"]
+    current_flow = prediction.get("current_flow") or prediction.get("row_data")
+
+    if current_flow is None:
+        raise ValueError(
+            f"No flow data found in prediction file {prediction_file}. "
+            f"Top-level keys: {list(prediction.keys())}"
+        )
 
     previous_flows = prediction.get("previous_flows", [])
 
