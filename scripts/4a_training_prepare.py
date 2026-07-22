@@ -110,14 +110,18 @@ def find_nested_record(obj):
 def extract_example(eval_obj, source_file):
     record = find_nested_record(eval_obj)
 
-    prediction_file = find_prediction_file(
-        eval_obj["model_output"]["source_file"]
-    )
+    evaluation_file = eval_obj["model_output"]["source_file"]
 
-    if prediction_file is None:
-        raise ValueError("Matching prediction JSON not found.")
+    prediction_file = find_prediction_file(evaluation_file)
 
-    prediction = read_json(prediction_file)
+    print(f"\nWinner file:     {source_file}")
+    print(f"Evaluation file: {evaluation_file}")
+    print(f"Prediction file: {prediction_file}")
+
+if prediction_file is None:
+    raise ValueError("Matching prediction JSON not found.")
+
+prediction = read_json(prediction_file)
 
     if not record:
         raise ValueError(f"No evaluation_record found in {source_file}")
