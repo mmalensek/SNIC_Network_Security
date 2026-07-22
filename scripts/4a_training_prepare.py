@@ -52,33 +52,35 @@ def parse_sample_number(name):
     m = re.search(r'_\d{8}_\d{6}_(\d+)\.json$', name)
     return int(m.group(1)) if m else None
 
-def find_prediction_file(prediction_source):
-    pred_name = os.path.basename(prediction_source)
-    pred_time = parse_timestamp(pred_name)
-    sample = parse_sample_number(pred_name)
+def find_prediction_file(evaluation_source):
+    eval_name = os.path.basename(evaluation_source)
+    eval_time = parse_timestamp(eval_name)
+    sample = parse_sample_number(eval_name)
+
+    if eval_time is None:
+        return None
 
     best = None
     best_time = None
 
-    for file in glob.glob(os.path.join(WINNER_DIR, "winner_*.json")):
+    for file in glob.glob(os.path.join(PREDICTION_DIR, "prediction_*.json")):
         name = os.path.basename(file)
 
-        winner_sample = parse_sample_number(name)
+        pred_sample = parse_sample_number(name)
 
-        # Only enforce sample matching if winner file has a sample number
-        if winner_sample is not None and winner_sample != sample:
+        if sample is not None and pred_sample != sample:
             continue
 
-        winner_time = parse_timestamp(name)
+        pred_time = parse_timestamp(name)
 
-        if winner_time is None:
+        if pred_time is None:
             continue
 
-        # Find the earliest winner strictly later than the prediction
-        if winner_time > pred_time:
-            if best is None or winner_time < best_time:
+        # Find the newest prediction at or before the evaluation time
+        if pred_time <= eval_time:
+            if best is None or pred_time > best_time:
                 best = file
-                best_time = winner_time
+                best_time = pred_time
 
     return best
 
@@ -135,10 +137,15 @@ def extract_example(eval_obj, source_file):
 
     probabilities = prediction.get("probabilities", {})
 
-    label = record.get("predicted_class_label") or record.get("model_prediction") or "UNKNOWN"
+    label = (
+        record.get("predicted_label")
+        or record.get("predicted_class_label")
+        or record.get("model_prediction")
+        or "UNKNOWN"
+    )
     reasoning = record.get("reasoning", "")
     solution = record.get("solution", "")
-    xgb_label = record.get("xgboost_predicted_label", "")
+    xgb_label = record.get("xgboost_predicted_label") or xgb_label
     actual_label = record.get("actual_label", "")
 
     user_text = (
