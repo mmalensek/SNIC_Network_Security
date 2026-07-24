@@ -27,9 +27,16 @@ http://localhost:5000
 import re
 import json
 import random
+import secrets
 from pathlib import Path
 from datetime import datetime
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, render_template_string, request, jsonify, session, redirect, url_for
+
+app.secret_key = "trivial-secret-for-faculty-testing"  # enabling Flask session cookies
+
+TESTER_IDS = ["tester1", "tester2", "tester3", "tester4", "tester5"]
+COMPARISONS_PER_TESTER = 30
+SIMPLE_PASSCODE = "network2026"  # shared passcode to enable Flask session cookies
 
 app = Flask(__name__)
 
@@ -55,6 +62,28 @@ SESSION_FILE = (
     RESULT_DIR
     / f"human_evaluation_session_{SESSION_ID}.json"
 )
+
+LOGIN_HTML = """
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Login</title></head>
+<body style="font-family: Arial; max-width: 400px; margin: 80px auto;">
+  <h2>Human Expert Evaluation Login</h2>
+  <form method="POST" action="/login">
+    <label>Tester ID:</label><br>
+    <select name="tester_id">
+      {% for t in tester_ids %}
+        <option value="{{ t }}">{{ t }}</option>
+      {% endfor %}
+    </select><br><br>
+    <label>Passcode:</label><br>
+    <input type="password" name="passcode"><br><br>
+    <button type="submit">Enter</button>
+  </form>
+  {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+</body>
+</html>
+"""
 
 HTML = """
 <!DOCTYPE html>
@@ -367,6 +396,27 @@ loadTasks();
 </html>
 """
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        tester_id = request.form.get("tester_id")
+        passcode = request.form.get("passcode")
+
+        if passcode != SIMPLE_PASSCODE or tester_id not in TESTER_IDS:
+            return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error="Invalid tester ID or passcode.")
+
+        session["tester_id"] = tester_id
+        return redirect(url_for("index"))
+
+    return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error=None)
+
+
+@app.route("/")
+def index():
+    if "tester_id" not in session:
+        return redirect(url_for("login"))
+    return render_template_string(HTML)
+
 
 def extract_sample_id(filename):
     match = re.search(r'(\d{8}_\d{6}_\d+)', filename)
@@ -430,11 +480,9 @@ def load_candidate(folder, sample_id):
         return None
 
 
-def build_tasks():
-
+def build_tasks(assigned_sample_ids):
     tasks = []
-
-    for sample_id in find_latest_sample_ids():
+    for sample_id in assigned_sample_ids:
 
         gt_path = (
             GROUNDTRUTH_DIR
@@ -513,11 +561,23 @@ def build_tasks():
 def index():
     return render_template_string(HTML)
 
+def get_tester_sample_ids(tester_id, all_sample_ids):
+    if tester_id not in TESTER_IDS:
+        return []
+    idx = TESTER_IDS.index(tester_id)
+    start = idx * COMPARISONS_PER_TESTER
+    end = start + COMPARISONS_PER_TESTER
+    return all_sample_ids[start:end]
 
 @app.route("/tasks")
 def tasks():
+    tester_id = session.get("tester_id")
+    if tester_id is None:
+        return jsonify({"error": "not logged in"}), 401
 
-    return jsonify(build_tasks())
+    all_sample_ids = find_latest_sample_ids()
+    assigned = get_tester_sample_ids(tester_id, all_sample_ids)
+    return jsonify(build_tasks(assigned))
 
 
 @app.route("/vote", methods=["POST"])
@@ -566,6 +626,54 @@ def vote():
 
     return jsonify({"status": "ok"})
 
+def get_session_file(tester_id):
+    return RESULT_DIR / f"human_evaluation_session_{tester_id}_{SESSION_ID}.json"
+
+
+@app.route("/vote", methods=["POST"])
+def vote():
+    tester_id = session.get("tester_id")
+    if tester_id is None:
+        return jsonify({"error": "not logged in"}), 401
+
+    data = request.json
+    task = data["task"]
+    winner = data["winner"]
+
+    session_file = get_session_file(tester_id)
+
+    if session_file.exists():
+        with open(session_file, "r") as f:
+            session_data = json.load(f)
+    else:
+        session_data = {
+            "session_id": SESSION_ID,
+            "tester_id": tester_id,
+            "created": datetime.now().isoformat(),
+            "comparisons": []
+        }
+
+    session_data["comparisons"].append({
+        "timestamp": datetime.now().isoformat(),
+        "tester_id": tester_id,          # NEW
+        "sample_id": task["sample_id"],
+        "ground_truth": task["ground_truth"],
+        "xgboost_prediction": task["prediction"],
+        "candidate_a_model": task["a"]["model"],
+        "candidate_b_model": task["b"]["model"],
+        "candidate_c_model": task["c"]["model"],
+        "winner": winner,
+        "winner_model": {
+            "A": task["a"]["model"],
+            "B": task["b"]["model"],
+            "C": task["c"]["model"],
+        }[winner]
+    })
+
+    with open(session_file, "w") as f:
+        json.dump(session_data, f, indent=2)
+
+    return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
 
