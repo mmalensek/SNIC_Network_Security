@@ -551,6 +551,8 @@ def build_tasks(assigned_sample_ids):
 
 @app.route("/")
 def index():
+    if "tester_id" not in session:
+        return redirect(url_for("login"))
     return render_template_string(HTML)
 
 def get_tester_sample_ids(tester_id, all_sample_ids):
@@ -571,52 +573,6 @@ def tasks():
     assigned = get_tester_sample_ids(tester_id, all_sample_ids)
     return jsonify(build_tasks(assigned))
 
-
-@app.route("/vote", methods=["POST"])
-def vote():
-
-    data = request.json
-
-    task = data["task"]
-    winner = data["winner"]
-
-    if SESSION_FILE.exists():
-
-        with open(SESSION_FILE, "r") as f:
-            session_data = json.load(f)
-
-    else:
-
-        session_data = {
-            "session_id": SESSION_ID,
-            "created": datetime.now().isoformat(),
-            "comparisons": []
-        }
-
-    session_data["comparisons"].append({
-        "timestamp": datetime.now().isoformat(),
-
-        "sample_id": task["sample_id"],
-
-        "ground_truth": task["ground_truth"],
-        "xgboost_prediction": task["prediction"],
-
-        "candidate_a_model": task["a"]["model"],
-        "candidate_b_model": task["b"]["model"],
-        "candidate_c_model": task["c"]["model"],
-
-        "winner": winner,
-        "winner_model": {
-            "A": task["a"]["model"],
-            "B": task["b"]["model"],
-            "C": task["c"]["model"],
-        }[winner]
-    })
-
-    with open(SESSION_FILE, "w") as f:
-        json.dump(session_data, f, indent=2)
-
-    return jsonify({"status": "ok"})
 
 def get_session_file(tester_id):
     return RESULT_DIR / f"human_evaluation_session_{tester_id}_{SESSION_ID}.json"
