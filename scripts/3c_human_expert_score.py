@@ -76,8 +76,6 @@ LOGIN_HTML = """
         <option value="{{ t }}">{{ t }}</option>
       {% endfor %}
     </select><br><br>
-    <label>Passcode:</label><br>
-    <input type="password" name="passcode"><br><br>
     <button type="submit">Enter</button>
   </form>
   {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
@@ -400,10 +398,9 @@ loadTasks();
 def login():
     if request.method == "POST":
         tester_id = request.form.get("tester_id")
-        passcode = request.form.get("passcode")
 
-        if passcode != SIMPLE_PASSCODE or tester_id not in TESTER_IDS:
-            return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error="Invalid tester ID or passcode.")
+        if tester_id not in TESTER_IDS:
+            return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error="Invalid tester ID.")
 
         session["tester_id"] = tester_id
         return redirect(url_for("index"))
