@@ -32,13 +32,13 @@ from pathlib import Path
 from datetime import datetime
 from flask import Flask, render_template_string, request, jsonify, session, redirect, url_for
 
+app = Flask(__name__)
+
 app.secret_key = "trivial-secret-for-faculty-testing"  # enabling Flask session cookies
 
 TESTER_IDS = ["tester1", "tester2", "tester3", "tester4", "tester5"]
 COMPARISONS_PER_TESTER = 30
 SIMPLE_PASSCODE = "network2026"  # shared passcode to enable Flask session cookies
-
-app = Flask(__name__)
 
 BASE_DIR = Path("json_log")
 
