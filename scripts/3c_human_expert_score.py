@@ -410,14 +410,6 @@ def login():
 
     return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error=None)
 
-
-@app.route("/")
-def index():
-    if "tester_id" not in session:
-        return redirect(url_for("login"))
-    return render_template_string(HTML)
-
-
 def extract_sample_id(filename):
     match = re.search(r'(\d{8}_\d{6}_\d+)', filename)
     return match.group(1) if match else None
