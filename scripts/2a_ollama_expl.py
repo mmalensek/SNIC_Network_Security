@@ -20,6 +20,7 @@ json
 import os
 import re
 import json
+import time
 import requests
 import argparse
 import subprocess
@@ -153,7 +154,6 @@ def evaluate(models, pred_json, ground_truth):
     results = []
 
     true_label = ground_truth["most_common_true_label"]
-    # XGBoost predicted label comes from the prediction JSON, not the LLM
     xgboost_label = pred_json.get("model_prediction", "UNKNOWN")
     xgboost_correct = xgboost_label == true_label
 
@@ -164,26 +164,40 @@ def evaluate(models, pred_json, ground_truth):
         print(f"\n--- Testing model: {model} ---")
 
         prompt = build_prompt(pred_json)
+
+        # cas od flowa (prompta) do odgovora modela
+        start_time = time.time()
         response = query_model(model, prompt)
+        response_time_sec = time.time() - start_time
 
         response_parts = extract_response_parts(response)
         reasoning = response_parts["reasoning"]
         solution = response_parts["solution"]
 
+        # dolzina odgovora
+        response_length_chars = len(response)
+        response_length_words = len(response.split())
+
         results.append({
-            "run_id": run_id,              
-            "sample_id": sample_id,         
+            "run_id": run_id,
+            "sample_id": sample_id,
             "model": model,
             "xgboost_predicted_label": xgboost_label,
             "actual_label": true_label,
             "is_xgboost_correct": xgboost_correct,
             "reasoning": reasoning,
-            "solution": solution
+            "solution": solution,
+            # NOVO: dodatne metrike
+            "response_time_sec": round(response_time_sec, 4),
+            "response_length_chars": response_length_chars,
+            "response_length_words": response_length_words,
         })
 
         print(f"XGBoost Predicted: {xgboost_label}")
         print(f"True Label:        {true_label}")
         print(f"XGBoost Correct:   {xgboost_correct}")
+        print(f"Response Time:     {response_time_sec:.2f}s")
+        print(f"Response Length:   {response_length_chars} chars / {response_length_words} words")
         print("\n--- Reasoning ---")
         print(reasoning)
         print("\n--- Solution ---")

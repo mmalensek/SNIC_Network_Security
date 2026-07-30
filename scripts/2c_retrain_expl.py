@@ -24,10 +24,11 @@ Prerequisites:
 """
 
 import os
-import json
 import re
-from datetime import datetime
+import json
+import time
 import torch
+from datetime import datetime
 from unsloth import FastLanguageModel
 
 # CONFIGURATION
@@ -242,16 +243,12 @@ def extract_response_parts(text):
 
 
 # EVALUATE A SINGLE PREDICTION / GROUND TRUTH PAIR
-
 def evaluate(pred_json, ground_truth):
 
     results = []
 
     true_label = ground_truth["most_common_true_label"]
-
-    # XGBoost prediction (the LLM does NOT predict the label)
     xgboost_label = pred_json.get("model_prediction", "UNKNOWN")
-
     xgboost_correct = (xgboost_label == true_label)
 
     run_id = pred_json.get("run_id")
@@ -261,16 +258,22 @@ def evaluate(pred_json, ground_truth):
 
     prompt = build_prompt(pred_json)
 
+    # cas od flowa (prompta) do odgovora modela
+    start_time = time.time()
     response = query_model(prompt)
+    response_time_sec = time.time() - start_time
 
     response_parts = extract_response_parts(response)
-
     reasoning = response_parts["reasoning"]
     solution = response_parts["solution"]
 
+    # dolzina odgovora
+    response_length_chars = len(response)
+    response_length_words = len(response.split())
+
     result = {
-        "run_id": run_id,             
-        "sample_id": sample_id,        
+        "run_id": run_id,
+        "sample_id": sample_id,
         "model": os.path.basename(MODEL_PATH),
         "xgboost_predicted_label": xgboost_label,
         "actual_label": true_label,
@@ -278,6 +281,10 @@ def evaluate(pred_json, ground_truth):
         "reasoning": reasoning,
         "solution": solution,
         "raw_response": response,
+        # NOVO: dodatne metrike
+        "response_time_sec": round(response_time_sec, 4),
+        "response_length_chars": response_length_chars,
+        "response_length_words": response_length_words,
     }
 
     results.append(result)
@@ -285,6 +292,8 @@ def evaluate(pred_json, ground_truth):
     print(f"XGBoost Predicted: {xgboost_label}")
     print(f"True Label:        {true_label}")
     print(f"XGBoost Correct:   {xgboost_correct}")
+    print(f"Response Time:     {response_time_sec:.2f}s")
+    print(f"Response Length:   {response_length_chars} chars / {response_length_words} words")
 
     print("\n-------------------------------")
     print("REASONING")
@@ -298,9 +307,6 @@ def evaluate(pred_json, ground_truth):
 
     return results
 
-
-
-# MAIN
 
 def main():
 

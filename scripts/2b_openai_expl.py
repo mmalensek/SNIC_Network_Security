@@ -15,6 +15,7 @@ json
 import os
 import re
 import json
+import time
 import argparse
 from openai import OpenAI
 
@@ -154,12 +155,20 @@ def evaluate(client, models, pred_json, ground_truth):
     for model in models:
         print(f"\n--- Testing model: {model} ---")
 
-        prompt   = build_prompt(pred_json)
+        prompt = build_prompt(pred_json)
+
+        # cas od flowa (prompta) do odgovora modela
+        start_time = time.time()
         response = query_model(client, model, prompt)
+        response_time_sec = time.time() - start_time
 
         parts     = extract_response_parts(response)
         reasoning = parts["reasoning"]
         solution  = parts["solution"]
+
+        # dolzina odgovora
+        response_length_chars = len(response)
+        response_length_words = len(response.split())
 
         results.append({
             "run_id": run_id,              
@@ -170,11 +179,17 @@ def evaluate(client, models, pred_json, ground_truth):
             "is_xgboost_correct":      xgboost_correct,
             "reasoning":               reasoning,
             "solution":                solution,
+            # NOVO: dodatne metrike
+            "response_time_sec": round(response_time_sec, 4),
+            "response_length_chars": response_length_chars,
+            "response_length_words": response_length_words,
         })
 
         print(f"XGBoost Predicted: {xgboost_label}")
         print(f"True Label:        {true_label}")
         print(f"XGBoost Correct:   {xgboost_correct}")
+        print(f"Response Time:     {response_time_sec:.2f}s")
+        print(f"Response Length:   {response_length_chars} chars / {response_length_words} words")
         print("\n--- Reasoning ---")
         print(reasoning)
         print("\n--- Solution ---")
