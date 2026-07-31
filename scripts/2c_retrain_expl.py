@@ -6,6 +6,11 @@ Evaluation script for the retrained DeepSeek-R1 LoRA model.
 This script replaces the previous Ollama-based evaluation by loading the
 fine-tuned LoRA adapter directly with Unsloth and Transformers.
 
+By default it evaluates the most recently trained adapter under
+BASE_LORA_DIR (as pointed to by "latest_run.txt", written by
+4b_unsloth_finetune.py). Pass --model-path to evaluate a specific adapter
+instead.
+
 The evaluation still compares:
 
 - XGBoost predicted label
@@ -27,45 +32,89 @@ import os
 import re
 import json
 import time
+import argparse
 import torch
+from pathlib import Path
 from datetime import datetime
 from unsloth import FastLanguageModel
 
 # CONFIGURATION
 
-# path to trained LoRA adapter
-MODEL_PATH = "/mnt/share/tmp/intrusion_lora/checkpoint-3"
+# base directory holding timestamped run_* adapters produced by
+# 4b_unsloth_finetune.py, plus its "latest_run.txt" pointer
+BASE_LORA_DIR = "/mnt/share/tmp/intrusion_lora"
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 EVAL_LOG_DIR = "json_log/2_retrained_evaluation"
 MAX_NEW_TOKENS = 512
 
+model = None
+tokenizer = None
+MODEL_PATH = None
 
-# LOAD MODEL
 
-print("Loading retrained model...")
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Evaluate the most recently retrained LoRA adapter."
+    )
+    parser.add_argument(
+        "--model-path",
+        default=None,
+        help="Path to a specific LoRA adapter directory. Defaults to the most "
+             "recently trained run under --base-dir."
+    )
+    parser.add_argument(
+        "--base-dir",
+        default=BASE_LORA_DIR,
+        help="Base directory containing timestamped run_* adapters from "
+             "4b_unsloth_finetune.py."
+    )
+    return parser.parse_args()
 
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name=MODEL_PATH,
-    max_seq_length=4096,
-    load_in_4bit=True,
-)
 
-base_model = "unsloth/DeepSeek-R1-Distill-Llama-8B"
+def resolve_model_path(base_dir, explicit_path=None):
+    if explicit_path:
+        return explicit_path
 
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name=base_model,
-    max_seq_length=4096,
-    load_in_4bit=True,
-)
+    base = Path(base_dir)
+    pointer_file = base / "latest_run.txt"
 
-from peft import PeftModel
+    if pointer_file.exists():
+        run_name = pointer_file.read_text(encoding="utf-8").strip()
+        candidate = base / run_name
+        if candidate.exists():
+            return str(candidate)
 
-model = PeftModel.from_pretrained(
-    model,
-    MODEL_PATH,
-)
+    # fall back to the most recently modified run_* directory
+    run_dirs = sorted(
+        (p for p in base.glob("run_*") if p.is_dir()),
+        key=lambda p: p.stat().st_mtime,
+    )
+    if run_dirs:
+        return str(run_dirs[-1])
 
-print("Model loaded successfully.\n")
+    raise FileNotFoundError(
+        f"No retrained LoRA adapter found under {base}. "
+        f"Run 4b_unsloth_finetune.py first, or pass --model-path explicitly."
+    )
+
+
+def load_model(model_path):
+    print("Loading retrained model...")
+
+    base_model = "unsloth/DeepSeek-R1-Distill-Llama-8B"
+
+    base, tok = FastLanguageModel.from_pretrained(
+        model_name=base_model,
+        max_seq_length=4096,
+        load_in_4bit=True,
+    )
+
+    from peft import PeftModel
+
+    merged = PeftModel.from_pretrained(base, model_path)
+
+    print("Model loaded successfully.\n")
+    return merged, tok
 
 
 
@@ -274,7 +323,7 @@ def evaluate(pred_json, ground_truth):
     result = {
         "run_id": run_id,
         "sample_id": sample_id,
-        "model": os.path.basename(MODEL_PATH),
+        "model": f"retrained-{os.path.basename(MODEL_PATH)}",
         "xgboost_predicted_label": xgboost_label,
         "actual_label": true_label,
         "is_xgboost_correct": xgboost_correct,
@@ -309,10 +358,17 @@ def evaluate(pred_json, ground_truth):
 
 
 def main():
+    global model, tokenizer, MODEL_PATH
+
+    args = parse_args()
+    MODEL_PATH = resolve_model_path(args.base_dir, args.model_path)
 
     print("=" * 60)
     print("Retrained DeepSeek-R1 LoRA Evaluation")
     print("=" * 60)
+    print(f"Using adapter: {MODEL_PATH}\n")
+
+    model, tokenizer = load_model(MODEL_PATH)
 
     latest_timestamp, file_pairs = get_latest_file_pairs()
 

@@ -233,7 +233,7 @@ def main():
     if not args.skip_human_evaluation:
 
         print("\n" + "=" * 80)
-        print("STEP 7/11 : Human scoring")
+        print("STEP 7/10 : Human scoring")
         print("=" * 80)
 
         input(
@@ -281,26 +281,21 @@ def main():
             str(args.max_samples),
         ])
 
-    """
     run(
         cmd,
         "STEP 10/10 : Dataset generation",
     )
 
-    run(
-        [
-            "python",
-            "4b_unsloth_finetune.py",
-        ],
-        "STEP 11/11 : LoRA fine-tuning",
-    )
-    """
-    
+    # 4b_unsloth_finetune.py is NOT run automatically: it requires the
+    # "retrain" conda env (unsloth/torch/peft) instead of this pipeline's
+    # env, and is a heavy GPU job best run deliberately (see module docstring
+    # for the tmux-based workflow this repo uses).
+
     print("\n" + "=" * 80)
     print("Pipeline finished successfully.")
     print("\nTraining dataset created:")
-    print("\nollama_training/training_dataset.json")
-    print("ollama_training/training_dataset.jsonl")
+    print(f"\n{args.output_dir}/training_dataset.json")
+    print(f"{args.output_dir}/training_dataset.jsonl")
     print("\nFor fine-tuning run:")
     print("\nconda activate retrain")
     print("python 4b_unsloth_finetune.py")
