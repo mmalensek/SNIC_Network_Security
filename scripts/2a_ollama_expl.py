@@ -56,8 +56,8 @@ def get_ollama_models():
 def get_latest_file_pairs():
     files = os.listdir(JSON_LOG_DIR)
 
-    pred_pattern = re.compile(r"^prediction_(\d{8}_\d{6})_(\d+)\.json$")
-    gt_pattern = re.compile(r"^ground_truth_(\d{8}_\d{6})_(\d+)\.json$")
+    pred_pattern = re.compile(r"^prediction_(\d{8}_\d{6})(?:_(\d+))?\.json$")
+    gt_pattern = re.compile(r"^ground_truth_(\d{8}_\d{6})(?:_(\d+))?\.json$")
 
     pred_matches = []
     gt_matches = []
@@ -65,11 +65,13 @@ def get_latest_file_pairs():
     for f in files:
         pred_match = pred_pattern.match(f)
         if pred_match:
-            pred_matches.append((pred_match.group(1), int(pred_match.group(2)), f))
+            idx = int(pred_match.group(2)) if pred_match.group(2) else 1
+            pred_matches.append((pred_match.group(1), idx, f))
 
         gt_match = gt_pattern.match(f)
         if gt_match:
-            gt_matches.append((gt_match.group(1), int(gt_match.group(2)), f))
+            idx = int(gt_match.group(2)) if gt_match.group(2) else 1
+            gt_matches.append((gt_match.group(1), idx, f))
 
     if not pred_matches or not gt_matches:
         raise FileNotFoundError("No numbered prediction/ground truth files found.")
@@ -281,7 +283,8 @@ def main():
         print("\n--- Pair Summary ---")
         print(f"XGBoost accuracy for pair {idx}: {correct}/{total} = {correct/total:.2f}")
 
-        out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}_{idx}.json")
+        suffix = "" if len(file_pairs) == 1 else f"_{idx}"
+        out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}{suffix}.json")
         with open(out_file, "w") as f:
             json.dump(results, f, indent=2)
 

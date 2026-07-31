@@ -1,1 +1,13 @@
 **/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Generated pipeline logs/outputs (scripts/main_pipeline.py and friends)
+scripts/json_log/
+scripts/output/
+scripts/ollama_training/
+scripts/batch-logs-*/
+scripts/unsloth_compiled_cache/
+scripts/human_eval_package.zip

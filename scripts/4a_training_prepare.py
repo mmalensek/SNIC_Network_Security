@@ -132,6 +132,7 @@ def extract_example(eval_obj, source_file):
         record.get("predicted_label")
         or record.get("predicted_class_label")
         or record.get("model_prediction")
+        or record.get("actual_label")
         or "UNKNOWN"
     )
     reasoning = record.get("reasoning", "")

@@ -60,8 +60,8 @@ def get_openai_client():
 def get_latest_file_pairs():
     files = os.listdir(JSON_LOG_DIR)
 
-    pred_pattern = re.compile(r"^prediction_(\d{8}_\d{6})_(\d+)\.json$")
-    gt_pattern   = re.compile(r"^ground_truth_(\d{8}_\d{6})_(\d+)\.json$")
+    pred_pattern = re.compile(r"^prediction_(\d{8}_\d{6})(?:_(\d+))?\.json$")
+    gt_pattern   = re.compile(r"^ground_truth_(\d{8}_\d{6})(?:_(\d+))?\.json$")
 
     pred_matches, gt_matches = [], []
 
@@ -69,9 +69,9 @@ def get_latest_file_pairs():
         pm = pred_pattern.match(f)
         gm = gt_pattern.match(f)
         if pm:
-            pred_matches.append((pm.group(1), int(pm.group(2)), f))
+            pred_matches.append((pm.group(1), int(pm.group(2)) if pm.group(2) else 1, f))
         if gm:
-            gt_matches.append((gm.group(1), int(gm.group(2)), f))
+            gt_matches.append((gm.group(1), int(gm.group(2)) if gm.group(2) else 1, f))
 
     if not pred_matches or not gt_matches:
         raise FileNotFoundError("No numbered prediction/ground truth files found.")
@@ -260,7 +260,8 @@ def main():
         print(f"\n--- Pair Summary ---")
         print(f"XGBoost accuracy for pair {idx}: {correct}/{total} = {correct/total:.2f}")
 
-        out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}_{idx}.json")
+        suffix = "" if len(file_pairs) == 1 else f"_{idx}"
+        out_file = os.path.join(EVAL_LOG_DIR, f"evaluation_{latest_timestamp}{suffix}.json")
         with open(out_file, "w") as f:
             json.dump(results, f, indent=2)
         print(f"Saved results to {out_file}")

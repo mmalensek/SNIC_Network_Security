@@ -116,7 +116,12 @@ def find_model_output(model_name, model_origin):
     if directory is None or run_id is None or not directory.exists():
         return None
 
-    for file in sorted(directory.glob(f"evaluation_{run_id}_*.json")):
+    candidate_files = sorted(
+        list(directory.glob(f"evaluation_{run_id}.json")) +
+        list(directory.glob(f"evaluation_{run_id}_*.json"))
+    )
+
+    for file in candidate_files:
         try:
             data = load_json(file)
         except Exception as e:

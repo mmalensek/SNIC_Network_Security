@@ -57,9 +57,10 @@ def score_attack_alignment(entry, ground_truth):
 def extract_timestamp(filename):
     """
     Only used to pick which batch is 'latest' - not used for pairing.
+    evaluation_20260506_085644.json -> "20260506_085644"
     evaluation_20260506_085644_1.json -> "20260506_085644"
     """
-    m = re.match(r".*?_(\d{8}_\d{6})_\d+\.json$", filename)
+    m = re.match(r".*?_(\d{8}_\d{6})(?:_\d+)?\.json$", filename)
     return m.group(1) if m else None
 
 
@@ -108,25 +109,6 @@ def score_format_compliance(entry):
         score *= 0.9
 
     return score
-
-
-# ----------------------------------------------------------------------
-# Attack Alignment
-# ----------------------------------------------------------------------
-
-def score_attack_alignment(entry, ground_truth):
-    predicted = normalize_label(
-        entry.get("predicted_label", "")
-    )
-
-    actual = normalize_label(
-        ground_truth.get(
-            "most_common_true_label",
-            ""
-        )
-    )
-
-    return 1.0 if predicted == actual else 0.0
 
 
 # ----------------------------------------------------------------------
@@ -427,7 +409,8 @@ def evaluate_directory(name, directory):
         return None
 
     evaluation_files = sorted(
-        directory.glob(f"evaluation_{latest_timestamp}_*.json")
+        list(directory.glob(f"evaluation_{latest_timestamp}.json")) +
+        list(directory.glob(f"evaluation_{latest_timestamp}_*.json"))
     )
 
     model_results = defaultdict(list)

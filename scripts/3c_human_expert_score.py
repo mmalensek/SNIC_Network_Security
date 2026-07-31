@@ -408,7 +408,7 @@ def login():
     return render_template_string(LOGIN_HTML, tester_ids=TESTER_IDS, error=None)
 
 def extract_sample_id(filename):
-    match = re.search(r'(\d{8}_\d{6}_\d+)', filename)
+    match = re.search(r'(\d{8}_\d{6}(?:_\d+)?)', filename)
     return match.group(1) if match else None
 
 def load_original_log(sample_id):

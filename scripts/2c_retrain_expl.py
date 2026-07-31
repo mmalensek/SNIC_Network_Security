@@ -75,11 +75,11 @@ def get_latest_file_pairs():
     files = os.listdir(JSON_LOG_DIR)
 
     pred_pattern = re.compile(
-        r"^prediction_(\d{8}_\d{6})_(\d+)\.json$"
+        r"^prediction_(\d{8}_\d{6})(?:_(\d+))?\.json$"
     )
 
     gt_pattern = re.compile(
-        r"^ground_truth_(\d{8}_\d{6})_(\d+)\.json$"
+        r"^ground_truth_(\d{8}_\d{6})(?:_(\d+))?\.json$"
     )
 
     pred_matches = []
@@ -93,7 +93,7 @@ def get_latest_file_pairs():
             pred_matches.append(
                 (
                     pred_match.group(1),
-                    int(pred_match.group(2)),
+                    int(pred_match.group(2)) if pred_match.group(2) else 1,
                     f,
                 )
             )
@@ -104,7 +104,7 @@ def get_latest_file_pairs():
             gt_matches.append(
                 (
                     gt_match.group(1),
-                    int(gt_match.group(2)),
+                    int(gt_match.group(2)) if gt_match.group(2) else 1,
                     f,
                 )
             )
@@ -363,9 +363,11 @@ def main():
             f"{correct}/{total} = {correct/total:.2f}"
         )
 
+        suffix = "" if len(file_pairs) == 1 else f"_{idx}"
+
         out_file = os.path.join(
             EVAL_LOG_DIR,
-            f"evaluation_{latest_timestamp}_{idx}.json",
+            f"evaluation_{latest_timestamp}{suffix}.json",
         )
 
         with open(out_file, "w") as f:

@@ -1,0 +1,11 @@
+0: BENIGN
+1: Bot
+2: DoS GoldenEye
+3: DoS Hulk
+4: DoS Slowhttptest
+5: DoS slowloris
+6: FTP-Patator
+7: SSH-Patator
+8: Web Attack  Brute Force
+9: Web Attack  Sql Injection
+10: Web Attack  XSS

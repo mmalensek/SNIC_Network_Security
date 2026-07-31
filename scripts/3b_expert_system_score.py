@@ -73,7 +73,7 @@ def extract_timestamp(filename):
     """
     Only used to pick which batch is 'latest' - not used for pairing.
     """
-    m = re.match(r".*?_(\d{8}_\d{6})_\d+\.json$", filename)
+    m = re.match(r".*?_(\d{8}_\d{6})(?:_\d+)?\.json$", filename)
     return m.group(1) if m else None
 
 
@@ -203,7 +203,8 @@ def evaluate_directory(directory):
         return None
 
     files = sorted(
-        directory.glob(f"evaluation_{latest_timestamp}_*.json")
+        list(directory.glob(f"evaluation_{latest_timestamp}.json")) +
+        list(directory.glob(f"evaluation_{latest_timestamp}_*.json"))
     )
 
     aggregate = defaultdict(list)

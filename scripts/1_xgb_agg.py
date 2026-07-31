@@ -459,12 +459,14 @@ def main():
         ground_truth_output["run_id"] = timestamp
         ground_truth_output["sample_id"] = run_idx
 
-        filename = f"{JSON_LOG_DIR}/prediction_{timestamp}_{run_idx}.json"
+        suffix = "" if n == 1 else f"_{run_idx}"
+
+        filename = f"{JSON_LOG_DIR}/prediction_{timestamp}{suffix}.json"
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
         print(f"JSON saved to: {filename}")
 
-        ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}_{run_idx}.json"
+        ground_truth_filename = f"{JSON_LOG_DIR}/ground_truth_{timestamp}{suffix}.json"
         with open(ground_truth_filename, "w", encoding="utf-8") as f:
             json.dump(ground_truth_output, f, indent=2, ensure_ascii=False)
         print(f"Ground truth JSON saved to: {ground_truth_filename}")
