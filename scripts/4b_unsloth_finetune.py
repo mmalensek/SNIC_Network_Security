@@ -25,7 +25,7 @@ from datetime import datetime
 from unsloth import FastLanguageModel
 from datasets import load_dataset
 from trl import SFTTrainer
-from transformers import TrainingArguments
+from transformers import TrainingArguments, PreTrainedTokenizerFast
 
 MODEL_NAME = "unsloth/DeepSeek-R1-Distill-Llama-8B"
 
@@ -44,6 +44,19 @@ def parse_args():
         help="Base directory; each run is saved to a timestamped subdirectory inside it.",
     )
     parser.add_argument("--num-train-epochs", type=int, default=3)
+    parser.add_argument(
+        "--max-seq-length",
+        type=int,
+        default=16384,
+        help="Must cover system+user+assistant tokens for the longest example "
+             "in --dataset — measured with PreTrainedTokenizerFast (see the "
+             "tokenizer workaround below), NOT plain AutoTokenizer, which "
+             "silently undercounts on this checkpoint. Re-check with a quick "
+             "tokenizer pass before training if the dataset grows or "
+             "4a_training_prepare.py's flow/reasoning content changes — "
+             "examples longer than this are silently truncated, which can cut "
+             "off the LABEL/REASONING/SOLUTION target entirely.",
+    )
     return parser.parse_args()
 
 
@@ -57,9 +70,21 @@ def main():
 
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=MODEL_NAME,
-        max_seq_length=4096,
+        max_seq_length=args.max_seq_length,
         load_in_4bit=True,
     )
+
+    # Work around a transformers/unsloth bug: AutoTokenizer silently
+    # resolves this checkpoint's tokenizer to the slow, sentencepiece-
+    # oriented LlamaTokenizer even though it only ships a fast tokenizer.json
+    # (declared tokenizer_class is LlamaTokenizerFast, but that name is
+    # currently aliased to the same broken slow class in this transformers
+    # version). The slow class merges BPE pieces incorrectly and drops
+    # word-boundary spaces on both encode AND decode — silently corrupting
+    # every training example. Loading tokenizer.json directly through
+    # PreTrainedTokenizerFast gives identical vocab/special-token IDs but
+    # correct merge behavior.
+    tokenizer = PreTrainedTokenizerFast.from_pretrained(MODEL_NAME)
 
     model = FastLanguageModel.get_peft_model(
         model,
@@ -101,7 +126,7 @@ def main():
         tokenizer=tokenizer,
         train_dataset=dataset,
         dataset_text_field="text",
-        max_seq_length=4096,
+        max_seq_length=args.max_seq_length,
         args=TrainingArguments(
             output_dir=str(run_dir),
             num_train_epochs=args.num_train_epochs,

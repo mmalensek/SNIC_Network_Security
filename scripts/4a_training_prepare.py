@@ -117,9 +117,15 @@ def extract_example(eval_obj, source_file):
             f"Top-level keys: {list(prediction.keys())}"
         )
 
-    previous_flows = prediction.get("previous_flows", [])
+    # Keep only the single closest neighboring flow on each side. Full
+    # previous/next windows (5 each) made the user prompt ~8k tokens on
+    # their own, on top of an assistant reasoning target that's itself
+    # ~8.5k tokens median — together that badly overflowed the 4096
+    # max_seq_length used for training, silently truncating the LABEL/
+    # REASONING/SOLUTION target off of every single example.
+    previous_flows = prediction.get("previous_flows", [])[-1:]
 
-    next_flows = prediction.get("next_flows", [])
+    next_flows = prediction.get("next_flows", [])[:1]
 
     xgb_label = prediction.get(
         "predicted_class_label",

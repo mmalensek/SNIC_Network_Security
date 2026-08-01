@@ -37,6 +37,7 @@ import torch
 from pathlib import Path
 from datetime import datetime
 from unsloth import FastLanguageModel
+from transformers import PreTrainedTokenizerFast
 
 # CONFIGURATION
 
@@ -46,6 +47,10 @@ BASE_LORA_DIR = "/mnt/share/tmp/intrusion_lora"
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 EVAL_LOG_DIR = "json_log/2_retrained_evaluation"
 MAX_NEW_TOKENS = 512
+
+# must match whatever --max-seq-length 4b_unsloth_finetune.py was trained
+# with, or the adapter will see prompts shaped differently than in training
+MAX_SEQ_LENGTH = 16384
 
 model = None
 tokenizer = None
@@ -67,6 +72,12 @@ def parse_args():
         default=BASE_LORA_DIR,
         help="Base directory containing timestamped run_* adapters from "
              "4b_unsloth_finetune.py."
+    )
+    parser.add_argument(
+        "--max-seq-length",
+        type=int,
+        default=MAX_SEQ_LENGTH,
+        help="Should match the --max-seq-length used to train the adapter.",
     )
     return parser.parse_args()
 
@@ -98,16 +109,22 @@ def resolve_model_path(base_dir, explicit_path=None):
     )
 
 
-def load_model(model_path):
+def load_model(model_path, max_seq_length=MAX_SEQ_LENGTH):
     print("Loading retrained model...")
 
     base_model = "unsloth/DeepSeek-R1-Distill-Llama-8B"
 
     base, tok = FastLanguageModel.from_pretrained(
         model_name=base_model,
-        max_seq_length=4096,
+        max_seq_length=max_seq_length,
         load_in_4bit=True,
     )
+
+    # see matching comment in 4b_unsloth_finetune.py: AutoTokenizer resolves
+    # this checkpoint to a broken slow tokenizer that corrupts word
+    # boundaries on both encode and decode. Must use the same fix here or
+    # eval prompts won't even match what the model was trained on.
+    tok = PreTrainedTokenizerFast.from_pretrained(base_model)
 
     from peft import PeftModel
 
@@ -195,26 +212,54 @@ def get_latest_file_pairs():
 
 
 # BUILD PROMPT
+#
+# This MUST match the prompt/message structure that 4a_training_prepare.py
+# used to build the training set (user_text + DEFAULT_SYSTEM), otherwise the
+# retrained model is evaluated out-of-distribution and produces garbage.
 
-def build_prompt(pred_json):
+DEFAULT_SYSTEM = (
+    "You are a network security expert specializing in intrusion detection. "
+    "Given a network flow, an actual label, and an XGBoost prediction, "
+    "produce a LABEL, REASONING, and SOLUTION section. "
+    "The REASONING should explain the traffic characteristics and why they "
+    "match the label. The SOLUTION should provide practical mitigation and "
+    "response recommendations."
+)
 
-    return f"""
-You are a cybersecurity expert.
 
-Analyze the following network traffic summary produced by an XGBoost classifier.
+def build_prompt(pred_json, actual_label):
 
-Provide your response EXACTLY and ONLY in the following format.
+    current_flow = pred_json.get("current_flow") or pred_json.get("row_data")
+    # keep only the single closest neighboring flow on each side — must match
+    # the trimming in 4a_training_prepare.py's extract_example()
+    previous_flows = pred_json.get("previous_flows", [])[-1:]
+    next_flows = pred_json.get("next_flows", [])[:1]
+    probabilities = pred_json.get("probabilities", {})
+    xgb_label = pred_json.get(
+        "predicted_class_label",
+        pred_json.get("model_prediction", ""),
+    )
 
-REASONING:
-[Explain what is happening in the traffic, whether it indicates an attack,
-what evidence supports your conclusion, and if possible identify the attack.]
-
-SOLUTION:
-[Provide concrete recommendations or mitigation strategies.]
-
-JSON:
-{json.dumps(pred_json, indent=2)}
-"""
+    return (
+        "Analyze this network traffic.\n\n"
+        "Provide your response EXACTLY in the following format:\n\n"
+        "LABEL:\n"
+        "[attack label]\n\n"
+        "REASONING:\n"
+        "[analysis]\n\n"
+        "SOLUTION:\n"
+        "[recommended mitigations]\n\n"
+        f"Actual label: {actual_label}\n"
+        f"XGBoost prediction: {xgb_label}\n\n"
+        "Current flow:\n"
+        f"{json.dumps(current_flow, indent=2)}\n\n"
+        "Previous flows:\n"
+        f"{json.dumps(previous_flows, indent=2)}\n\n"
+        "Next flows:\n"
+        f"{json.dumps(next_flows, indent=2)}\n\n"
+        "XGBoost probabilities:\n"
+        f"{json.dumps(probabilities, indent=2)}"
+    )
 
 
 
@@ -224,6 +269,10 @@ JSON:
 def query_model(prompt):
 
     messages = [
+        {
+            "role": "system",
+            "content": DEFAULT_SYSTEM,
+        },
         {
             "role": "user",
             "content": prompt,
@@ -305,7 +354,7 @@ def evaluate(pred_json, ground_truth):
 
     print("\nGenerating response from retrained model...\n")
 
-    prompt = build_prompt(pred_json)
+    prompt = build_prompt(pred_json, true_label)
 
     # cas od flowa (prompta) do odgovora modela
     start_time = time.time()
@@ -368,7 +417,7 @@ def main():
     print("=" * 60)
     print(f"Using adapter: {MODEL_PATH}\n")
 
-    model, tokenizer = load_model(MODEL_PATH)
+    model, tokenizer = load_model(MODEL_PATH, args.max_seq_length)
 
     latest_timestamp, file_pairs = get_latest_file_pairs()
 
