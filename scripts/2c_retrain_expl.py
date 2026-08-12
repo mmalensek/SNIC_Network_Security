@@ -11,6 +11,11 @@ BASE_LORA_DIR (as pointed to by "latest_run.txt", written by
 4b_unsloth_finetune.py). Pass --model-path to evaluate a specific adapter
 instead.
 
+By default it evaluates against the 5 most recent prediction/ground truth
+samples (see --num-samples) rather than just the single latest one, and
+averages across them — a single sample makes retrained_score in
+training_history.csv swing heavily on the luck of one flow.
+
 The evaluation still compares:
 
 - XGBoost predicted label
@@ -79,6 +84,17 @@ def parse_args():
         default=MAX_SEQ_LENGTH,
         help="Should match the --max-seq-length used to train the adapter.",
     )
+    parser.add_argument(
+        "--num-samples",
+        type=int,
+        default=5,
+        help="Evaluate against this many of the most recent prediction/ground "
+             "truth pairs instead of just the single latest one. A single "
+             "sample makes retrained_score in training_history.csv extremely "
+             "noisy (one unlucky/lucky flow swings the whole score) — "
+             "averaging over several samples gives a much more reliable read "
+             "on whether retraining is actually helping.",
+    )
     return parser.parse_args()
 
 
@@ -137,7 +153,13 @@ def load_model(model_path, max_seq_length=MAX_SEQ_LENGTH):
 
 # FIND LATEST PREDICTION/GROUND TRUTH FILES
 
-def get_latest_file_pairs():
+def get_recent_file_pairs(num_samples):
+    """
+    Return the num_samples most recent prediction/ground-truth pairs
+    (newest first), not just the single latest one — evaluating on only one
+    sample makes retrained_score in training_history.csv swing on the luck
+    of a single flow.
+    """
     files = os.listdir(JSON_LOG_DIR)
 
     pred_pattern = re.compile(
@@ -148,65 +170,39 @@ def get_latest_file_pairs():
         r"^ground_truth_(\d{8}_\d{6})(?:_(\d+))?\.json$"
     )
 
-    pred_matches = []
-    gt_matches = []
+    pred_map = {}
+    gt_map = {}
 
     for f in files:
 
         pred_match = pred_pattern.match(f)
 
         if pred_match:
-            pred_matches.append(
-                (
-                    pred_match.group(1),
-                    int(pred_match.group(2)) if pred_match.group(2) else 1,
-                    f,
-                )
-            )
+            idx = int(pred_match.group(2)) if pred_match.group(2) else 1
+            pred_map[(pred_match.group(1), idx)] = os.path.join(JSON_LOG_DIR, f)
+            continue
 
         gt_match = gt_pattern.match(f)
 
         if gt_match:
-            gt_matches.append(
-                (
-                    gt_match.group(1),
-                    int(gt_match.group(2)) if gt_match.group(2) else 1,
-                    f,
-                )
-            )
+            idx = int(gt_match.group(2)) if gt_match.group(2) else 1
+            gt_map[(gt_match.group(1), idx)] = os.path.join(JSON_LOG_DIR, f)
 
-    if not pred_matches or not gt_matches:
-        raise FileNotFoundError(
-            "No numbered prediction/ground truth files found."
-        )
-
-    latest_timestamp = max(ts for ts, _, _ in pred_matches)
-
-    pred_map = {
-        idx: os.path.join(JSON_LOG_DIR, fname)
-        for ts, idx, fname in pred_matches
-        if ts == latest_timestamp
-    }
-
-    gt_map = {
-        idx: os.path.join(JSON_LOG_DIR, fname)
-        for ts, idx, fname in gt_matches
-        if ts == latest_timestamp
-    }
-
-    common_indices = sorted(
-        set(pred_map.keys()) &
-        set(gt_map.keys())
+    common_keys = sorted(
+        set(pred_map.keys()) & set(gt_map.keys()),
+        reverse=True,
     )
 
-    if not common_indices:
+    if not common_keys:
         raise FileNotFoundError(
             "No matching prediction/ground truth pairs found."
         )
 
-    return latest_timestamp, [
-        (idx, pred_map[idx], gt_map[idx])
-        for idx in common_indices
+    selected = common_keys[:num_samples]
+
+    return [
+        (f"{ts}_{idx}", pred_map[(ts, idx)], gt_map[(ts, idx)])
+        for ts, idx in selected
     ]
 
 
@@ -419,22 +415,28 @@ def main():
 
     model, tokenizer = load_model(MODEL_PATH, args.max_seq_length)
 
-    latest_timestamp, file_pairs = get_latest_file_pairs()
+    file_pairs = get_recent_file_pairs(args.num_samples)
 
     print(
-        f"\nFound {len(file_pairs)} prediction/ground truth "
-        f"pairs for batch {latest_timestamp}"
+        f"\nEvaluating retrained model on {len(file_pairs)} recent "
+        f"prediction/ground truth sample(s)"
     )
 
     os.makedirs(EVAL_LOG_DIR, exist_ok=True)
 
+    # One shared timestamp for this whole eval run (not the source samples'
+    # own timestamps, which differ per sample) — lets 3a/3b/3e discover all
+    # of them as one batch and average scores across samples, the same way
+    # they already do for multi-model ollama/openai batches.
+    eval_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     overall_correct = 0
     overall_total = 0
 
-    for idx, pred_file, gt_file in file_pairs:
+    for i, (label, pred_file, gt_file) in enumerate(file_pairs, start=1):
 
         print("\n" + "=" * 60)
-        print(f"Processing pair {idx}")
+        print(f"Processing sample {i}/{len(file_pairs)} ({label})")
         print("=" * 60)
 
         print(f"Prediction file : {pred_file}")
@@ -461,18 +463,18 @@ def main():
         overall_correct += correct
         overall_total += total
 
-        print("\nPair Summary")
+        print("\nSample Summary")
         print("-------------------------------")
         print(
             f"XGBoost Accuracy: "
             f"{correct}/{total} = {correct/total:.2f}"
         )
 
-        suffix = "" if len(file_pairs) == 1 else f"_{idx}"
+        suffix = "" if len(file_pairs) == 1 else f"_{i}"
 
         out_file = os.path.join(
             EVAL_LOG_DIR,
-            f"evaluation_{latest_timestamp}{suffix}.json",
+            f"evaluation_{eval_timestamp}{suffix}.json",
         )
 
         with open(out_file, "w") as f:
