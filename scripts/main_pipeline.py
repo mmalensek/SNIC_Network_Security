@@ -78,7 +78,7 @@ def parse_args():
         description="Complete evaluation and retraining pipeline."
     )
 
-    # ---------- 1_xgb_agg ----------
+    # 1_xgb_agg.py
     parser.add_argument(
         "--classifier",
         default="multiclass",
@@ -110,7 +110,7 @@ def parse_args():
         choices=[1,2,3],
     )
 
-    # ---------- explanation models ----------
+    # explanation generation
 
     parser.add_argument(
         "--ollama-model",
@@ -136,7 +136,7 @@ def parse_args():
         help="Skip 3c_human_expert_score.py"
     )
 
-    # ---------- training ----------
+    # training dataset generation
 
     parser.add_argument(
         "--input-glob",
@@ -286,10 +286,8 @@ def main():
         "STEP 10/10 : Dataset generation",
     )
 
-    # 4b_unsloth_finetune.py is NOT run automatically: it requires the
-    # "retrain" conda env (unsloth/torch/peft) instead of this pipeline's
-    # env, and is a heavy GPU job best run deliberately (see module docstring
-    # for the tmux-based workflow this repo uses).
+    # 4b_unsloth_finetune.py is NOT run automatically, it requires the
+    # "retrain" conda env (unsloth/torch/peft) instead of this pipelines env
 
     print("\n" + "=" * 80)
     print("Pipeline finished successfully.")

@@ -63,9 +63,7 @@ WEIGHTS_NO_HUMAN = {
 }
 
 
-# --------------------------------------------------
-# Helpers
-# --------------------------------------------------
+# helper functions
 
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -89,16 +87,10 @@ def latest_json(directory, warn_age_minutes=120):
     return latest_file
 
 
-# --------------------------------------------------
-# Load latest files
-# --------------------------------------------------
+# load latest deterministic, expert, and human score files
 
 deterministic_file = latest_json(DETERMINISTIC_DIR)
 expert_file = latest_json(EXPERT_DIR)
-
-# Every tester writes their own session file (one per
-# tester_id), so — unlike deterministic/expert — ALL files
-# in HUMAN_DIR must be combined, not just the newest one.
 human_files = sorted(HUMAN_DIR.glob("*.json"))
 
 if deterministic_file is None:
@@ -121,8 +113,7 @@ expert = load_json(
 
 human_scores = {}
 
-# Pool comparisons from every tester's session file so that
-# all experts contribute, not just whichever file sorts last.
+# pool comparisons from all human score files, if any exist
 human_comparisons = []
 
 for hf in human_files:
@@ -132,10 +123,7 @@ for hf in human_files:
 
 if human_comparisons:
 
-    # --------------------------------------------------
-    # Human comparison -> normalized score
-    # --------------------------------------------------
-
+    # normalize human scores to a 0-100 scale, where 100 = all wins, 0 = all losses, and 50 = all ties
     human_points = defaultdict(float)
     human_matches = defaultdict(int)
 
@@ -169,9 +157,7 @@ ACTIVE_WEIGHTS = (
 )
 
 
-# --------------------------------------------------
-# Collect all models
-# --------------------------------------------------
+# collect all unique models from deterministic, expert, and human scores
 
 all_models = set()
 
@@ -222,9 +208,7 @@ all_models.update(
 )
 
 
-# --------------------------------------------------
-# Score lookups
-# --------------------------------------------------
+# score lookup functions
 
 def find_deterministic_score(model):
 
@@ -285,9 +269,7 @@ def find_human_score(model):
     return human_scores.get(model)
 
 
-# --------------------------------------------------
-# Combine scores
-# --------------------------------------------------
+# combine scores and calculate final weighted score for each model
 
 combined = {}
 
@@ -358,9 +340,7 @@ for model in sorted(all_models):
     }
 
 
-# --------------------------------------------------
-# Ranking
-# --------------------------------------------------
+# ranking
 
 ranking = sorted(
     [
@@ -385,9 +365,7 @@ for rank, entry in enumerate(
     entry["rank"] = rank
 
 
-# --------------------------------------------------
-# Final report
-# --------------------------------------------------
+# final report
 
 report = {
     "generated_at":

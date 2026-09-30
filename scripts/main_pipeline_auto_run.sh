@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-# Run 10 independent multiclass pipeline invocations for labels 0 through 14.
+# run 10 independent multiclass pipeline invocations for labels 0 through 14.
 #
-# Usage (from the directory that contains main_pipeline.py):
+# usage (from the directory that contains main_pipeline.py):
 #   bash main_pipeline_auto_run.sh
-#
-# Optional environment overrides:
-#   ITERATIONS=20 FIRST_LABEL=2 LAST_LABEL=14 bash main_pipeline_auto_run.sh
 
 set -uo pipefail
 

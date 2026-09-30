@@ -29,6 +29,7 @@ from transformers import TrainingArguments, PreTrainedTokenizerFast
 
 MODEL_NAME = "unsloth/DeepSeek-R1-Distill-Llama-8B"
 
+# helper functions 
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -95,16 +96,7 @@ def main():
         load_in_4bit=True,
     )
 
-    # Work around a transformers/unsloth bug: AutoTokenizer silently
-    # resolves this checkpoint's tokenizer to the slow, sentencepiece-
-    # oriented LlamaTokenizer even though it only ships a fast tokenizer.json
-    # (declared tokenizer_class is LlamaTokenizerFast, but that name is
-    # currently aliased to the same broken slow class in this transformers
-    # version). The slow class merges BPE pieces incorrectly and drops
-    # word-boundary spaces on both encode AND decode — silently corrupting
-    # every training example. Loading tokenizer.json directly through
-    # PreTrainedTokenizerFast gives identical vocab/special-token IDs but
-    # correct merge behavior.
+    # workaround for PreTrainedTokenizerFast undercounting tokens on this checkpoint
     tokenizer = PreTrainedTokenizerFast.from_pretrained(MODEL_NAME)
 
     model = FastLanguageModel.get_peft_model(

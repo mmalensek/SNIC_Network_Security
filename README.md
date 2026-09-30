@@ -1,92 +1,18 @@
-## Explainable Network Intrusion Detection with Large Language Models
+## FlowExplain: Explainable Network Intrusion Detection with LLMs
 
-This repository contains the implementation developed for my diploma thesis on **Explainable Network Intrusion Detection using Large Language Models (LLMs)**.
+Implementation for my diploma thesis on explainable network intrusion detection. An XGBoost flow classifier is paired with a small, locally fine-tuned LLM that turns each prediction into a natural-language explanation and mitigation recommendation, intended to run on a smart NIC (SNIC).
 
-The goal of this work is to investigate how LLMs can improve the interpretability of machine learning-based intrusion detection systems by generating human-readable explanations and mitigation strategies for detected network attacks.
+Candidate explanations are generated in parallel by a local model (Ollama), a cloud reference model (OpenAI), and the current fine-tuned checkpoint, then scored automatically (deterministic checks + LLM-as-judge, optionally a human expert comparison) to select training examples for the next LoRA fine-tuning round.
 
-The project combines a traditional XGBoost-based intrusion detection model with multiple large language models (both local and cloud-hosted), evaluates the quality of their explanations using several scoring methods, and automatically prepares high-quality datasets for iterative fine-tuning of local LLMs.
+## Pipeline
 
-## Features
+1. `1_xgb_agg.py` — XGBoost prediction on selected CICIDS2017 flows
+2. `2a_ollama_expl.py` / `2b_openai_expl.py` / `2c_retrain_expl.py` — explanation generation (local, cloud, current fine-tuned model)
+3. `3a`–`3e` — deterministic, LLM-judge, and optional human-expert scoring, combined into a weighted score and a per-round winner
+4. `4a_training_prepare.py` — build the fine-tuning dataset from winning explanations
+5. `4b_unsloth_finetune.py` — LoRA fine-tuning (separate `retrain` environment)
 
-* XGBoost binary and multiclass intrusion detection
-* Support for both local (Ollama) and OpenAI language models
-* Automatic generation of:
-
-  * reasoning
-  * mitigation recommendations
-* Multiple evaluation methods:
-
-  * deterministic scoring
-  * expert-system scoring
-  * human evaluation
-  * weighted score aggregation
-* Automatic selection of the highest-quality explanations
-* Training dataset generation for supervised fine-tuning
-* LoRA fine-tuning using Unsloth
-* Support for iterative improvement of local LLMs
-
-## Project Pipeline
-
-The complete workflow consists of the following stages:
-
-1. **XGBoost classification**
-
-   * Generate predictions for selected network traffic samples.
-
-2. **LLM explanation generation**
-
-   * Ollama models
-   * OpenAI models
-   * (optional) previously fine-tuned local model
-
-3. **Evaluation**
-
-   * Deterministic scoring
-   * Expert-system scoring
-   * Human evaluation (optional)
-   * Combined weighted score
-
-4. **Winner selection**
-
-   * Select the highest-quality explanation for each sample.
-
-5. **Dataset preparation**
-
-   * Convert winning explanations into a JSONL dataset suitable for supervised fine-tuning.
-
-6. **Fine-tuning**
-
-   * Train a local model using Unsloth LoRA.
-
-## Requirements
-
-* Python 3.11+
-* XGBoost
-* Ollama
-* CUDA-capable GPU (recommended for fine-tuning)
-* OpenAI API key (optional, for OpenAI evaluation)
-* CICIDS2017 (or compatible) dataset
-
-The project currently uses two Conda environments:
-
-* **xgboost**
-
-  * evaluation pipeline
-  * XGBoost
-  * OpenAI/Ollama scripts
-  * scoring
-  * dataset preparation
-
-* **retrain**
-
-  * Unsloth
-  * PyTorch
-  * CUDA
-  * LoRA fine-tuning
-
-## Running the Evaluation Pipeline
-
-The complete evaluation pipeline can be executed using:
+`main_pipeline.py` runs steps 1–4a in one command:
 
 ```bash
 python main_pipeline.py \
@@ -100,50 +26,24 @@ python main_pipeline.py \
     --skip-human-evaluation
 ```
 
-This pipeline performs:
-
-* XGBoost prediction
-* explanation generation
-* automatic scoring
-* winner selection
-* training dataset generation
-
-By default, the fine-tuning step is executed separately inside the `retrain` Conda environment.
-
-## Fine-Tuning
-
-After the evaluation pipeline has generated the training dataset, activate the retraining environment and run:
+Fine-tuning is run separately:
 
 ```bash
 conda activate retrain
-
 python 4b_unsloth_finetune.py
 ```
 
-The resulting LoRA adapter can then be converted into an Ollama model and used as an additional explanation model in future evaluation iterations.
+## Environments
 
-## Keywords
+- **xgboost** — classifier, explanation generation, scoring, dataset prep
+- **retrain** — Unsloth, PyTorch, LoRA fine-tuning
 
-* Explainable Artificial Intelligence (XAI)
-* Large Language Models (LLMs)
-* Network Intrusion Detection
-* Cybersecurity
-* Machine Learning
-* XGBoost
-* Fine-Tuning
-* LoRA
-* Unsloth
-* Ollama
+Requires Python 3.11+, a CUDA GPU for fine-tuning, an OpenAI API key (optional, for the cloud reference model), and the CICIDS2017 dataset.
 
 ## Acknowledgements
 
-**Mentor**
-
-* Assoc. Prof. Dr. Veljko Pejović
-
-**Co-mentor**
-
-* Assist. Miha Grohar
+Mentor: Assoc. Prof. Dr. Veljko Pejović
+Co-mentor: Assist. Miha Grohar
 
 ## Author
 

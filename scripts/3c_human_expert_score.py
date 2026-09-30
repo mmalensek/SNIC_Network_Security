@@ -63,6 +63,9 @@ SESSION_FILE = (
     / f"human_evaluation_session_{SESSION_ID}.json"
 )
 
+# sorry for the inline HTML, but this is a quickFlask app for human evaluation of candidate solutions and shouldnt be used in production
+# im not going to pretend i know how to do proper templating and static file serving in flask, this is just a quick hack for a one-off evaluation
+
 LOGIN_HTML = """
 <!DOCTYPE html>
 <html>

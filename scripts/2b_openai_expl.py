@@ -34,6 +34,7 @@ AVAILABLE_MODELS = [
 JSON_LOG_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 EVAL_LOG_DIR = "json_log/2_openai_evaluation"
 
+# parse command-line arguments
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Run Ollama explanation models."
@@ -56,7 +57,7 @@ def get_openai_client():
         )
     return OpenAI(api_key=api_key)
 
-
+# get the latest file pairs from the JSON log directory
 def get_latest_file_pairs():
     files = os.listdir(JSON_LOG_DIR)
 
@@ -142,6 +143,7 @@ JSON:
 """
 
 
+# evaluate a single prediction against the ground truth using the selected OpenAI models
 def evaluate(client, models, pred_json, ground_truth):
     results = []
 
@@ -157,7 +159,7 @@ def evaluate(client, models, pred_json, ground_truth):
 
         prompt = build_prompt(pred_json)
 
-        # cas od flowa (prompta) do odgovora modela
+        # time the model response
         start_time = time.time()
         response = query_model(client, model, prompt)
         response_time_sec = time.time() - start_time
@@ -166,7 +168,7 @@ def evaluate(client, models, pred_json, ground_truth):
         reasoning = parts["reasoning"]
         solution  = parts["solution"]
 
-        # dolzina odgovora
+        # calculate response length metrics
         response_length_chars = len(response)
         response_length_words = len(response.split())
 
@@ -179,7 +181,7 @@ def evaluate(client, models, pred_json, ground_truth):
             "is_xgboost_correct":      xgboost_correct,
             "reasoning":               reasoning,
             "solution":                solution,
-            # NOVO: dodatne metrike
+            # added new metrics
             "response_time_sec": round(response_time_sec, 4),
             "response_length_chars": response_length_chars,
             "response_length_words": response_length_words,

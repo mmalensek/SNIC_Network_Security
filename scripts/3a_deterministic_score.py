@@ -32,9 +32,7 @@ EVALUATION_DIRS = {
 }
 
 
-# ----------------------------------------------------------------------
-# Helpers
-# ----------------------------------------------------------------------
+# helper functions
 
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -78,9 +76,7 @@ def get_latest_timestamp(directory):
     return max(timestamps)
 
 
-# ----------------------------------------------------------------------
-# Format Compliance
-# ----------------------------------------------------------------------
+# format compliance scoring
 
 REQUIRED_FIELDS = {
     "model",
@@ -111,9 +107,7 @@ def score_format_compliance(entry):
     return score
 
 
-# ----------------------------------------------------------------------
-# Feature Grounding
-# ----------------------------------------------------------------------
+# feature grounding scoring
 
 FEATURE_KEYWORDS = {
     "flow duration": [
@@ -352,9 +346,7 @@ def score_feature_grounding(entry, prediction):
     return verified / len(claims)
 
 
-# ----------------------------------------------------------------------
-# Overall
-# ----------------------------------------------------------------------
+# overall score computation
 
 def compute_overall_score(
     format_score,
@@ -371,9 +363,7 @@ def compute_overall_score(
     )
 
 
-# ----------------------------------------------------------------------
-# Matching files
-# ----------------------------------------------------------------------
+# matching evaluation files to ground truth and prediction files
 
 def find_ground_truth_file(run_id, sample_id):
     for path in GT_DIR.glob("ground_truth_*.json"):
@@ -397,9 +387,7 @@ def find_prediction_file(run_id, sample_id):
     return None
 
 
-# ----------------------------------------------------------------------
-# Main evaluation
-# ----------------------------------------------------------------------
+# main evaluation function
 
 def evaluate_directory(name, directory):
 
@@ -417,7 +405,7 @@ def evaluate_directory(name, directory):
 
     for evaluation_file in evaluation_files:
 
-        # Load evaluations FIRST so we can read run_id/sample_id from them
+        # load evaluations FIRST so we can read run_id/sample_id from them
         evaluations = load_json(evaluation_file)
 
         if not isinstance(evaluations, list):

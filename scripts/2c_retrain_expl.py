@@ -147,10 +147,6 @@ def load_model(model_path, max_seq_length=MAX_SEQ_LENGTH):
         load_in_4bit=True,
     )
 
-    # see matching comment in 4b_unsloth_finetune.py: AutoTokenizer resolves
-    # this checkpoint to a broken slow tokenizer that corrupts word
-    # boundaries on both encode and decode. Must use the same fix here or
-    # eval prompts won't even match what the model was trained on.
     tok = PreTrainedTokenizerFast.from_pretrained(base_model)
 
     from peft import PeftModel
@@ -219,10 +215,6 @@ def get_recent_file_pairs(num_samples):
 
 
 # BUILD PROMPT
-#
-# This MUST match the prompt/message structure that 4a_training_prepare.py
-# used to build the training set (user_text + DEFAULT_SYSTEM), otherwise the
-# retrained model is evaluated out-of-distribution and produces garbage.
 
 DEFAULT_SYSTEM = (
     "You are a network security expert specializing in intrusion detection. "
@@ -237,8 +229,7 @@ DEFAULT_SYSTEM = (
 def build_prompt(pred_json, actual_label):
 
     current_flow = pred_json.get("current_flow") or pred_json.get("row_data")
-    # keep only the single closest neighboring flow on each side — must match
-    # the trimming in 4a_training_prepare.py's extract_example()
+    # keep only the single closest neighboring flow on each side
     previous_flows = pred_json.get("previous_flows", [])[-1:]
     next_flows = pred_json.get("next_flows", [])[:1]
     probabilities = pred_json.get("probabilities", {})
@@ -363,7 +354,7 @@ def evaluate(pred_json, ground_truth):
 
     prompt = build_prompt(pred_json, true_label)
 
-    # cas od flowa (prompta) do odgovora modela
+    # time the model response
     start_time = time.time()
     response = query_model(prompt)
     response_time_sec = time.time() - start_time
@@ -372,7 +363,7 @@ def evaluate(pred_json, ground_truth):
     reasoning = response_parts["reasoning"]
     solution = response_parts["solution"]
 
-    # dolzina odgovora
+    # calculate response length metrics
     response_length_chars = len(response)
     response_length_words = len(response.split())
 
@@ -386,7 +377,7 @@ def evaluate(pred_json, ground_truth):
         "reasoning": reasoning,
         "solution": solution,
         "raw_response": response,
-        # NOVO: dodatne metrike
+        # new metrics for analysis
         "response_time_sec": round(response_time_sec, 4),
         "response_length_chars": response_length_chars,
         "response_length_words": response_length_words,
@@ -436,10 +427,7 @@ def main():
 
     os.makedirs(EVAL_LOG_DIR, exist_ok=True)
 
-    # One shared timestamp for this whole eval run (not the source samples'
-    # own timestamps, which differ per sample) — lets 3a/3b/3e discover all
-    # of them as one batch and average scores across samples, the same way
-    # they already do for multi-model ollama/openai batches.
+    # evaluate each prediction/ground truth pair and save results to JSON
     eval_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     overall_correct = 0

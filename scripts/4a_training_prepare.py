@@ -41,6 +41,9 @@ PREDICTION_DIR = "json_log/1_groundtruth_and_xgboost_prediction"
 
 WINNER_DIR = "json_log/3_evaluation_results/6_score_winner"
 
+
+# helper functions
+
 def find_prediction_file(run_id, sample_id):
     if run_id is None or sample_id is None:
         return None
@@ -79,6 +82,8 @@ def find_nested_record(obj):
     return None
 
 
+
+# build the training dataset
 def extract_example(eval_obj, source_file):
     record = find_nested_record(eval_obj)
 
@@ -117,12 +122,7 @@ def extract_example(eval_obj, source_file):
             f"Top-level keys: {list(prediction.keys())}"
         )
 
-    # Keep only the single closest neighboring flow on each side. Full
-    # previous/next windows (5 each) made the user prompt ~8k tokens on
-    # their own, on top of an assistant reasoning target that's itself
-    # ~8.5k tokens median — together that badly overflowed the 4096
-    # max_seq_length used for training, silently truncating the LABEL/
-    # REASONING/SOLUTION target off of every single example.
+    # keep only the last previous flow and the first next flow for context
     previous_flows = prediction.get("previous_flows", [])[-1:]
 
     next_flows = prediction.get("next_flows", [])[:1]
@@ -195,7 +195,7 @@ def extract_example(eval_obj, source_file):
         "probabilities": probabilities,
     }
 
-
+# build the training dataset
 def build_dataset(paths, max_samples=None):
     examples = []
     for path in paths:
@@ -208,7 +208,6 @@ def build_dataset(paths, max_samples=None):
     if max_samples is not None:
         examples = examples[:max_samples]
     return examples
-
 
 def write_jsonl(examples, out_path):
     with open(out_path, "w", encoding="utf-8") as f:

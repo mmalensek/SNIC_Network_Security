@@ -60,10 +60,7 @@ client = OpenAI(
 )
 
 
-# --------------------------------------------------
-# Helpers
-# --------------------------------------------------
-
+# helper functions
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -108,9 +105,7 @@ def find_prediction_file(run_id, sample_id):
     return None
 
 
-# --------------------------------------------------
-# Judge Prompt
-# --------------------------------------------------
+# judge prompt and evaluation function
 
 def judge_evaluation(
     evaluation,
@@ -190,11 +185,6 @@ Return ONLY valid JSON:
                 "Judge returned invalid JSON"
         }
 
-
-# --------------------------------------------------
-# Evaluate directory
-# --------------------------------------------------
-
 def evaluate_directory(directory):
 
     latest_timestamp = get_latest_timestamp(directory)
@@ -210,10 +200,12 @@ def evaluate_directory(directory):
     aggregate = defaultdict(list)
     sample_details = []
 
+    # evaluate each evaluation file
     for evaluation_file in files:
 
         evaluations = load_json(evaluation_file)
 
+        # ensure evaluations is a list
         if not isinstance(evaluations, list):
             evaluations = [evaluations]
 
@@ -232,6 +224,7 @@ def evaluate_directory(directory):
         ground_truth = load_json(gt_file)
         prediction = load_json(pred_file) if pred_file else {}
 
+        # evaluate each evaluation in the file
         for evaluation in evaluations:
 
             judge_result = judge_evaluation(evaluation, ground_truth, prediction)
@@ -241,8 +234,8 @@ def evaluate_directory(directory):
             aggregate[model_name].append(judge_result)
 
             sample_details.append({
-                "run_id": run_id,          # NEW — was "sample_id": n
-                "sample_id": sample_id,    # NEW — now the real sample_id, not filename n
+                "run_id": run_id,
+                "sample_id": sample_id,   
                 "model": model_name,
                 "judge_result": judge_result
             })
@@ -264,11 +257,6 @@ def evaluate_directory(directory):
         "summary": summary,
         "samples": sample_details
     }
-
-
-# --------------------------------------------------
-# Main
-# --------------------------------------------------
 
 def main():
 

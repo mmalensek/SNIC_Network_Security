@@ -156,9 +156,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
             print("")
         print("------------------------------------")
 
-    # ==========================================
-    # SINGLE SAMPLE MODE
-    # ==========================================
+    # single sample mode (if only one row is selected)
     if len(test_rows) == 1:
         row_data = test_rows.iloc[0].to_dict()
         row_index = test_rows.index[0]
@@ -187,6 +185,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
 
         prediction = predictions[0]
 
+        # prepare probability info based on model type
         if model_type == "binary":
             probability_info = {
                 "probabilities": {
@@ -235,10 +234,7 @@ def generate_outputs(model, model_type, test_rows, true_labels, true_label_names
 
         return output, ground_truth_output
 
-    # ==========================================
-    # MULTI SAMPLE MODE (original aggregation)
-    # ==========================================
-
+    # multiple sample mode
     majority_label = true_label_names.value_counts().idxmax()
     majority_ratio = float(true_label_names.value_counts().max() / len(true_label_names))
 
@@ -426,6 +422,7 @@ def main():
     os.makedirs(JSON_LOG_DIR, exist_ok=True)
     timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
 
+    # generate outputs for n pairs
     for run_idx in range(1, n + 1):
         if limit > 0:
             sample_size = min(limit, len(filtered_rows))
@@ -461,6 +458,8 @@ def main():
 
         suffix = "" if n == 1 else f"_{run_idx}"
 
+
+        # save JSON outputs
         filename = f"{JSON_LOG_DIR}/prediction_{timestamp}{suffix}.json"
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)

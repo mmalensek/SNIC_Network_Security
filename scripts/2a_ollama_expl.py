@@ -167,7 +167,7 @@ def evaluate(models, pred_json, ground_truth):
 
         prompt = build_prompt(pred_json)
 
-        # cas od flowa (prompta) do odgovora modela
+        # time the model response
         start_time = time.time()
         response = query_model(model, prompt)
         response_time_sec = time.time() - start_time
@@ -176,10 +176,11 @@ def evaluate(models, pred_json, ground_truth):
         reasoning = response_parts["reasoning"]
         solution = response_parts["solution"]
 
-        # dolzina odgovora
+        # calculate response length metrics
         response_length_chars = len(response)
         response_length_words = len(response.split())
 
+        # store results
         results.append({
             "run_id": run_id,
             "sample_id": sample_id,
@@ -207,8 +208,6 @@ def evaluate(models, pred_json, ground_truth):
 
     return results
 
-
-# main
 def main():
 
     args = parse_args()
@@ -259,6 +258,7 @@ def main():
     overall_correct = 0
     overall_total = 0
 
+    # run evaluation for each prediction/ground truth pair
     for idx, pred_file, gt_file in file_pairs:
         print(f"\n==============================")
         print(f"Processing pair {idx}")

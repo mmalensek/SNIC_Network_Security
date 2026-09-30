@@ -80,9 +80,7 @@ WEIGHTS_NO_HUMAN = {
 }
 
 
-# --------------------------------------------------
-# Helpers
-# --------------------------------------------------
+# helper functions
 
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -140,9 +138,7 @@ def find_model_output(model_name, model_origin):
 
     return None
 
-# --------------------------------------------------
-# Load latest files
-# --------------------------------------------------
+# load latest files from deterministic, expert, and human directories
 
 deterministic_file = latest_json(
     DETERMINISTIC_DIR
@@ -152,16 +148,11 @@ expert_file = latest_json(
     EXPERT_DIR
 )
 
-# Every tester writes their own session file (one per
-# tester_id), so — unlike deterministic/expert — ALL files
-# in HUMAN_DIR must be combined, not just the newest one.
 human_files = sorted(
     HUMAN_DIR.glob("*.json")
 )
 
-# --------------------------------------------------
-# Required files
-# --------------------------------------------------
+# required files
 
 if deterministic_file is None:
     raise RuntimeError(
@@ -173,9 +164,7 @@ if expert_file is None:
         "No expert system score file found"
     )
 
-# --------------------------------------------------
-# Check timestamps
-# --------------------------------------------------
+# check timestamps of deterministic and expert files
 
 det_time = datetime.fromtimestamp(
     deterministic_file.stat().st_mtime
@@ -185,9 +174,7 @@ exp_time = datetime.fromtimestamp(
     expert_file.stat().st_mtime
 )
 
-# Deterministic and expert MUST belong
-# to the same run
-
+# deterministic and expert files must be within 30 minutes of each other
 if abs(
     (det_time - exp_time).total_seconds()
 ) > 30 * 60:
@@ -196,7 +183,7 @@ if abs(
         "differ by more than 30 minutes"
     )
 
-# Human files are optional
+# human files are optional
 if human_files:
 
     newest_core = max(
@@ -227,9 +214,8 @@ if human_files:
                 f"scores. Proceeding anyway — verify this is the intended session."
             )
 
-# --------------------------------------------------
-# Load JSON data
-# --------------------------------------------------
+
+# load json data
 
 deterministic = load_json(
     deterministic_file
@@ -256,19 +242,12 @@ for system_name, system_data in expert.get("results", {}).items():
         model_origin.setdefault(model, (system_name, batch))
 
 human_scores = {}
-
-# Pool comparisons from every tester's session file so that
-# all experts contribute, not just whichever file sorts last.
 human_comparisons = []
 
 for hf in human_files:
     human_comparisons.extend(
         load_json(hf).get("comparisons", [])
     )
-
-# --------------------------------------------------
-# Human comparison -> normalized score
-# --------------------------------------------------
 
 if human_comparisons:
 
@@ -316,9 +295,7 @@ ACTIVE_WEIGHTS = (
 )
 
 
-# --------------------------------------------------
-# Collect all models
-# --------------------------------------------------
+# collect all models from deterministic, expert, and human scores
 
 all_models = set()
 
@@ -369,9 +346,7 @@ all_models.update(
 )
 
 
-# --------------------------------------------------
-# Score lookups
-# --------------------------------------------------
+# score lookup functions
 
 def find_deterministic_score(model):
 
@@ -432,9 +407,7 @@ def find_human_score(model):
     return human_scores.get(model)
 
 
-# --------------------------------------------------
-# Combine scores
-# --------------------------------------------------
+# combine scores and determine winner
 
 combined = {}
 
@@ -504,9 +477,7 @@ for model in sorted(all_models):
             else None,
     }
 
-# --------------------------------------------------
-# Find winner
-# --------------------------------------------------
+# find winner
 
 winner_model = None
 winner_score = -1
@@ -534,9 +505,7 @@ winner_output = find_model_output(
     model_origin
 )
 
-# --------------------------------------------------
-# Final report
-# --------------------------------------------------
+# final report
 
 report = {
     "generated_at":
@@ -588,10 +557,7 @@ with open(
         indent=2
     )
 
-# --------------------------------------------------
-# Save training history
-# --------------------------------------------------
-
+# save history of winners
 history_file = HISTORY_FILE
 
 # score retrained of model
