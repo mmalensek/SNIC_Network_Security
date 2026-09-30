@@ -95,6 +95,17 @@ def parse_args():
              "averaging over several samples gives a much more reliable read "
              "on whether retraining is actually helping.",
     )
+    parser.add_argument(
+        "--max-new-tokens",
+        type=int,
+        default=MAX_NEW_TOKENS,
+        help="Generation budget. The default (512) assumes the model reaches "
+             "LABEL:/REASONING:/SOLUTION: quickly; an adapter whose training "
+             "targets still contain long chain-of-thought or echoed data (or "
+             "that hasn't yet learned to be concise) can burn the whole "
+             "budget before ever emitting the structured answer, leaving "
+             "reasoning/solution empty even though the model did respond.",
+    )
     return parser.parse_args()
 
 
@@ -403,10 +414,11 @@ def evaluate(pred_json, ground_truth):
 
 
 def main():
-    global model, tokenizer, MODEL_PATH
+    global model, tokenizer, MODEL_PATH, MAX_NEW_TOKENS
 
     args = parse_args()
     MODEL_PATH = resolve_model_path(args.base_dir, args.model_path)
+    MAX_NEW_TOKENS = args.max_new_tokens
 
     print("=" * 60)
     print("Retrained DeepSeek-R1 LoRA Evaluation")

@@ -129,8 +129,29 @@ HTML = """
 
 body {
     font-family: Arial, sans-serif;
+    font-size: 20px;
     margin: 30px;
     background: #f5f5f5;
+}
+
+/* Bumped up from the browser default so the page stays legible once a
+   full-page screenshot is scaled down to thesis page width (9pt base
+   font in style/friteza.cls) -- at the original size the panel text
+   becomes unreadable at that scale. */
+.header h2 {
+    font-size: 26px;
+}
+
+.header p {
+    font-size: 20px;
+}
+
+.panel h2 {
+    font-size: 24px;
+}
+
+.panel h3 {
+    font-size: 20px;
 }
 
 .header {

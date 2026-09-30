@@ -45,6 +45,27 @@ def parse_args():
     )
     parser.add_argument("--num-train-epochs", type=int, default=3)
     parser.add_argument(
+        "--lora-r",
+        type=int,
+        default=16,
+        help="LoRA rank — size of the low-rank update matrices added to each "
+             "target module. Higher = more trainable capacity (and more risk "
+             "of overfitting a small dataset), lower = fewer trainable "
+             "parameters.",
+    )
+    parser.add_argument(
+        "--lora-alpha",
+        type=int,
+        default=16,
+        help="LoRA scaling factor. Following the common alpha=r convention "
+             "used elsewhere in this project unless swept independently.",
+    )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=2e-4,
+    )
+    parser.add_argument(
         "--max-seq-length",
         type=int,
         default=16384,
@@ -88,7 +109,7 @@ def main():
 
     model = FastLanguageModel.get_peft_model(
         model,
-        r=16,
+        r=args.lora_r,
         target_modules=[
             "q_proj",
             "k_proj",
@@ -98,7 +119,7 @@ def main():
             "up_proj",
             "down_proj",
         ],
-        lora_alpha=16,
+        lora_alpha=args.lora_alpha,
         lora_dropout=0,
     )
 
@@ -132,7 +153,7 @@ def main():
             num_train_epochs=args.num_train_epochs,
             per_device_train_batch_size=1,
             gradient_accumulation_steps=8,
-            learning_rate=2e-4,
+            learning_rate=args.learning_rate,
             logging_steps=10,
             save_strategy="no",
             bf16=True,

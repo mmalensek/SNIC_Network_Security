@@ -152,8 +152,11 @@ expert_file = latest_json(
     EXPERT_DIR
 )
 
-human_file = latest_json(
-    HUMAN_DIR
+# Every tester writes their own session file (one per
+# tester_id), so — unlike deterministic/expert — ALL files
+# in HUMAN_DIR must be combined, not just the newest one.
+human_files = sorted(
+    HUMAN_DIR.glob("*.json")
 )
 
 # --------------------------------------------------
@@ -193,12 +196,8 @@ if abs(
         "differ by more than 30 minutes"
     )
 
-# Human file is optional
-if human_file is not None:
-
-    human_time = datetime.fromtimestamp(
-        human_file.stat().st_mtime
-    )
+# Human files are optional
+if human_files:
 
     newest_core = max(
         det_time,
@@ -212,15 +211,21 @@ if human_file is not None:
 
     HUMAN_WINDOW_MINUTES = 24 * 60  # generous - human eval can take hours
 
-    if (
-        abs((human_time - newest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
-        or abs((human_time - oldest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
-    ):
-        print(
-            f"[WARNING] Human evaluation file is more than "
-            f"{HUMAN_WINDOW_MINUTES} minutes away from the deterministic/expert "
-            f"scores. Proceeding anyway — verify this is the intended session."
+    for hf in human_files:
+
+        human_time = datetime.fromtimestamp(
+            hf.stat().st_mtime
         )
+
+        if (
+            abs((human_time - newest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
+            or abs((human_time - oldest_core).total_seconds()) > HUMAN_WINDOW_MINUTES * 60
+        ):
+            print(
+                f"[WARNING] Human evaluation file {hf.name} is more than "
+                f"{HUMAN_WINDOW_MINUTES} minutes away from the deterministic/expert "
+                f"scores. Proceeding anyway — verify this is the intended session."
+            )
 
 # --------------------------------------------------
 # Load JSON data
@@ -250,27 +255,27 @@ for system_name, system_data in expert.get("results", {}).items():
     for model in system_data.get("summary", {}):
         model_origin.setdefault(model, (system_name, batch))
 
-human = None
 human_scores = {}
 
-if human_file is not None:
-    human = load_json(
-        human_file
+# Pool comparisons from every tester's session file so that
+# all experts contribute, not just whichever file sorts last.
+human_comparisons = []
+
+for hf in human_files:
+    human_comparisons.extend(
+        load_json(hf).get("comparisons", [])
     )
 
 # --------------------------------------------------
 # Human comparison -> normalized score
 # --------------------------------------------------
 
-if human is not None:
+if human_comparisons:
 
     human_points = defaultdict(float)
     human_matches = defaultdict(int)
 
-    for comparison in human.get(
-        "comparisons",
-        []
-    ):
+    for comparison in human_comparisons:
 
         a = comparison[
             "candidate_a_model"
@@ -306,7 +311,7 @@ if human is not None:
 
 ACTIVE_WEIGHTS = (
     WEIGHTS_WITH_HUMAN
-    if human_file is not None
+    if human_files
     else WEIGHTS_NO_HUMAN
 )
 
@@ -468,7 +473,7 @@ for model in sorted(all_models):
             ACTIVE_WEIGHTS["expert"]
         )
 
-    if human_file is not None and h is not None:
+    if human_files and h is not None:
         weighted_sum += (
             h
             * ACTIVE_WEIGHTS["human"]
@@ -541,7 +546,11 @@ report = {
         ACTIVE_WEIGHTS,
 
     "human_score_included":
-        human_file is not None,
+        bool(human_files),
+
+    "human_sessions_used": [
+        f.name for f in human_files
+    ],
 
     "winner": {
         "model":

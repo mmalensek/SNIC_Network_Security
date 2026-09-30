@@ -95,7 +95,11 @@ def latest_json(directory, warn_age_minutes=120):
 
 deterministic_file = latest_json(DETERMINISTIC_DIR)
 expert_file = latest_json(EXPERT_DIR)
-human_file = latest_json(HUMAN_DIR)
+
+# Every tester writes their own session file (one per
+# tester_id), so — unlike deterministic/expert — ALL files
+# in HUMAN_DIR must be combined, not just the newest one.
+human_files = sorted(HUMAN_DIR.glob("*.json"))
 
 if deterministic_file is None:
     raise RuntimeError(
@@ -115,13 +119,18 @@ expert = load_json(
     expert_file
 )
 
-human = None
 human_scores = {}
 
-if human_file is not None:
-    human = load_json(
-        human_file
+# Pool comparisons from every tester's session file so that
+# all experts contribute, not just whichever file sorts last.
+human_comparisons = []
+
+for hf in human_files:
+    human_comparisons.extend(
+        load_json(hf).get("comparisons", [])
     )
+
+if human_comparisons:
 
     # --------------------------------------------------
     # Human comparison -> normalized score
@@ -130,10 +139,7 @@ if human_file is not None:
     human_points = defaultdict(float)
     human_matches = defaultdict(int)
 
-    for comparison in human.get(
-        "comparisons",
-        []
-    ):
+    for comparison in human_comparisons:
 
         a = comparison["candidate_a_model"]
         b = comparison["candidate_b_model"]
@@ -158,7 +164,7 @@ if human_file is not None:
 
 ACTIVE_WEIGHTS = (
     WEIGHTS_WITH_HUMAN
-    if human_file is not None
+    if human_files
     else WEIGHTS_NO_HUMAN
 )
 
@@ -320,7 +326,7 @@ for model in sorted(all_models):
             ACTIVE_WEIGHTS["expert"]
         )
 
-    if human_file is not None and h is not None:
+    if human_files and h is not None:
         weighted_sum += (
             h
             * ACTIVE_WEIGHTS["human"]
@@ -391,7 +397,7 @@ report = {
         ACTIVE_WEIGHTS,
 
     "human_score_included":
-        human_file is not None,
+        bool(human_files),
 
     "source_files": {
         "deterministic":
@@ -400,8 +406,9 @@ report = {
         "expert":
             str(expert_file),
 
-        "human":
-            str(human_file) if human_file is not None else None,
+        "human": [
+            str(hf) for hf in human_files
+        ],
     },
 
     "ranking":
@@ -438,7 +445,7 @@ print(
 )
 
 print(
-    f"Human score included: {human_file is not None}"
+    f"Human score included: {bool(human_files)}"
 )
 
 print(
