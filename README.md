@@ -33,6 +33,11 @@ conda activate retrain
 python 4b_unsloth_finetune.py
 ```
 
+## Trained model & dataset
+
+- Fine-tuned LoRA adapter: [mmalensek/flowexplain-deepseek-r1-8b-lora](https://huggingface.co/mmalensek/flowexplain-deepseek-r1-8b-lora)
+- Training dataset (711 examples): [mmalensek/flowexplain-dataset](https://huggingface.co/datasets/mmalensek/flowexplain-dataset)
+
 ## Environments
 
 - **xgboost** — classifier, explanation generation, scoring, dataset prep
