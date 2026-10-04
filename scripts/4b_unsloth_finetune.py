@@ -16,6 +16,13 @@ Usage:
   python 4b_unsloth_finetune.py \
     --dataset ollama_training/training_dataset.jsonl \
     --output-dir /mnt/share/tmp/intrusion_lora
+
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
+Prerequisites:
+unsloth
+transformers
 """
 
 import argparse

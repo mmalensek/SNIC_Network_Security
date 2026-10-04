@@ -24,6 +24,9 @@ The evaluation still compares:
 The LLM itself is only evaluated qualitatively based on its generated
 REASONING and SOLUTION.
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
 Prerequisites:
     unsloth
     transformers

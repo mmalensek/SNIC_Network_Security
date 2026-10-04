@@ -3,6 +3,9 @@
 
 XGBoost classifier aggregator (label-based selection + classifier selection)
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
 Prerequisites:
 xgboost >= 0.90
 numpy >= 1.17.2

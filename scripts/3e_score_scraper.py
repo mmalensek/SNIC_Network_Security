@@ -3,7 +3,10 @@
 """
 (3e/4)
 
-Score scraping script for extracting and processing evaluation scores for retraining of models
+Score scraping script for extracting and processing evaluation scores for retraining of models.
+
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
 
 Prerequisites:
 openai >= 1.0.0

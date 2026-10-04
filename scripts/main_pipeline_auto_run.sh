@@ -3,6 +3,10 @@
 #
 # usage (from the directory that contains main_pipeline.py):
 #   bash main_pipeline_auto_run.sh
+#
+# Note: parts of this code (e.g., helper functions) were generated with the
+# assistance of a large language model (LLM) and reviewed by the author.
+
 
 set -uo pipefail
 

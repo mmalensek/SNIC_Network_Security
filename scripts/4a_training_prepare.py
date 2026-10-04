@@ -9,6 +9,9 @@ This script prepares:
 - a Modelfile for ollama create
 - a test command template
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
 Usage:
   python 4a_training_prepare.py \
     --input-glob "json_log/3_evaluation_results/6_score_winner/*.json" \

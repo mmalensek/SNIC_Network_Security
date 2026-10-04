@@ -3,13 +3,8 @@
 
 Human Expert Score Evaluation via pairwise comparison of candidate solutions.
 
-Prerequisites:
-openai >= 1.0.0
-xgboost >= 0.90
-numpy >= 1.17.2
-pandas >= 0.25.1
-sklearn >= 0.22.1
-json
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
 
 INSTRUCTIONS:
 
@@ -22,6 +17,13 @@ ssh -L 5000:localhost:5000 ubuntu@z1.cloud.garaza.io -t ssh -L 5000:localhost:50
 and then the website will be available at (on local machine):
 http://localhost:5000
 
+Prerequisites:
+openai >= 1.0.0
+xgboost >= 0.90
+numpy >= 1.17.2
+pandas >= 0.25.1
+sklearn >= 0.22.1
+json
 """
 
 import re

@@ -9,6 +9,9 @@ and solution from the model response, without asking for a label prediction from
 ** the evaluation will still compare the XGBoost predicted label to the true label, 
 but the LLM's response will be evaluated qualitatively based on the reasoning and solution sections
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
 Prerequisites:
 xgboost >= 0.90
 numpy >= 1.17.2

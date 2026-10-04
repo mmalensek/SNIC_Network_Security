@@ -55,6 +55,8 @@ python main_pipeline.py \
     --ollama-model deepseek-r1:8b \
     --openai-model gpt-5.2
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
 """
 
 import argparse

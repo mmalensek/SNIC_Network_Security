@@ -5,6 +5,9 @@
 
 Deterministic scoring script for evaluating model performance
 
+Note: parts of this code (e.g., helper functions) were generated with the
+assistance of a large language model (LLM) and reviewed by the author.
+
 Prerequisites:
 openai >= 1.0.0
 xgboost >= 0.90
